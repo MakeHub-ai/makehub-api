@@ -1,0 +1,42 @@
+{
+  "name": "llm-api-gateway",
+  "version": "1.0.0",
+  "description": "API Gateway for LLM providers with authentication, billing, and fallback support",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "build": "echo 'No build step required'",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "hono": "^4.0.0",
+    "@hono/node-server": "^1.8.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "node-cache": "^5.1.2",
+    "zod": "^3.22.0",
+    "openai": "^4.28.0",
+    "@anthropic-ai/sdk": "^0.17.0",
+    "@google/generative-ai": "^0.2.0",
+    "aws-sdk": "^2.1543.0",
+    "axios": "^1.6.0",
+    "uuid": "^9.0.1",
+    "dotenv": "^16.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/uuid": "^9.0.0"
+  },
+  "keywords": [
+    "llm",
+    "api-gateway",
+    "openai",
+    "anthropic",
+    "google",
+    "aws",
+    "azure"
+  ],
+  "author": "",
+  "license": "MIT"
+}
