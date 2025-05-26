@@ -47,7 +47,7 @@ async function testAndDisplayMessage(prompt = 'Ecrit le 5e amendement', model = 
       messages: [
         { role: 'user', content: prompt }
       ],
-      max_tokens: 200,
+      max_tokens: 1000,
       stream: true  // Activer le mode streaming
     }, {
       responseType: 'stream'  // Important pour qu'axios gère la réponse comme un stream
@@ -162,7 +162,7 @@ async function testAndDisplayMessage(prompt = 'Ecrit le 5e amendement', model = 
 // Si ce fichier est exécuté directement
 if (import.meta.url === `file://${process.argv[1]}`) {
   // Récupérer les arguments optionnels
-  const prompt = process.argv[2] || 'Ecrit le 5e amendement';
+  const prompt = process.argv[2] || 'Ecrit moi le 5e amendement';
   const model = process.argv[3] || 'gpt-4o';
   
   console.log('🧪 Test de messagerie simple LLM API Gateway\n');

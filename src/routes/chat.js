@@ -77,21 +77,27 @@ chat.post('/completions', async (c) => {
     
     // 3. Traiter la requête
     const result = await requestHandler.handleChatCompletion(validatedRequest, authData);
-    
-    // 4. Retourner la réponse selon le mode
+      // 4. Retourner la réponse selon le mode
     if (validatedRequest.stream) {
+      // Définir les headers pour le streaming SSE
+      c.header('Content-Type', 'text/event-stream');
+      c.header('Cache-Control', 'no-cache');
+      c.header('Connection', 'keep-alive');
+      c.header('X-Accel-Buffering', 'no'); // Nginx
+      
       return stream(c, async (stream) => {
         try {
-          // Écrire les headers SSE
+          // Initialiser le stream SSE
           stream.writeln('');
           
           for await (const chunk of result) {
             const sseData = `data: ${JSON.stringify(chunk)}\n\n`;
-            await stream.write(sseData);
+            // Éviter await pour réduire le buffering
+            stream.write(sseData);
           }
           
           // Marquer la fin du stream
-          await stream.write('data: [DONE]\n\n');
+          stream.write('data: [DONE]\n\n');
         } catch (error) {
           console.error('Streaming error:', error);
           const errorChunk = {
@@ -109,8 +115,8 @@ chat.post('/completions', async (c) => {
               type: 'internal_error'
             }
           };
-          await stream.write(`data: ${JSON.stringify(errorChunk)}\n\n`);
-          await stream.write('data: [DONE]\n\n');
+          stream.write(`data: ${JSON.stringify(errorChunk)}\n\n`);
+          stream.write('data: [DONE]\n\n');
         }
       });
     } else {
