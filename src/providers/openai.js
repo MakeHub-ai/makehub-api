@@ -131,12 +131,27 @@ export class OpenAIProvider extends BaseProvider {
   }
 
   async *streamRequest(request, model) {
+    const providerStreamStartTime = Date.now();
+    console.log(`[OpenAIProvider DEBUG ${providerStreamStartTime}] streamRequest started.`);
+
     const streamRequest = { ...request, stream: true };
+    
+    console.log(`[OpenAIProvider DEBUG ${providerStreamStartTime}] Calling this.makeRequest...`);
+    const makeRequestStartTime = Date.now();
     const response = await this.makeRequest(streamRequest, model, true);
+    const makeRequestEndTime = Date.now();
+    console.log(`[OpenAIProvider DEBUG ${providerStreamStartTime}] this.makeRequest call took ${makeRequestEndTime - makeRequestStartTime}ms. Status: ${response.status}`);
     
     let buffer = '';
+    let firstChunkReceivedTime = null;
+    let firstChunkYieldedTime = null;
     
+    console.log(`[OpenAIProvider DEBUG ${providerStreamStartTime}] Starting to iterate response.data stream...`);
     for await (const chunk of response.data) {
+      if (firstChunkReceivedTime === null) {
+        firstChunkReceivedTime = Date.now();
+        console.log(`[OpenAIProvider DEBUG ${providerStreamStartTime}] First chunk received from upstream after ${firstChunkReceivedTime - makeRequestEndTime}ms (total ${firstChunkReceivedTime - providerStreamStartTime}ms from streamRequest start).`);
+      }
       buffer += chunk.toString();
       
       // Traiter les lignes complètes
@@ -153,11 +168,31 @@ export class OpenAIProvider extends BaseProvider {
           
           const parsed = this.transformStreamChunk(data);
           if (parsed) {
+            if (firstChunkYieldedTime === null) {
+              firstChunkYieldedTime = Date.now();
+              console.log(`[OpenAIProvider DEBUG ${providerStreamStartTime}] First chunk yielded after ${firstChunkYieldedTime - firstChunkReceivedTime}ms from first chunk received (total ${firstChunkYieldedTime - providerStreamStartTime}ms from streamRequest start).`);
+            }
             yield parsed;
           }
         }
       }
     }
+    // Process any remaining data in the buffer after the loop
+    if (buffer.trim().startsWith('data: ')) {
+      const data = buffer.slice(buffer.indexOf('data: ') + 6).trim();
+      if (data !== '[DONE]' && data !== '') {
+        const parsed = this.transformStreamChunk(data);
+        if (parsed) {
+          if (firstChunkYieldedTime === null) { // Should have been set, but as a fallback
+            firstChunkYieldedTime = Date.now();
+             console.log(`[OpenAIProvider DEBUG ${providerStreamStartTime}] First chunk (from final buffer) yielded at ${firstChunkYieldedTime - providerStreamStartTime}ms from streamRequest start.`);
+          }
+          yield parsed;
+        }
+      }
+    }
+    const streamRequestEndTime = Date.now();
+    console.log(`[OpenAIProvider DEBUG ${providerStreamStartTime}] streamRequest finished. Total duration: ${streamRequestEndTime - providerStreamStartTime}ms.`);
   }
 
   prepareRequestParams(standardRequest, model) { // 'model' here is the 'combination' object
@@ -166,6 +201,11 @@ export class OpenAIProvider extends BaseProvider {
       messages: standardRequest.messages,
       stream: standardRequest.stream || false
     };
+
+    // Add stream_options if present
+    if (standardRequest.stream_options) {
+      params.stream_options = standardRequest.stream_options;
+    }
 
     // Paramètres optionnels
     if (standardRequest.max_tokens !== undefined) {

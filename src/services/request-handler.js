@@ -136,12 +136,22 @@ export class RequestHandler {
     let firstChunkTime = null;
     let lastChunkTime = null;
     let hasStarted = false;
+    let responseChunks = [];
 
     const self = this;
 
     async function* streamGenerator() {
       try {
-        for await (const chunk of provider.streamRequest(request, combination)) {
+        let payloadForProviderStream = { ...request }; // Start with a copy of the enriched request
+
+        if (combination.provider === 'openai' && payloadForProviderStream.stream) {
+          payloadForProviderStream.stream_options = {
+            ...(payloadForProviderStream.stream_options || {}), // Preserve other stream_options if any
+            include_usage: true
+          };
+        }
+
+        for await (const chunk of provider.streamRequest(payloadForProviderStream, combination)) {
           const now = Date.now();
           
           if (!hasStarted) {
@@ -156,6 +166,7 @@ export class RequestHandler {
           }
           
           lastChunkTime = now;
+          responseChunks.push(chunk);
           yield chunk;
         }
 
@@ -171,7 +182,8 @@ export class RequestHandler {
             startTime,
             timeToFirstChunk,
             dtFirstLastChunk,
-            true // streaming
+            true, // streaming
+            responseChunks // Pass the response chunks
           );
         });
 
@@ -212,32 +224,96 @@ export class RequestHandler {
   /**
    * Log une requête réussie dans la base de données (asynchrone)
    */
-  async logSuccessfulRequest(requestId, authData, request, combination, startTime, timeToFirstChunk, dtFirstLastChunk, isStreaming, responseData = null) {
+  async logSuccessfulRequest(requestId, authData, request, combination, startTime, timeToFirstChunk, dtFirstLastChunk, isStreaming, responseDataOrChunks = null) {
     try {
+      let responseJson = null;
+      let usage = null;
+
+      if (!isStreaming && responseDataOrChunks) {
+        // For non-streaming, use the response data directly
+        responseJson = responseDataOrChunks;
+        usage = responseDataOrChunks.usage || responseDataOrChunks.token_usage;
+      } else if (isStreaming && responseDataOrChunks && responseDataOrChunks.length > 0) {
+        // For streaming, reconstruct the complete response from chunks
+        let reconstructedContent = '';
+        let finalChunk = null;
+        let responseId = null;
+        let model = combination.modelId;
+        
+        // Process all chunks to reconstruct the response
+        for (const chunk of responseDataOrChunks) {
+          if (chunk.id) {
+            responseId = chunk.id;
+          }
+          if (chunk.model) {
+            model = chunk.model;
+          }
+          
+          // Extract content from chunk
+          if (chunk.choices && chunk.choices[0] && chunk.choices[0].delta) {
+            const delta = chunk.choices[0].delta;
+            if (delta.content) {
+              reconstructedContent += delta.content;
+            }
+          }
+          
+          // Check if this is the final chunk (contains usage or finish_reason)
+          if (chunk.choices && chunk.choices[0] && 
+              (chunk.choices[0].finish_reason || chunk.usage)) {
+            finalChunk = chunk;
+          }
+          
+          // Extract usage from chunk if present
+          if (chunk.usage) {
+            usage = chunk.usage;
+          }
+        }
+        
+        // Reconstruct a complete chat completion response
+        responseJson = {
+          id: responseId || `chatcmpl-${requestId}`,
+          object: 'chat.completion',
+          created: Math.floor(startTime / 1000),
+          model: model,
+          choices: [{
+            index: 0,
+            message: {
+              role: 'assistant',
+              content: reconstructedContent
+            },
+            finish_reason: finalChunk?.choices?.[0]?.finish_reason || 'stop'
+          }],
+          usage: usage || {
+            prompt_tokens: null,
+            completion_tokens: null,
+            total_tokens: null
+          }
+        };
+      }
+
       const endTime = Date.now();
       const totalDuration = endTime - startTime;
 
-      // Extraire les tokens si disponibles dans la réponse
+      // Extraire les tokens depuis les données d'usage collectées
       let inputTokens = null;
       let outputTokens = null;
       let cachedTokens = null;
 
-      if (responseData) {
-        if (responseData.usage) {
-          inputTokens = responseData.usage.prompt_tokens || responseData.usage.input_tokens;
-          outputTokens = responseData.usage.completion_tokens || responseData.usage.output_tokens;
-        } else if (responseData.token_usage) {
-          inputTokens = responseData.token_usage.input_tokens;
-          outputTokens = responseData.token_usage.output_tokens;
+      if (usage) {
+        // Utiliser les données d'usage extraites (streaming ou non-streaming)
+        inputTokens = usage.prompt_tokens || usage.input_tokens;
+        outputTokens = usage.completion_tokens || usage.output_tokens;
+        cachedTokens = usage.cached_tokens;
+      } else if (!isStreaming && responseDataOrChunks) {
+        // Fallback pour les réponses non-streaming sans usage dans l'objet principal
+        if (responseDataOrChunks.token_usage) {
+          inputTokens = responseDataOrChunks.token_usage.input_tokens;
+          outputTokens = responseDataOrChunks.token_usage.output_tokens;
         }
-        cachedTokens = responseData.cached_tokens; // Assuming it's a top-level field
+        cachedTokens = responseDataOrChunks.cached_tokens;
       }
-      
-      // Pour le streaming, les tokens sont généralement calculés après ou pas du tout dans cette phase.
-      // is_metrics_calculated sera false, et un autre processus pourrait les mettre à jour.
-      // Si responseData est null (cas du streaming initial), inputTokens/outputTokens resteront null.
 
-      // Insérer dans la table requests
+      // 1. Insérer dans la table requests
       const { data: requestData, error: requestError } = await supabase
         .from('requests')
         .insert({
@@ -257,30 +333,57 @@ export class RequestHandler {
         .single();
 
       if (requestError) {
-        console.error('Failed to log request:', requestError);
-        return;
+        console.error(`Failed to insert into requests table for ${requestId}:`, requestError);
+        // If this primary insert fails, we might not want to proceed with content/metrics
+        return; 
       }
+      console.log(`Successfully inserted into requests for ${requestId}`);
 
-      // Insérer le contenu de la requête
-      await supabase
-        .from('requests_content')
-        .insert({
-          request_id: requestId,
-          request_json: request,
-          response_json: null // Sera mis à jour par le service de calcul
-        });
-
-      // Insérer les métriques seulement si c'est en streaming
+      // 2. Insérer le contenu de la requête avec la réponse complète
+      try {
+        await supabase
+          .from('requests_content')
+          .insert({
+            request_id: requestId,
+            request_json: request, // request object from function params
+            response_json: responseJson // reconstructed responseJson
+          });
+        console.log(`Successfully inserted into requests_content for ${requestId}`);
+      } catch (contentError) {
+        console.error(`Failed to insert into requests_content for ${requestId}:`, contentError);
+        // Decide if we should return or if logging the error is enough
+      }
+      
+      // 3. Insérer les métriques seulement si c'est en streaming
       if (isStreaming) {
+        let calculated_throughput_tokens_s = null;
+        let is_metrics_actually_calculated = false;
+
+        // Conditions based on user request: total_duration_ms, time_to_first_chunk, and dt_first_last_chunk must not be NULL
+        // totalDuration is derived from startTime and endTime, so it should always be present.
+        // timeToFirstChunk and dtFirstLastChunk are specific to streaming.
+        const can_attempt_calculation = totalDuration != null && timeToFirstChunk != null && dtFirstLastChunk != null;
+
+        if (can_attempt_calculation) {
+          // Throughput calculation still requires outputTokens and a positive totalDuration.
+          if (outputTokens != null && totalDuration > 0) {
+            calculated_throughput_tokens_s = parseFloat((outputTokens / (dtFirstLastChunk / 1000)).toFixed(2));
+            is_metrics_actually_calculated = true; // Metric was calculated
+          }
+          // If outputTokens is null or totalDuration is not positive, throughput remains null, and is_metrics_actually_calculated remains false.
+        }
+        // If can_attempt_calculation is false, both remain null/false.
+
         await supabase
           .from('metrics')
           .insert({
             request_id: requestId,
             timestamp: new Date().toISOString(),
-            total_duration_ms: totalDuration,
-            time_to_first_chunk: timeToFirstChunk,
-            dt_first_last_chunk: dtFirstLastChunk,
-            is_metrics_calculated: !!(inputTokens || outputTokens) // True if we got any token info
+            total_duration_ms: totalDuration, // Logged regardless of calculation
+            time_to_first_chunk: timeToFirstChunk, // Logged regardless of calculation
+            dt_first_last_chunk: dtFirstLastChunk, // Logged regardless of calculation
+            is_metrics_calculated: is_metrics_actually_calculated,
+            throughput_tokens_s: calculated_throughput_tokens_s
           });
       }
 
