@@ -322,11 +322,11 @@ export class RequestHandler {
           api_key_name: authData.apiKey?.name,
           provider: combination.provider,
           model: combination.modelId,
-          timestamp: new Date(startTime).toISOString(),
+          created_at: new Date(startTime).toISOString(),
           input_tokens: inputTokens,
           output_tokens: outputTokens,
           cached_tokens: cachedTokens,
-          status: 'completed',
+          status: 'ready_to_compute',
           streaming: isStreaming
         })
         .select()
@@ -378,7 +378,7 @@ export class RequestHandler {
           .from('metrics')
           .insert({
             request_id: requestId,
-            timestamp: new Date().toISOString(),
+            created_at: new Date().toISOString(),
             total_duration_ms: totalDuration, // Logged regardless of calculation
             time_to_first_chunk: timeToFirstChunk, // Logged regardless of calculation
             dt_first_last_chunk: dtFirstLastChunk, // Logged regardless of calculation
@@ -414,7 +414,7 @@ export class RequestHandler {
           user_id: userId,
           provider: combination?.provider || 'unknown',
           model: combination?.modelId || request.model || 'unknown',
-          timestamp: new Date(startTime).toISOString(),
+          created_at: new Date(startTime).toISOString(),
           status: 'error',
           streaming: request.stream || false,
           error_message: error.message
@@ -431,7 +431,7 @@ export class RequestHandler {
         .from('metrics')
         .insert({
           request_id: requestId,
-          timestamp: new Date().toISOString(),
+          created_at: new Date().toISOString(),
           // total_duration_ms: totalDuration
         });
 

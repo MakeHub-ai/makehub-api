@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { stream } from 'hono/streaming';
 import { authMiddleware } from '../middleware/auth.js';
 import { requestHandler } from '../services/request-handler.js';
+import { triggerWebhookAsync } from '../services/webhook-trigger.js';
 import { z } from 'zod';
 
 const chat = new Hono();
@@ -56,6 +57,25 @@ const chatCompletionSchema = z.object({
       })
     })
   ]).optional()
+});
+
+// Schéma de validation pour les requêtes de completion legacy
+const completionSchema = z.object({
+  model: z.string().optional(),
+  prompt: z.union([z.string(), z.array(z.string())]),
+  max_tokens: z.number().int().positive().optional(),
+  temperature: z.number().min(0).max(2).optional(),
+  top_p: z.number().min(0).max(1).optional(),
+  frequency_penalty: z.number().min(-2).max(2).optional(),
+  presence_penalty: z.number().min(-2).max(2).optional(),
+  stop: z.union([z.string(), z.array(z.string())]).optional(),
+  stream: z.boolean().optional().default(false),
+  logprobs: z.number().int().min(0).max(5).optional(),
+  echo: z.boolean().optional().default(false),
+  best_of: z.number().int().min(1).optional(),
+  logit_bias: z.object({}).passthrough().optional(),
+  user: z.string().optional(),
+  suffix: z.string().optional()
 });
 
 // Middleware d'authentification pour toutes les routes
@@ -117,14 +137,207 @@ chat.post('/completions', async (c) => {
           };
           stream.write(`data: ${JSON.stringify(errorChunk)}\n\n`);
           stream.write('data: [DONE]\n\n');
+        } finally {
+          // Déclencher le webhook asynchrone après la fin du streaming
+          triggerWebhookAsync(3000); // 3 secondes de délai pour laisser le stream se terminer
         }
       });
     } else {
+      // Déclencher le webhook asynchrone après la réponse non-streaming
+      triggerWebhookAsync(2000); // 2 secondes de délai pour laisser la requête se terminer
       return c.json(result);
     }
     
   } catch (error) {
     console.error('Chat completion error:', error);
+    
+    // Erreurs de validation
+    if (error instanceof z.ZodError) {
+      return c.json({
+        error: {
+          message: 'Invalid request format',
+          type: 'invalid_request_error',
+          details: error.errors
+        }
+      }, 400);
+    }
+    
+    // Erreurs métier
+    if (error.status) {
+      return c.json({
+        error: {
+          message: error.message,
+          type: error.code || 'api_error',
+          provider: error.provider
+        }
+      }, error.status);
+    }
+    
+    // Erreurs génériques
+    return c.json({
+      error: {
+        message: error.message || 'Internal server error',
+        type: 'internal_error'
+      }
+    }, 500);
+  }
+});
+
+/**
+ * POST /chat/completion
+ * Endpoint legacy pour les requêtes de completion (format OpenAI legacy)
+ */
+chat.post('/completion', async (c) => {
+  try {
+    // 1. Validation de la requête
+    const body = await c.req.json();
+    const validatedRequest = completionSchema.parse(body);
+    
+    // 2. Récupérer les données d'authentification
+    const authData = c.get('auth');
+    const balance = c.get('balance');
+    
+    // 3. Convertir la requête de completion en format chat completion
+    const prompts = Array.isArray(validatedRequest.prompt) 
+      ? validatedRequest.prompt 
+      : [validatedRequest.prompt];
+    
+    // Traiter chaque prompt séparément si multiple
+    const results = [];
+    
+    for (const prompt of prompts) {
+      // Convertir le prompt en format chat completion
+      const chatRequest = {
+        model: validatedRequest.model,
+        messages: [
+          { role: 'user', content: prompt }
+        ],
+        max_tokens: validatedRequest.max_tokens,
+        temperature: validatedRequest.temperature,
+        top_p: validatedRequest.top_p,
+        frequency_penalty: validatedRequest.frequency_penalty,
+        presence_penalty: validatedRequest.presence_penalty,
+        stop: validatedRequest.stop,
+        stream: validatedRequest.stream,
+        user: validatedRequest.user
+      };
+      
+      // 4. Traiter la requête avec le handler existant
+      const result = await requestHandler.handleChatCompletion(chatRequest, authData);
+      
+      // 5. Convertir la réponse au format completion legacy
+      if (validatedRequest.stream) {
+        // Pour le streaming, on doit retourner immédiatement
+        if (prompts.length > 1) {
+          throw new Error('Streaming is not supported with multiple prompts');
+        }
+        
+        c.header('Content-Type', 'text/event-stream');
+        c.header('Cache-Control', 'no-cache');
+        c.header('Connection', 'keep-alive');
+        c.header('X-Accel-Buffering', 'no');
+        
+        return stream(c, async (stream) => {
+          try {
+            stream.writeln('');
+            
+            for await (const chunk of result) {
+              // Convertir chunk de chat completion en format completion
+              const completionChunk = {
+                id: chunk.id,
+                object: 'text_completion',
+                created: chunk.created,
+                model: chunk.model,
+                choices: chunk.choices?.map((choice, index) => ({
+                  text: choice.delta?.content || '',
+                  index: index,
+                  logprobs: null,
+                  finish_reason: choice.finish_reason
+                })) || []
+              };
+              
+              const sseData = `data: ${JSON.stringify(completionChunk)}\n\n`;
+              stream.write(sseData);
+            }
+            
+            stream.write('data: [DONE]\n\n');
+          } catch (error) {
+            console.error('Completion streaming error:', error);
+            const errorChunk = {
+              id: 'error',
+              object: 'text_completion',
+              created: Math.floor(Date.now() / 1000),
+              model: validatedRequest.model || 'unknown',
+              choices: [{
+                text: '',
+                index: 0,
+                logprobs: null,
+                finish_reason: 'error'
+              }],
+              error: {
+                message: error.message,
+                type: 'internal_error'
+              }
+            };
+            stream.write(`data: ${JSON.stringify(errorChunk)}\n\n`);
+            stream.write('data: [DONE]\n\n');
+          } finally {
+            // Déclencher le webhook asynchrone après la fin du streaming
+            triggerWebhookAsync(3000);
+          }
+        });
+      } else {
+        // Convertir réponse de chat completion en format completion
+        const completionResult = {
+          id: result.id,
+          object: 'text_completion',
+          created: result.created,
+          model: result.model,
+          choices: result.choices?.map((choice, index) => ({
+            text: choice.message?.content || '',
+            index: index,
+            logprobs: null,
+            finish_reason: choice.finish_reason
+          })) || [],
+          usage: result.usage
+        };
+        
+        results.push(completionResult);
+      }
+    }
+    
+    // Pour les requêtes non-streaming avec multiple prompts
+    if (!validatedRequest.stream) {
+      // Déclencher le webhook asynchrone
+      triggerWebhookAsync(2000);
+      
+      // Si un seul prompt, retourner directement l'objet
+      if (results.length === 1) {
+        return c.json(results[0]);
+      }
+      
+      // Si plusieurs prompts, retourner un tableau
+      return c.json({
+        id: `cmpl-${Date.now()}`,
+        object: 'text_completion',
+        created: Math.floor(Date.now() / 1000),
+        model: validatedRequest.model || 'unknown',
+        choices: results.flatMap((result, batchIndex) => 
+          result.choices.map(choice => ({
+            ...choice,
+            index: batchIndex * results.length + choice.index
+          }))
+        ),
+        usage: results.reduce((acc, result) => ({
+          prompt_tokens: (acc.prompt_tokens || 0) + (result.usage?.prompt_tokens || 0),
+          completion_tokens: (acc.completion_tokens || 0) + (result.usage?.completion_tokens || 0),
+          total_tokens: (acc.total_tokens || 0) + (result.usage?.total_tokens || 0)
+        }), {})
+      });
+    }
+    
+  } catch (error) {
+    console.error('Completion error:', error);
     
     // Erreurs de validation
     if (error instanceof z.ZodError) {

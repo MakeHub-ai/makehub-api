@@ -142,6 +142,31 @@ Compatible avec l'API OpenAI. Exemples :
 }
 ```
 
+### Completion Legacy (Compatibilité OpenAI)
+```http
+POST /v1/completion
+```
+
+Endpoint de compatibilité avec l'API OpenAI legacy. Exemple :
+
+```json
+{
+  "model": "gpt-4o",
+  "prompt": "Once upon a time",
+  "max_tokens": 100,
+  "temperature": 0.7
+}
+```
+
+**Avec multiple prompts :**
+```json
+{
+  "model": "gpt-4o",
+  "prompt": ["Hello", "Bonjour", "Hola"],
+  "max_tokens": 50
+}
+```
+
 ### Autres endpoints
 
 ```http
@@ -292,6 +317,49 @@ curl -X POST http://localhost:3000/v1/chat/completions \
   -d '{"model":"gpt-4o","messages":[{"role":"user","content":"Hello!"}]}'
 ```
 
+## 📝 Exemples et Scripts de Test
+
+Le dossier `examples/` contient plusieurs scripts pour tester différentes fonctionnalités :
+
+### Tests de l'API Chat
+```bash
+# Test simple avec un message
+node examples/test-simple-message.js
+
+# Test du streaming
+node examples/test-chunk-streaming.js
+
+# Test des requêtes générales
+node examples/test-requests.js
+```
+
+### Tests du Webhook
+```bash
+# Créer des données de test dans la base
+node examples/create-test-data.js
+
+# Tester le webhook de calcul des tokens
+node examples/test-webhook.js
+
+# Test complet automatisé (création + test + nettoyage optionnel)
+./examples/test-webhook-complete.sh
+
+# Nettoyer les données de test
+node examples/create-test-data.js clean
+```
+
+### Configuration requise pour les tests
+```env
+# Variables d'environnement pour les tests
+TEST_API_KEY=test-api-key-123
+API_BASE_URL=http://localhost:3000
+WEBHOOK_SECRET_KEY=your-webhook-secret-key
+
+# Base de données (pour create-test-data.js)
+SUPABASE_URL=your-supabase-url
+SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
 ## 🤝 Contribution
 
 1. Fork le projet
@@ -313,3 +381,41 @@ MIT License - voir le fichier LICENSE pour plus de détails.
 ---
 
 **Note** : Ce projet est conçu pour être déployé avec Holo mais peut fonctionner sur n'importe quelle plateforme Node.js.
+
+## 🔄 Webhooks
+
+### Calcul des tokens et mises à jour des transactions
+Le système inclut un endpoint webhook pour faciliter le calcul des tokens et la mise à jour des transactions :
+
+```
+POST /webhook/calculate-tokens
+```
+
+#### En-têtes requis
+```http
+X-Webhook-Secret: your-webhook-secret-key
+```
+
+#### Caractéristiques
+- Utilisation optimisée de la mémoire (traitement par lots)
+- Limite de temps configurable
+- Mécanisme de sémaphore pour éviter les exécutions concurrentes
+- Statistiques de traitement dans la réponse
+
+#### Exemple d'utilisation avec cURL
+```bash
+curl -X POST https://votre-api.com/webhook/calculate-tokens \
+  -H "X-Webhook-Secret: your-webhook-secret-key" \
+  -H "Content-Type: application/json"
+```
+
+#### Réponse
+```json
+{
+  "success": true,
+  "message": "Calcul des tokens et mise à jour des transactions effectués avec succès",
+  "stats": {
+    "processed": 15,
+    "errors": 0  }
+}
+```

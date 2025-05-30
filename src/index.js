@@ -10,6 +10,7 @@ dotenv.config();
 
 // Importer les routes
 import chatRoutes from './routes/chat.js';
+import webhookRoutes from './routes/webhook.js';
 
 // Créer l'application Hono
 const app = new Hono();
@@ -18,8 +19,8 @@ const app = new Hono();
 app.use('*', logger());
 app.use('*', prettyJSON());
 app.use('*', cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://your-frontend-domain.com'],
-  allowHeaders: ['Content-Type', 'Authorization', 'X-API-Key'],
+  origin: ['*'],
+  allowHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-Webhook-Secret'],
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   exposeHeaders: ['Content-Length'],
   maxAge: 600,
@@ -42,12 +43,12 @@ app.onError((err, c) => {
 // Route de santé générale
 app.get('/', (c) => {
   return c.json({
-    name: 'LLM API Gateway',
+    name: 'Makehub API Gateway',
     version: '1.0.0',
     status: 'running',
-    timestamp: new Date().toISOString(),
-    endpoints: {
+    timestamp: new Date().toISOString(),    endpoints: {
       chat: '/v1/chat/completions',
+      completion: '/v1/completion',
       models: '/v1/chat/models',
       health: '/v1/chat/health',
       estimate: '/v1/chat/estimate'
@@ -100,6 +101,8 @@ app.get('/health', async (c) => {
 
 // Monter les routes
 app.route('/v1/chat', chatRoutes);
+app.route('/v1', chatRoutes); // Pour /v1/completion endpoint legacy
+app.route('/webhook', webhookRoutes);
 
 // Route 404
 app.notFound((c) => {
