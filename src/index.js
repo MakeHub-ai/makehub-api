@@ -50,54 +50,11 @@ app.get('/', (c) => {
       chat: '/v1/chat/completions',
       completion: '/v1/completion',
       models: '/v1/chat/models',
-      health: '/v1/chat/health',
       estimate: '/v1/chat/estimate'
     }
   });
 });
 
-// Route de santé détaillée
-app.get('/health', async (c) => {
-  try {
-    // Vérifier la connexion à la base de données
-    const { supabase } = await import('./config/database.js');
-    const { data, error } = await supabase.from('models').select('count').limit(1);
-    
-    const dbStatus = error ? 'error' : 'ok';
-    
-    // Vérifier les providers
-    const { getProvidersHealth } = await import('./providers/index.js');
-    const providersHealth = getProvidersHealth();
-    
-    const healthStatus = {
-      status: dbStatus === 'ok' ? 'healthy' : 'degraded',
-      timestamp: new Date().toISOString(),
-      services: {
-        database: {
-          status: dbStatus,
-          error: error?.message
-        },
-        providers: providersHealth,
-        cache: {
-          status: 'ok' // Le cache est toujours disponible (en mémoire)
-        }
-      },
-      version: '1.0.0',
-      uptime: process.uptime()
-    };
-    
-    const statusCode = healthStatus.status === 'healthy' ? 200 : 503;
-    return c.json(healthStatus, statusCode);
-    
-  } catch (error) {
-    console.error('Health check failed:', error);
-    return c.json({
-      status: 'error',
-      timestamp: new Date().toISOString(),
-      error: error.message
-    }, 500);
-  }
-});
 
 // Monter les routes
 app.route('/v1/chat', chatRoutes);
@@ -143,8 +100,7 @@ process.on('unhandledRejection', (reason, promise) => {
 // Démarrer le serveur
 console.log(`🚀 LLM API Gateway starting on port ${port}`);
 console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-console.log(`🔗 Health check: http://localhost:${port}/health`);
-console.log(`💬 Chat endpoint: http://localhost:${port}/v1/chat/completions`);
+console.log(` Chat endpoint: http://localhost:${port}/v1/chat/completions`);
 
 serve({
   fetch: app.fetch,

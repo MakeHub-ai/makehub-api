@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../config/database.js';
-import { getProvider } from '../providers/index.js';
+import { createAdapter } from '../adapters/index.js';
 import { filterProviders, estimateRequestCost } from './models.js';
 import { updateApiKeyUsage } from '../middleware/auth.js';
 import { cacheUtils } from '../config/cache.js';
@@ -64,30 +64,36 @@ export class RequestHandler {
 
     for (let i = 0; i < providerCombinations.length; i++) {
       const combination = providerCombinations[i];
-      let provider;
+      let adapter;
       
       try {
         console.log(`Trying provider ${combination.provider} with model ${combination.modelId} (attempt ${i + 1}/${providerCombinations.length})`);
         
-        provider = getProvider(combination.provider);
+        // Créer l'adapter avec la configuration appropriée
+        const adapterConfig = {
+          apiKey: process.env[combination.ApiKeyName],
+          baseURL: combination.baseUrl
+        };
+        
+        adapter = createAdapter(combination.adapter, adapterConfig);
+        
+        // Vérifier que l'adapter est configuré
+        if (!adapter.isConfigured()) {
+          console.warn(`Adapter ${combination.adapter} is not properly configured`);
+          continue;
+        }
         
         // Valider la requête pour ce provider
-        if (!provider.validateRequest(request, combination.model)) {
+        if (!adapter.validateRequest(request, combination.model)) {
           console.warn(`Request validation failed for ${combination.provider}`);
           continue;
         }
 
-        // Préparer la requête avec les infos du modèle
-        const enrichedRequest = {
-          ...request,
-          model: combination
-        };
-
         // Exécuter selon le mode (streaming ou non)
         if (request.stream) {
           return await this.handleStreamingRequest(
-            enrichedRequest,
-            provider,
+            request,
+            adapter,
             combination,
             requestId,
             authData,
@@ -95,8 +101,8 @@ export class RequestHandler {
           );
         } else {
           return await this.handleNonStreamingRequest(
-            enrichedRequest,
-            provider,
+            request,
+            adapter,
             combination,
             requestId,
             authData,
@@ -108,7 +114,7 @@ export class RequestHandler {
         lastError = error;
         
         // Si c'est une APIError (erreur métier), on la retourne directement
-        if (provider && provider.isAPIError(error)) {
+        if (adapter && adapter.isAPIError(error)) {
           await this.logFailedRequest(requestId, authData.user.id, request, error, startTime, combination);
           throw error;
         }
@@ -128,10 +134,12 @@ export class RequestHandler {
     throw lastError || new Error('All providers failed');
   }
 
+
+
   /**
    * Gère une requête en mode streaming
    */
-  async handleStreamingRequest(request, provider, combination, requestId, authData, startTime) {
+  async handleStreamingRequest(request, adapter, combination, requestId, authData, startTime) {
     let timeToFirstChunk = null;
     let firstChunkTime = null;
     let lastChunkTime = null;
@@ -142,32 +150,115 @@ export class RequestHandler {
 
     async function* streamGenerator() {
       try {
-        let payloadForProviderStream = { ...request }; // Start with a copy of the enriched request
+        // Enrichir la requête avec les informations du modèle
+        const enrichedRequest = {
+          ...request,
+          model: combination.model // Passer l'objet model complet
+        };
 
-        if (combination.provider === 'openai' && payloadForProviderStream.stream) {
-          payloadForProviderStream.stream_options = {
-            ...(payloadForProviderStream.stream_options || {}), // Preserve other stream_options if any
-            include_usage: true
-          };
-        }
+        // Utiliser l'adapter pour faire la requête streaming
+        const response = await adapter.makeRequest(enrichedRequest, combination.providerModelId, true);
+        
+        // Créer un stream personnalisé pour gérer les chunks
+        const chunkQueue = [];
+        let buffer = '';
+        let isStreamComplete = false;
+        let streamError = null;
+        let resolveNextChunk = null;
 
-        for await (const chunk of provider.streamRequest(payloadForProviderStream, combination)) {
-          const now = Date.now();
+        // Fonction pour attendre le prochain chunk
+        const waitForNextChunk = () => {
+          return new Promise((resolve) => {
+            if (chunkQueue.length > 0) {
+              resolve(chunkQueue.shift());
+            } else if (isStreamComplete) {
+              resolve(null); // Fin du stream
+            } else {
+              resolveNextChunk = resolve;
+            }
+          });
+        };
+
+        // Fonction pour ajouter un chunk à la queue
+        const addChunk = (chunk) => {
+          chunkQueue.push(chunk);
+          if (resolveNextChunk) {
+            const resolve = resolveNextChunk;
+            resolveNextChunk = null;
+            resolve(chunkQueue.shift());
+          }
+        };
+
+        // Traiter les données du stream
+        response.data.on('data', (chunk) => {
+          buffer += chunk.toString();
+          const lines = buffer.split('\n');
+          buffer = lines.pop(); // Garder la ligne incomplète dans le buffer
           
-          if (!hasStarted) {
-            hasStarted = true;
-            timeToFirstChunk = now - startTime;
-            firstChunkTime = now;
-            
-            // Vérifier si le premier chunk contient une erreur
-            if (chunk.choices && chunk.choices[0] && chunk.choices[0].finish_reason === 'error') {
-              throw new Error('Provider returned error in first chunk');
+          for (const line of lines) {
+            if (line.trim() === '') continue;
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') {
+                return;
+              }
+              
+              const transformedChunk = adapter.transformStreamChunk(data);
+              if (!transformedChunk) continue;
+              
+              const now = Date.now();
+              
+              if (!hasStarted) {
+                hasStarted = true;
+                timeToFirstChunk = now - startTime;
+                firstChunkTime = now;
+                
+                // Vérifier si le premier chunk contient une erreur
+                if (transformedChunk.choices && transformedChunk.choices[0] && 
+                    transformedChunk.choices[0].finish_reason === 'error') {
+                  streamError = new Error('Provider returned error in first chunk');
+                  return;
+                }
+              }
+              
+              lastChunkTime = now;
+              responseChunks.push(transformedChunk);
+              addChunk(transformedChunk);
             }
           }
-          
-          lastChunkTime = now;
-          responseChunks.push(chunk);
+        });
+
+        response.data.on('end', () => {
+          isStreamComplete = true;
+          if (resolveNextChunk) {
+            const resolve = resolveNextChunk;
+            resolveNextChunk = null;
+            resolve(null);
+          }
+        });
+
+        response.data.on('error', (error) => {
+          streamError = error;
+          isStreamComplete = true;
+          if (resolveNextChunk) {
+            const resolve = resolveNextChunk;
+            resolveNextChunk = null;
+            resolve(null);
+          }
+        });
+
+        // Générer les chunks un par un
+        let chunk;
+        while ((chunk = await waitForNextChunk()) !== null) {
+          if (streamError) {
+            throw streamError;
+          }
           yield chunk;
+        }
+
+        // Vérifier s'il y a eu une erreur après la fin du stream
+        if (streamError) {
+          throw streamError;
         }
 
         // Log de la requête réussie (asynchrone)
@@ -195,13 +286,18 @@ export class RequestHandler {
 
     return streamGenerator();
   }
-
+  
   /**
    * Gère une requête en mode non-streaming
    */
-  async handleNonStreamingRequest(request, provider, combination, requestId, authData, startTime) {
-    const response = await provider.makeRequest(request, combination, false);
-    const transformedResponse = provider.transformResponse(response);
+  async handleNonStreamingRequest(request, adapter, combination, requestId, authData, startTime) {
+    // Enrichir la requête avec les informations du modèle
+    const enrichedRequest = {
+      ...request,
+      model: combination.model // Passer l'objet model complet
+    };
+
+    const response = await adapter.makeRequest(enrichedRequest, combination.providerModelId, false);
 
     // Log de la requête réussie (asynchrone)
     setImmediate(() => {
@@ -214,11 +310,11 @@ export class RequestHandler {
         null, // timeToFirstChunk
         null, // dtFirstLastChunk
         false, // streaming
-        transformedResponse // Pass the response data
+        response // Pass the response data
       );
     });
 
-    return transformedResponse;
+    return response;
   }
 
   /**

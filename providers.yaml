@@ -1,0 +1,4687 @@
+providers:
+  kluster:
+    api_key_name: API_KEY_KLUSTER
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        error_in_function_calling: null
+        last_test_timestamp: 1743631730
+        latency_median: 358.83378982543945
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 5
+        provider_model_id: deepseek-ai/DeepSeek-R1-0528
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 36.31183518258491
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: true
+        display_name: DeepSeek R1 (05/28)
+      mistral/open-mistral-nemo:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        error_in_function_calling: null
+        last_test_timestamp: 1743631730
+        latency_median: 750.0534057617188
+        max_output: null
+        price_per_input_token: 0.02
+        price_per_output_token: 0.07
+        provider_model_id: mistralai/Mistral-Nemo-Instruct-2407
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 226.98906808096115
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: true
+        display_name: Open Mistral Nemo
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        error_in_function_calling: null
+        last_test_timestamp: 1743631730
+        latency_median: 656.6672325134277
+        max_output: null
+        price_per_input_token: 0.14
+        price_per_output_token: 2
+        provider_model_id: Qwen/Qwen3-235B-A22B-FP8
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 99.04484660934804
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: true
+        display_name: Qwen 3 235B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        error_in_function_calling: null
+        last_test_timestamp: 1743631730
+        latency_median: 578.0603885650635
+        max_output: null
+        price_per_input_token: 0.16
+        price_per_output_token: 0.8
+        provider_model_id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 59.15135104642636
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: true
+        display_name: Llama 4 Maverick 17B 128E
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        error_in_function_calling: null
+        last_test_timestamp: 1743631730
+        latency_median: 551.767110824585
+        max_output: null
+        price_per_input_token: 0.08
+        price_per_output_token: 0.45
+        provider_model_id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 81.09495387744606
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: true
+        display_name: Llama 4 Scout 17B 16E
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        error_in_function_calling: null
+        last_test_timestamp: 1743631730
+        latency_median: 0.0
+        max_output: null
+        price_per_input_token: 0.33
+        price_per_output_token: 1.4
+        provider_model_id: deepseek/DeepSeek-V3-0324-FP8
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 0.0
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: true
+        display_name: DeepSeek V3 (03/24)
+      google/gemma-3-27B:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        error_in_function_calling: null
+        last_test_timestamp: 1743631730
+        latency_median: 478.2915115356445
+        max_output: null
+        price_per_input_token: 0.2
+        price_per_output_token: 0.2
+        provider_model_id: google/gemma-3-27b-it
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 71.95333836547039
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: true
+        display_name: Gemma 3 27B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        error_in_function_calling: null
+        last_test_timestamp: 1743631730
+        latency_median: 567.5241947174072
+        max_output: null
+        price_per_input_token: 1.75
+        price_per_output_token: 5
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 40.41281825873267
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: true
+        display_name: DeepSeek R1
+      meta/Llama-3.3-70B-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        error_in_function_calling: null
+        last_test_timestamp: 1743631730
+        latency_median: 360.61739921569824
+        max_output: null
+        price_per_input_token: 0.07
+        price_per_output_token: 0.07
+        provider_model_id: klusterai/Meta-Llama-3.3-70B-Instruct-Turbo
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 28.23158180978651
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: true
+        display_name: Llama 3.3 70B
+  vertex:
+    api_key_name: API_KEY_VERTEX
+    models:
+      anthropic/claude-4-opus:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743631723
+        latency_median: 2591.9981002807617
+        max_output: null
+        price_per_input_token: 15
+        price_per_output_token: 75
+        provider_model_id: claude-opus-4-20250514
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 55.72205058107867
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: true
+        display_name: Claude 4 Opus
+      anthropic/claude-3-5-sonnet:
+        base_url: http://proxy_vertex_claude:17914/v1
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743631727
+        latency_median: 1188.0097389221191
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-3-5-sonnet-latest
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 69.7935262719025
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: false
+        display_name: Claude 3.5 Sonnet
+      anthropic/claude-3-7-sonnet:
+        base_url: http://proxy_vertex_claude:17914/v1
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743631724
+        latency_median: 424.2677688598633
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-3-7-sonnet-latest
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 92.44256369567134
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: true
+        display_name: Claude 3.7 Sonnet
+      anthropic/claude-4-sonnet:
+        base_url: http://proxy_vertex_claude:17914/v1
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743631723
+        latency_median: 439.9068355560303
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-sonnet-4
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 82.18834279891703
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: true
+        display_name: Claude 4 Sonnet
+      google/gemini-2.5-pro-preview:
+        base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
+        context: 1048
+        error_in_function_calling: null
+        last_test_timestamp: 1743631732
+        latency_median: 855.5071353912354
+        max_output: null
+        price_per_input_token: 1.25
+        price_per_output_token: 10
+        provider_model_id: google/gemini-2.5-pro-preview-05-06
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 9.836017287998068
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: true
+        display_name: Gemini 2.5 Pro
+      google/gemini-2.5-flash-preview:
+        base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
+        context: 1048
+        error_in_function_calling: null
+        last_test_timestamp: 1743631732
+        latency_median: 509.0694427490234
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 3.5
+        provider_model_id: google/gemini-2.5-flash-preview-05-20
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 11.376481629154664
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: true
+        display_name: Gemini 2.5 Flash
+    provider_name: vertex
+  anthropic:
+    api_key_name: API_KEY_ANTHROPIC
+    models:
+      anthropic/claude-4-opus:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743631723
+        latency_median: 2591.9981002807617
+        max_output: null
+        price_per_input_token: 15
+        price_per_output_token: 75
+        provider_model_id: claude-opus-4-20250514
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 55.72205058107867
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: true
+        display_name: Claude 4 Opus
+      anthropic/claude-4-sonnet:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743631723
+        latency_median: 1179.9025535583496
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-sonnet-4-20250514
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 53.905776152696255
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: true
+        display_name: Claude 4 Sonnet
+      anthropic/claude-3-5-haiku:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743631723
+        latency_median: 585.860013961792
+        max_output: null
+        price_per_input_token: 0.8
+        price_per_output_token: 4
+        provider_model_id: claude-3-5-haiku-latest
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 47.46459651227268
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: true
+        display_name: Claude 3.5 Haiku
+      anthropic/claude-3-5-sonnet:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743631727
+        latency_median: 1188.0097389221191
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-3-5-sonnet-latest
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 69.7935262719025
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: false
+        display_name: Claude 3.5 Sonnet
+      anthropic/claude-3-7-sonnet:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743631724
+        latency_median: 1446.7623233795166
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-3-7-sonnet-latest
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 104.77378097521982
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: true
+        display_name: Claude 3.7 Sonnet
+    provider_name: anthropic
+  azure-eastus:
+    api_key_name: API_KEY_AZUREOPENAI_EASTUS
+    models:
+      openai/gpt-4.1:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743981963
+        latency_median: 618.7090873718262
+        max_output: null
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: gpt-4.1
+        quantisation: null
+        rtt_from_makehub: 9.07
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubeast5542921764.openai.azure.com/
+        throughput_median: 96.84424817046347
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4.1
+      openai/gpt-4o:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        failed_reason: '''Stream'' object has no attribute ''model_dump'''
+        last_test_timestamp: 1743981963
+        latency_median: 573.0636119842529
+        max_output: null
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        rtt_from_makehub: 9.07
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubeast5542921764.openai.azure.com/
+        throughput_median: 90.0018883147649
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 0.99896
+        working: false
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: http://proxy_azure:3000/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981963
+        latency_median: 266.33214950561523
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        rtt_from_makehub: 9.07
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubeast5542921764.openai.azure.com/
+        throughput_median: 122.74851978041612
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  azure-germanywestcentral:
+    api_key_name: API_KEY_AZUREOPENAI_GERMANYWESTCENTRAL
+    models:
+      openai/gpt-4.1:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743981964
+        latency_median: 1196.9101428985596
+        max_output: null
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: gpt-4.1
+        quantisation: null
+        rtt_from_makehub: 70.34
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubgerm4693253071.openai.azure.com/
+        throughput_median: 91.59921609645922
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4.1
+      openai/gpt-4o:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        failed_reason: '''Stream'' object has no attribute ''model_dump'''
+        last_test_timestamp: 1743981964
+        latency_median: 535.0391864776611
+        max_output: null
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        rtt_from_makehub: 70.34
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubgerm4693253071.openai.azure.com/
+        throughput_median: 88.67627926229746
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 0.99896
+        working: false
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: http://proxy_azure:3000/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981963
+        latency_median: 1089.921236038208
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        rtt_from_makehub: 70.34
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubgerm4693253071.openai.azure.com/
+        throughput_median: 89.42055336500592
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  azure-norwayeast:
+    api_key_name: API_KEY_AZUREOPENAI_NORWAYEAST
+    models:
+      openai/gpt-4o:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        failed_reason: '''Stream'' object has no attribute ''model_dump'''
+        last_test_timestamp: 1743981966
+        latency_median: 582.9801559448242
+        max_output: null
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubnorw9905091079.openai.azure.com/
+        throughput_median: 66.70855648546072
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 0.99896
+        working: false
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: http://proxy_azure:3000/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981967
+        latency_median: 594.3338871002197
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubnorw9905091079.openai.azure.com/
+        throughput_median: 47.491156913387925
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  azure-swedencentral:
+    api_key_name: API_KEY_AZUREOPENAI_SWEDENCENTRAL
+    models:
+      xai/grok-3:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743981967
+        latency_median: 0.0
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: grok-3
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubswec0318947209.openai.azure.com/
+        throughput_median: 0.0
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: Grok 3
+      xai/grok-3-mini:
+        base_url: http://proxy_azure:3000/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981967
+        latency_median: 0.0
+        max_output: null
+        price_per_input_token: 0.25
+        price_per_output_token: 1.27
+        provider_model_id: grok-3-mini
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubswec0318947209.openai.azure.com/
+        throughput_median: 0.0
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: Grok 3 Mini
+      openai/gpt-4o:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        failed_reason: '''Stream'' object has no attribute ''model_dump'''
+        last_test_timestamp: 1743981967
+        latency_median: 539.8204326629639
+        max_output: null
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubswed0318947209.openai.azure.com/
+        throughput_median: 99.10750636508097
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 0.99896
+        working: false
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: http://proxy_azure:3000/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981966
+        latency_median: 585.6201648712158
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubswed0318947209.openai.azure.com/
+        throughput_median: 76.3423325037313
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4o Mini
+      openai/o4-mini:
+        base_url: http://proxy_azure:3000/v1
+        context: 150
+        error_in_function_calling: null
+        last_test_timestamp: 1743981967
+        latency_median: 0.6918907165527344
+        max_output: null
+        price_per_input_token: 1.1
+        price_per_output_token: 4.4
+        provider_model_id: o4-mini
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubswed0318947209.openai.azure.com/
+        throughput_median: 96.82777457820288
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: false
+        display_name: o4 Mini
+      openai/gpt-4.1:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743981967
+        latency_median: 837.904691696167
+        max_output: null
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: gpt-4.1
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubswed0318947209.openai.azure.com/
+        throughput_median: 81.7741548533403
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4.1
+      openai/gpt-4.1-mini:
+        base_url: http://proxy_azure:3000/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981967
+        latency_median: 584.9888324737549
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4.1-mini
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubswed0318947209.openai.azure.com/
+        throughput_median: 101.91585255589644
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4.1 Mini
+      openai/gpt-4.1-nano:
+        base_url: http://proxy_azure:3000/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981967
+        latency_median: 575.4327774047852
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.4
+        provider_model_id: gpt-4.1-nano
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubswed0318947209.openai.azure.com/
+        throughput_median: 101.61734380299758
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4.1 Nano
+  azure-switzerlandnorth:
+    api_key_name: API_KEY_AZUREOPENAI_SWITERLANDNORTH
+    models:
+      openai/gpt-4.1:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743981968
+        latency_median: 556.5285682678223
+        max_output: null
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: gpt-4.1
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubswit9897536963.openai.azure.com/
+        throughput_median: 91.2840257087842
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4.1
+      openai/gpt-4o:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        failed_reason: '''Stream'' object has no attribute ''model_dump'''
+        last_test_timestamp: 1743981968
+        latency_median: 511.88087463378906
+        max_output: null
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubswit9897536963.openai.azure.com/
+        throughput_median: 80.01007206870372
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 0.99896
+        working: false
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: http://proxy_azure:3000/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981968
+        latency_median: 1046.377182006836
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        rtt_from_makehub: 97.18
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubswit9897536963.openai.azure.com/
+        throughput_median: 67.09129314343781
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  azure-uksouth:
+    api_key_name: API_KEY_AZUREOPENAI_UKSOUTH
+    models:
+      openai/gpt-4o:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        failed_reason: '''Stream'' object has no attribute ''model_dump'''
+        last_test_timestamp: 1743981969
+        latency_median: 559.2348575592041
+        max_output: null
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        rtt_from_makehub: 70.34
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubukso3602467753.openai.azure.com/
+        throughput_median: 94.6828613642238
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 0.99896
+        working: false
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: http://proxy_azure:3000/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981969
+        latency_median: 600.9178161621094
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        rtt_from_makehub: 70.34
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubukso3602467753.openai.azure.com/
+        throughput_median: 60.81475455623541
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  azure-francecentral:
+    api_key_name: API_KEY_AZUREOPENAI_FRANCECENTRAL
+    models:
+      openai/gpt-4o:
+        base_url: http://proxy_azure:3000/v1
+        context: 131
+        error_in_function_calling: null
+        failed_reason: '''Stream'' object has no attribute ''model_dump'''
+        last_test_timestamp: 1743981969
+        latency_median: 477.8411388397217
+        max_output: null
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        rtt_from_makehub: 70.34
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubfran4433007418.openai.azure.com/
+        throughput_median: 86.13036532986904
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 0.99896
+        working: false
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: http://proxy_azure:3000/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981969
+        latency_median: 496.48165702819824
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        rtt_from_makehub: 70.34
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: https://hubmakehubfran4433007418.openai.azure.com/
+        throughput_median: 109.62031417645602
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99896
+        working: true
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  bedrock:
+    api_key_name: AWS_ACCESS_KEY_ID
+    models:
+      anthropic/claude-4-opus:
+        base_url: http://proxy_bedrock:17912/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743711634
+        latency_median: 1173.5889911651611
+        max_output: null
+        price_per_input_token: 15
+        price_per_output_token: 75
+        provider_model_id: arn:aws:bedrock:us-east-2:783764599435:inference-profile/us.anthropic.claude-opus-4-20250514-v1:0
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 100.159285417532
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: true
+        display_name: Claude 4 Opus
+      anthropic/claude-4-sonnet:
+        base_url: http://proxy_bedrock:17912/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743711634
+        latency_median: 1173.5889911651611
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: arn:aws:bedrock:us-east-2:783764599435:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 100
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: true
+        display_name: Claude 4 Sonnet
+      anthropic/claude-3-5-haiku:
+        base_url: http://proxy_bedrock:17912/v1
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743711634
+        latency_median: 1173.5889911651611
+        max_output: null
+        price_per_input_token: 0.8
+        price_per_output_token: 4
+        provider_model_id: arn:aws:bedrock:us-east-2:783764599435:inference-profile/us.anthropic.claude-3-5-haiku-20241022-v1:0
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 100.159285417532
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: false
+        display_name: Claude 3.5 Haiku
+      anthropic/claude-3-5-sonnet:
+        base_url: http://proxy_bedrock:17912/v1
+        context: 200
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"API
+          error: Error code: 500 - {''detail'': ''An error occurred (ValidationException)
+          when calling the InvokeModel operation: messages.0.content.0.type: Field
+          required''}","param":null,"type":"API_ERROR"}}
+
+          '
+        last_test_timestamp: 1743711640
+        latency_median: 946.0906982421876
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: arn:aws:bedrock:us-east-1:783764599435:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 4362.502715821102
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: false
+        display_name: Claude 3.5 Sonnet
+      anthropic/claude-3-7-sonnet:
+        base_url: http://proxy_bedrock:17912/v1
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743711634
+        latency_median: 1453.3064365386963
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: arn:aws:bedrock:us-east-2:783764599435:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0
+        quantisation: null
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 5654.817766459441
+        throughput_p25: 71.6
+        throughput_p5: 63.2
+        working: false
+        assistant_ready: false
+        display_name: Claude 3.7 Sonnet
+  centml:
+    api_key_name: API_KEY_CENTML
+    models:
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.centml.com/openai/v1
+        context: 131
+        error_in_function_calling: Model did not use the function
+        exclude_param: null
+        last_test_timestamp: 1743631734
+        latency_median: 88.1192684173584
+        max_output: null
+        price_per_input_token: 2.99
+        price_per_output_token: 2.99
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        rtt_from_makehub: 23.89
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 6
+        throughput_p25: 16.5
+        throughput_p5: 12.4
+        token_ratio: 0.52973
+        working: false
+        assistant_ready: false
+        display_name: DeepSeek R1
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.centml.com/openai/v1
+        context: 131
+        error_in_function_calling: null
+        exclude_param: null
+        last_test_timestamp: 1743631732
+        latency_median: 219.62714195251465
+        max_output: null
+        price_per_input_token: 0.35
+        price_per_output_token: 0.35
+        provider_model_id: meta-llama/Llama-3.3-70B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 23.89
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 70.26842840830435
+        throughput_p25: 113.4
+        throughput_p5: 105.9
+        token_ratio: 0.99892
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.centml.com/openai/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743905231
+        latency_median: 159.69419479370117
+        max_output: null
+        price_per_input_token: 0.2
+        price_per_output_token: 0.2
+        provider_model_id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+        quantisation: 8
+        rtt_from_makehub: 23.89
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 71.93939279594808
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 1.0
+        working: true
+        assistant_ready: true
+        display_name: Llama 4 Maverick 17B 128E
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.centml.com/openai/v1
+        context: 16
+        error_in_function_calling: null
+        last_test_timestamp: 1743905266
+        latency_median: 198.0500221252441
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.1
+        provider_model_id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+        quantisation: 8
+        rtt_from_makehub: 23.89
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 26.568197056616757
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 1.0
+        working: true
+        assistant_ready: false
+        display_name: Llama 4 Scout 17B 16E
+    provider_name: centml
+  cerebras:
+    api_key_name: API_KEY_CEREBRAS
+    models:
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.cerebras.ai/v1
+        context: 16
+        error_in_function_calling: null
+        last_test_timestamp: 1743631732
+        latency_median: 310.1630210876465
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.1
+        provider_model_id: llama3.1-8b
+        quantisation: 16
+        rtt_from_makehub: 17.91
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 552.291351624819
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99905
+        working: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.cerebras.ai/v1
+        context: 16
+        error_in_function_calling: null
+        last_test_timestamp: 1743631732
+        latency_median: 232.05065727233887
+        max_output: null
+        price_per_input_token: 0.85
+        price_per_output_token: 1.2
+        provider_model_id: llama-3.3-70b
+        quantisation: 16
+        rtt_from_makehub: 17.91
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 357.3269722269552
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99902
+        working: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Scout-17B-16E-fp16:
+        base_url: https://api.cerebras.ai/v1
+        context: 16
+        error_in_function_calling: null
+        last_test_timestamp: 1743631732
+        latency_median: 199.7377872467041
+        max_output: null
+        price_per_input_token: 0.65
+        price_per_output_token: 0.85
+        provider_model_id: llama-4-scout-17b-16e-instruct
+        quantisation: 8
+        rtt_from_makehub: 17.91
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 267.1137210736599
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99902
+        working: null
+        assistant_ready: true
+        display_name: Llama 4 Scout 17B 16E
+  chutesai:
+    api_key_name: API_KEY_CHUTESAI
+    models:
+      mistral/devstral-small-fp8:
+        base_url: https://llm.chutes.ai/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631735
+        latency_median: 405.1094055175781
+        max_output: null
+        price_per_input_token: 0
+        price_per_output_token: 0
+        provider_model_id: chutesai/Devstral-Small-2505
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 132.06849808949087
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        working: true
+        assistant_ready: false
+        display_name: DevStral Small (FP8)
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://llm.chutes.ai/v1
+        context: 65
+        error_in_function_calling: null
+        last_test_timestamp: 1743631735
+        latency_median: 798.2797622680664
+        max_output: null
+        price_per_input_token: 0
+        price_per_output_token: 0
+        provider_model_id: deepseek-ai/DeepSeek-V3-0324
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 53.99961505210637
+        throughput_p25: 7.4
+        throughput_p5: 5.7
+        token_ratio: 1.01925
+        working: true
+        assistant_ready: false
+        display_name: DeepSeek V3 (03/24)
+      deepseek/deepseek-R1-fp8:
+        base_url: https://llm.chutes.ai/v1
+        context: 15
+        error_in_function_calling: null
+        last_test_timestamp: 1743631735
+        latency_median: 1023.7658023834229
+        max_output: null
+        price_per_input_token: 0
+        price_per_output_token: 0
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 63.52883849046098
+        throughput_p25: 8.2
+        throughput_p5: 7.8
+        token_ratio: 1.01667
+        working: true
+        assistant_ready: true
+        display_name: DeepSeek R1
+  deepinfra:
+    api_key_name: API_KEY_DEEPINFRA
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 15
+        error_in_function_calling: null
+        last_test_timestamp: 1743631744
+        latency_median: 381.1511993408203
+        max_output: null
+        price_per_input_token: 0.5
+        price_per_output_token: 2.18
+        provider_model_id: deepseek-ai/DeepSeek-R1-0528
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 120.27712778160128
+        throughput_p25: 8.2
+        throughput_p5: 7.8
+        token_ratio: 1.01667
+        working: false
+        assistant_ready: true
+        display_name: DeepSeek R1 (05/28)
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 40
+        error_in_function_calling: null
+        last_test_timestamp: 1743631735
+        latency_median: 356.9498062133789
+        max_output: 40
+        price_per_input_token: 0.14
+        price_per_output_token: 0.6
+        provider_model_id: Qwen/Qwen3-235B-A22B
+        quantisation: 16
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 30.48443459372954
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        assistant_ready: false
+        display_name: Qwen 3 235B
+      qwen/Qwen3-30B-A3B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 40
+        error_in_function_calling: null
+        last_test_timestamp: 1743631735
+        latency_median: 300.321102142334
+        max_output: 40
+        price_per_input_token: 0.08
+        price_per_output_token: 0.29
+        provider_model_id: Qwen/Qwen3-30B-A3B
+        quantisation: 16
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 145.79248496645695
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        assistant_ready: false
+        display_name: Qwen 3 30B
+      qwen/Qwen3-32B:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 40
+        error_in_function_calling: null
+        last_test_timestamp: 1743631735
+        latency_median: 291.3498878479004
+        max_output: 40
+        price_per_input_token: 0.1
+        price_per_output_token: 0.3
+        provider_model_id: Qwen/Qwen3-32B
+        quantisation: 16
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 71.59842627215087
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        assistant_ready: false
+        display_name: Qwen 3 32B
+      qwen/Qwen3-14B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 40
+        error_in_function_calling: null
+        last_test_timestamp: 1743631735
+        latency_median: 595.8008766174316
+        max_output: 40
+        price_per_input_token: 0.07
+        price_per_output_token: 0.24
+        provider_model_id: Qwen/Qwen3-14B
+        quantisation: 16
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 73.0171624400956
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        assistant_ready: false
+        display_name: Qwen 3 14B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 15
+        error_in_function_calling: null
+        last_test_timestamp: 1743631744
+        latency_median: 363.1179332733154
+        max_output: null
+        price_per_input_token: 0.5
+        price_per_output_token: 2.18
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 126.63797483641947
+        throughput_p25: 8.2
+        throughput_p5: 7.8
+        token_ratio: 1.01667
+        working: false
+        assistant_ready: true
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 65
+        error_in_function_calling: null
+        last_test_timestamp: 1743631737
+        latency_median: 370.88966369628906
+        max_output: null
+        price_per_input_token: 0.85
+        price_per_output_token: 0.9
+        provider_model_id: deepseek-ai/DeepSeek-V3-0324
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 33.867776669748515
+        throughput_p25: 7.4
+        throughput_p5: 5.7
+        token_ratio: 1.01925
+        working: true
+        assistant_ready: false
+        display_name: DeepSeek V3 (03/24)
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 64
+        error_in_function_calling: null
+        last_test_timestamp: 1743631747
+        latency_median: 469.8450565338135
+        max_output: null
+        price_per_input_token: 0.38
+        price_per_output_token: 0.89
+        provider_model_id: deepseek-ai/DeepSeek-V3
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 48.18635301470301
+        throughput_p25: 7.4
+        throughput_p5: 5.7
+        token_ratio: 1.01925
+        working: true
+        assistant_ready: false
+        display_name: DeepSeek V3
+      google/gemma-3-27B:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 8
+        error_in_function_calling: Model did not use the function
+        exclude_param: null
+        failed_reason: null
+        last_test_timestamp: 1743631746
+        latency_median: 851.3412475585938
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.2
+        provider_model_id: google/gemma-3-27b-it
+        quantisation: 16
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 14.241770659596778
+        throughput_p25: 46.1
+        throughput_p5: 39.7
+        token_ratio: 1.0
+        assistant_ready: false
+        display_name: Gemma 3 27B
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631744
+        latency_median: 337.7768993377685
+        max_output: null
+        price_per_input_token: 0.23
+        price_per_output_token: 0.4
+        provider_model_id: meta-llama/Meta-Llama-3.1-70B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 43.94444584140076
+        throughput_p25: 37.8
+        throughput_p5: 32.0
+        token_ratio: 1.0
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        error_in_function_calling: null
+        exclude_param: null
+        last_test_timestamp: 1743631750
+        latency_median: 564.9352073669434
+        max_output: null
+        price_per_input_token: 0.03
+        price_per_output_token: 0.05
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 58.10407966636213
+        throughput_p25: 44.5
+        throughput_p5: 29.1
+        token_ratio: 1.0
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.1-8B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631748
+        latency_median: 293.2291030883789
+        max_output: null
+        price_per_input_token: 0.02
+        price_per_output_token: 0.05
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 92.84579174963116
+        throughput_p25: 44.5
+        throughput_p5: 29.1
+        token_ratio: 1.0
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 8B Turbo
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631748
+        latency_median: 298.38013648986816
+        max_output: null
+        price_per_input_token: 0.23
+        price_per_output_token: 0.4
+        provider_model_id: meta-llama/Llama-3.3-70B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 47.17280595994313
+        throughput_p25: 21.4
+        throughput_p5: 14.1
+        token_ratio: 1.0
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-3.3-70B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631748
+        latency_median: 349.47848320007324
+        max_output: null
+        price_per_input_token: 0.12
+        price_per_output_token: 0.3
+        provider_model_id: meta-llama/Llama-3.3-70B-Instruct-Turbo
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 38.68284944848194
+        throughput_p25: 21.4
+        throughput_p5: 14.1
+        token_ratio: 1.0
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 1024
+        error_in_function_calling: 'HTTP error: 500 - {"error":"Internal server error"}
+
+          '
+        last_test_timestamp: 1743905231
+        latency_median: 298.7158298492432
+        max_output: null
+        price_per_input_token: 0.16
+        price_per_output_token: 0.6
+        provider_model_id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 104.8576
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 1.0
+        working: true
+        assistant_ready: false
+        display_name: Llama 4 Maverick 17B 128E
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 16
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"API
+          error: Error code: 405 - {''detail'': ''Tool calling is not supported for
+          model: meta-llama/Llama-4-Scout-17B-16E-Instruct''}","param":null,"type":"API_ERROR"}}
+
+          '
+        last_test_timestamp: 1743905263
+        latency_median: 359.96413230896
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.3
+        provider_model_id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 33.861638327562986
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 1.0
+        working: true
+        assistant_ready: false
+        display_name: Llama 4 Scout 17B 16E
+      mistral/mistral-small-24B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 33
+        error_in_function_calling: Model did not use the function
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          "API error: Error code: 405 - {''detail'': ''Tool calling is not supported
+          for model: mistralai/Mistral-Small-24B-Instruct-2501''}", ''param'': None,
+          ''type'': ''API_ERROR''}}'
+        last_test_timestamp: 1743631752
+        latency_median: 224.50637817382807
+        max_output: null
+        price_per_input_token: 0.06
+        price_per_output_token: 0.12
+        provider_model_id: mistralai/Mistral-Small-24B-Instruct-2501
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 73.56329172932192
+        throughput_p25: 77.7
+        throughput_p5: 64.6
+        token_ratio: 0.98263
+        working: true
+        assistant_ready: false
+        display_name: Mistral Small 24B Turbo
+      mistral/open-mistral-nemo:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        error_in_function_calling: Model did not use the function
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          "API error: Error code: 405 - {''detail'': ''Tool calling is not supported
+          for model: mistralai/Mistral-Nemo-Instruct-2407''}", ''param'': None, ''type'':
+          ''API_ERROR''}}'
+        last_test_timestamp: 1743631752
+        latency_median: 390.8576965332031
+        max_output: null
+        price_per_input_token: 0.025
+        price_per_output_token: 0.07
+        provider_model_id: mistralai/Mistral-Nemo-Instruct-2407
+        quantisation: 16
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 20.373026688236354
+        throughput_p25: 51.7
+        throughput_p5: 33.0
+        token_ratio: 0.9837
+        working: true
+        assistant_ready: false
+        display_name: Open Mistral Nemo
+      qwen/QWQ-32b-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 128
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"API
+          error: Error code: 404 - {''error'': {''message'': ''The model `Qwen/QWQ-32B-Instruct`
+          does not exist'', ''type'': ''invalid_request_error'', ''param'': None,
+          ''code'': ''model_not_found''}}","param":null,"type":"API_ERROR"}}
+
+          '
+        failed_reason: null
+        last_test_timestamp: 1743631751
+        latency_median: 317.40593910217285
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.2
+        provider_model_id: Qwen/QwQ-32B
+        quantisation: 8
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 54.74813636179708
+        throughput_p25: 41.2
+        throughput_p5: 33.2
+        token_ratio: 1.0
+        assistant_ready: false
+        display_name: QWQ 32B
+      qwen/Qwen2.5-Coder-32B:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 32
+        error_in_function_calling: Model did not use the function
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          "API error: Error code: 405 - {''detail'': ''Tool calling is not supported
+          for model: Qwen/Qwen2.5-Coder-32B-Instruct''}", ''param'': None, ''type'':
+          ''API_ERROR''}}'
+        last_test_timestamp: 1743631752
+        latency_median: 252.24947929382324
+        max_output: null
+        price_per_input_token: 0.06
+        price_per_output_token: 0.15
+        provider_model_id: Qwen/Qwen2.5-Coder-32B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 72.94
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 57.59741173740285
+        throughput_p25: 41.2
+        throughput_p5: 33.2
+        token_ratio: 1.0
+        assistant_ready: false
+        display_name: Qwen 2.5 Coder 32B
+    provider_name: deepinfra
+  deepseek:
+    api_key_name: API_KEY_DEEPSEEK
+    models:
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.deepseek.com
+        context: 64
+        error_in_function_calling: Model did not use the function
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          "Error code: 400 - {''error'': {''message'': ''deepseek-reasoner does not
+          support Function Calling'', ''type'': ''invalid_request_error'', ''param'':
+          None, ''code'': ''invalid_request_error''}}", ''param'': None, ''type'':
+          ''API_ERROR''}}'
+        last_test_timestamp: 1743631753
+        latency_median: 3329.053401947021
+        max_output: null
+        price_per_input_token: 0.55
+        price_per_output_token: 2.19
+        provider_model_id: deepseek-reasoner
+        quantisation: 8
+        rtt_from_makehub: 3.21
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 0.4791514210493716
+        throughput_p25: 29.5
+        throughput_p5: 20.3
+        token_ratio: 0.53783
+        working: false
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.deepseek.com
+        context: 64
+        error_in_function_calling: null
+        last_test_timestamp: 1743631752
+        latency_median: 3172.2612380981445
+        max_output: null
+        price_per_input_token: 0.014
+        price_per_output_token: 0.028
+        provider_model_id: deepseek-chat
+        quantisation: 8
+        rtt_from_makehub: 3.21
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 18.26872195944629
+        throughput_p25: 31.5
+        throughput_p5: 18.4
+        token_ratio: 1.01933
+        working: true
+        assistant_ready: true
+        display_name: DeepSeek V3
+    provider_name: deepseek
+  fireworks-fast:
+    api_key_name: API_KEY_FIREWORKS
+    provider_name: fireworks
+    models:
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 160
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743631778
+        latency_median: 356.9502830505371
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 8
+        provider_model_id: accounts/fireworks/models/deepseek-r1
+        quantisation: 8
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 111.89584889552876
+        throughput_p25: 22.7
+        throughput_p5: 15.3
+        token_ratio: 1.01713
+        working: false
+        assistant_ready: false
+        display_name: DeepSeek R1
+  fireworks-base:
+    api_key_name: API_KEY_FIREWORKS
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 15
+        error_in_function_calling: null
+        last_test_timestamp: 1743631778
+        latency_median: 299.04818534851074
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 3
+        provider_model_id: accounts/fireworks/models/deepseek-r1-0528
+        quantisation: 8
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 83.95052201975993
+        throughput_p25: 8.2
+        throughput_p5: 7.8
+        token_ratio: 1.01667
+        working: false
+        assistant_ready: true
+        display_name: DeepSeek R1 (05/28)
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: null
+        error_in_function_calling: null
+        last_test_timestamp: 1743631778
+        latency_median: 707.0019245147705
+        max_output: null
+        price_per_input_token: 0.22
+        price_per_output_token: 0.88
+        provider_model_id: accounts/fireworks/models/qwen3-235b-a22b
+        quantisation: 16
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 79.32046932874175
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        assistant_ready: false
+        display_name: Qwen 3 235B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 160
+        errrror_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743631778
+        latency_median: 480.6516170501709
+        max_output: null
+        price_per_input_token: 0.55
+        price_per_output_token: 2.19
+        provider_model_id: accounts/fireworks/models/deepseek-r1-base
+        quantisation: 8
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 104.89743605011904
+        throughput_p25: 22.7
+        throughput_p5: 15.3
+        token_ratio: 1.01713
+        working: false
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 160
+        error_in_function_calling: null
+        last_test_timestamp: 1743631752
+        latency_median: 353.04808616638184
+        max_output: null
+        price_per_input_token: 0.9
+        price_per_output_token: 0.9
+        provider_model_id: accounts/fireworks/models/deepseek-v3-0324
+        quantisation: 8
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 104.44712280736704
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01795
+        working: true
+        assistant_ready: true
+        display_name: DeepSeek V3 (03/24)
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631778
+        latency_median: 679.7745227813721
+        max_output: null
+        price_per_input_token: 0.9
+        price_per_output_token: 0.9
+        provider_model_id: accounts/fireworks/models/deepseek-v3
+        quantisation: 8
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 43.54727818090641
+        throughput_p25: 16.8
+        throughput_p5: 11.0
+        token_ratio: 1.01795
+        working: true
+        assistant_ready: true
+        display_name: DeepSeek V3
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631779
+        latency_median: 3209.84435081482
+        max_output: null
+        price_per_input_token: 0.9
+        price_per_output_token: 0.9
+        provider_model_id: accounts/fireworks/models/llama-v3p1-70b-instruct
+        quantisation: 16
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 113.86556475718557
+        throughput_p25: 116.0
+        throughput_p5: 62.2
+        token_ratio: 0.99888
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 131
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743631783
+        latency_median: 242.7515983581543
+        max_output: null
+        price_per_input_token: 0.2
+        price_per_output_token: 0.2
+        provider_model_id: accounts/fireworks/models/llama-v3p1-8b-instruct
+        quantisation: 16
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 314.7620714034624
+        throughput_p25: 162.5
+        throughput_p5: 123.9
+        token_ratio: 0.99857
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 128
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743631782
+        latency_median: 1024.9946117401123
+        max_output: null
+        price_per_input_token: 0.9
+        price_per_output_token: 0.9
+        provider_model_id: accounts/fireworks/models/llama-v3p3-70b-instruct
+        quantisation: 16
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 94.23875256167835
+        throughput_p25: 68.1
+        throughput_p5: 38.2
+        token_ratio: 0.99882
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 1005
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743905230
+        latency_median: 447.089433670044
+        max_output: null
+        price_per_input_token: 0.22
+        price_per_output_token: 0.88
+        provider_model_id: accounts/fireworks/models/llama4-maverick-instruct-basic
+        quantisation: 8
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 36.86872380523754
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        working: true
+        assistant_ready: false
+        display_name: Llama 4 Maverick 17B 128E
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 128
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743905264
+        latency_median: 546.2973117828369
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: accounts/fireworks/models/llama4-scout-instruct-basic
+        quantisation: 8
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 63.345483487796606
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        working: true
+        assistant_ready: false
+        display_name: Llama 4 Scout 17B 16E
+      qwen/QWQ-32b-fp16:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 32
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743631787
+        latency_median: 249.64666366577148
+        max_output: null
+        price_per_input_token: 0.9
+        price_per_output_token: 0.9
+        provider_model_id: accounts/fireworks/models/qwq-32b
+        quantisation: 16
+        rtt_from_makehub: 3.51
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 203.97439434853277
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99899
+        working: true
+        assistant_ready: false
+        display_name: QWQ 32B (FP16)
+    provider_name: fireworks
+  google:
+    api_key_name: API_KEY_GOOGLE
+    models:
+      google/gemini-2.5-flash-preview:
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        context: 2097
+        error_in_function_calling: null
+        exclude_param:
+        - frequency_penalty
+        - op:remove_content_none
+        last_test_timestamp: 1743631787
+        latency_median: 457.578182220459
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 3.5
+        provider_model_id: gemini-2.5-flash-preview-05-20
+        quantisation: null
+        rtt_from_makehub: 3.39
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 0.3278486883954509
+        throughput_p25: null
+        throughput_p5: null
+        assistant_ready: true
+        display_name: Gemini 2.5 Flash
+      google/gemini-2.5-pro-preview:
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        context: 2097
+        error_in_function_calling: null
+        exclude_param:
+        - frequency_penalty
+        - op:remove_content_none
+        failed_reason: null
+        last_test_timestamp: 1743631787
+        latency_median: 906.9459438323976
+        max_output: null
+        price_per_input_token: 1.25
+        price_per_output_token: 10
+        provider_model_id: gemini-2.5-pro-preview-05-06
+        quantisation: null
+        rtt_from_makehub: 3.39
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 41.5878070679784
+        throughput_p25: null
+        throughput_p5: null
+        assistant_ready: true
+        display_name: Gemini 2.5 Pro
+      google/gemini-2.0-flash:
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        context: 1056
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"Invalid
+          JSON payload received. Unknown name \"functions\": Cannot find field.","param":null,"type":"INVALID_ARGUMENT"}}
+
+          '
+        exclude_param:
+        - frequency_penalty
+        - op:remove_content_none
+        last_test_timestamp: 1743631785
+        latency_median: 405.9340953826904
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.4
+        provider_model_id: gemini-2.0-flash
+        quantisation: null
+        rtt_from_makehub: 3.39
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 303.6675392769909
+        throughput_p25: null
+        throughput_p5: null
+        working: false
+        assistant_ready: false
+        display_name: Gemini 2.0 Flash
+      google/gemini-2.0-flash-lite-preview:
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        context: 1048
+        error_in_function_calling: null
+        exclude_param:
+        - frequency_penalty
+        - op:remove_content_none
+        last_test_timestamp: 1743631787
+        latency_median: 252.6798248291016
+        max_output: null
+        price_per_input_token: 0.075
+        price_per_output_token: 0.15
+        provider_model_id: gemini-2.0-flash-lite-preview-02-05
+        quantisation: null
+        rtt_from_makehub: 3.39
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 125.42837633760136
+        throughput_p25: null
+        throughput_p5: null
+        working: false
+        assistant_ready: true
+        display_name: Gemini 2.0 Flash Lite
+      google/gemini-2.0-flash-thinking:
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        context: 1048
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"Invalid
+          JSON payload received. Unknown name \"functions\": Cannot find field.","param":null,"type":"INVALID_ARGUMENT"}}
+
+          '
+        exclude_param:
+        - frequency_penalty
+        - op:remove_content_none
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          ''Function calling is not enabled for models/gemini-2.0-flash-thinking-exp-01-21'',
+          ''param'': None, ''type'': ''INVALID_ARGUMENT''}}'
+        last_test_timestamp: 1743631788
+        latency_median: 409.75499153137207
+        max_output: null
+        price_per_input_token: 0.0
+        price_per_output_token: 0.0
+        provider_model_id: gemini-2.0-flash-thinking-exp-01-21
+        quantisation: null
+        rtt_from_makehub: 3.39
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 0.7453753204535036
+        throughput_p25: null
+        throughput_p5: null
+        working: false
+        assistant_ready: false
+        display_name: Gemini 2.0 Flash Thinking
+    provider_name: google
+  groq:
+    api_key_name: API_KEY_GROQ
+    models:
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.groq.com/openai/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631787
+        latency_median: 255.92398643493647
+        max_output: null
+        price_per_input_token: 0.59
+        price_per_output_token: 0.79
+        provider_model_id: llama-3.3-70b-versatile
+        quantisation: 16
+        rtt_from_makehub: 27.33
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 261.0115190996957
+        throughput_p25: 273.2
+        throughput_p5: 200.2
+        token_ratio: 0.99893
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.groq.com/openai/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743905231
+        latency_median: 249.0715980529785
+        max_output: 8
+        price_per_input_token: 0.11
+        price_per_output_token: 0.34
+        provider_model_id: meta-llama/llama-4-scout-17b-16e-instruct
+        quantisation: 8.2
+        rtt_from_makehub: 27.33
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 597.5813529378241
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 1.0
+        assistant_ready: false
+        display_name: Llama 4 Scout 17B 16E
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.groq.com/openai/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743905231
+        latency_median: 233.59084129333496
+        max_output: 8
+        price_per_input_token: 0.2
+        price_per_output_token: 0.6
+        provider_model_id: meta-llama/llama-4-maverick-17b-128e-instruct
+        quantisation: 8.2
+        rtt_from_makehub: 27.33
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 874.0591624727788
+        throughput_p25: 200
+        throughput_p5: 200
+        token_ratio: 1.0
+        assistant_ready: false
+        display_name: Llama 4 Maverick 17B 128E
+    provider_name: groq
+  hyperbolic:
+    api_key_name: API_KEY_HYPERBOLIC
+    models:
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 131
+        error_in_function_calling: null
+        exclude_param: null
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          "API error: Error code: 500 - {''object'': ''error'', ''message'': ''Internal
+          Error'', ''type'': '''', ''param'': None, ''code'': 500}", ''param'': None,
+          ''type'': ''API_ERROR''}}'
+        last_test_timestamp: 1743631788
+        latency_median: 943.4573650360109
+        max_output: null
+        price_per_input_token: 2
+        price_per_output_token: 2
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        rtt_from_makehub: 8.24
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 0.0
+        throughput_p25: 9.4
+        throughput_p5: 7.0
+        token_ratio: 0
+        working: false
+        assistant_ready: true
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 131
+        error_in_function_calling: null
+        exclude_param: null
+        last_test_timestamp: 1743631788
+        latency_median: 1082.7431678771973
+        max_output: null
+        price_per_input_token: 1.25
+        price_per_output_token: 1.25
+        provider_model_id: deepseek-ai/DeepSeek-V3-0324
+        quantisation: 8
+        rtt_from_makehub: 8.24
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 27.409756617172796
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01382
+        working: true
+        assistant_ready: true
+        display_name: DeepSeek V3 (03/24)
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 131
+        error_in_function_calling: null
+        exclude_param: null
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          "API error: Error code: 500 - {''object'': ''error'', ''message'': ''Internal
+          Error'', ''type'': '''', ''param'': None, ''code'': 500}", ''param'': None,
+          ''type'': ''API_ERROR''}}'
+        last_test_timestamp: 1743631789
+        latency_median: 2008.0275535583496
+        max_output: null
+        price_per_input_token: 0.25
+        price_per_output_token: 0.25
+        provider_model_id: deepseek-ai/DeepSeek-V3
+        quantisation: 8
+        rtt_from_makehub: 8.24
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 25.10415313740266
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01382
+        working: true
+        assistant_ready: true
+        display_name: DeepSeek V3
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 32
+        error_in_function_calling: null
+        exclude_param: null
+        last_test_timestamp: 1743631789
+        latency_median: 975.616216659546
+        max_output: null
+        price_per_input_token: 0.4
+        price_per_output_token: 0.4
+        provider_model_id: meta-llama/Meta-Llama-3.1-70B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 8.24
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 86.47073580409807
+        throughput_p25: 21.4
+        throughput_p5: 15.2
+        token_ratio: 0.99883
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 32
+        error_in_function_calling: null
+        exclude_param: null
+        last_test_timestamp: 1743631789
+        latency_median: 809.6716403961182
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.1
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 8.24
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 260.7732249556607
+        throughput_p25: 109.1
+        throughput_p5: 100.6
+        token_ratio: 0.99885
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 131
+        error_in_function_calling: null
+        exclude_param: null
+        last_test_timestamp: 1743631789
+        latency_median: 715.4130935668945
+        max_output: null
+        price_per_input_token: 0.4
+        price_per_output_token: 0.4
+        provider_model_id: meta-llama/Llama-3.3-70B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 8.24
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 61.38612622813808
+        throughput_p25: 18.3
+        throughput_p5: 12.9
+        token_ratio: 0.99878
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      qwen/QWQ-32b-fp16:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 131
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"Error
+          code: 400 - {''object'': ''error'', ''message'': ''Only Qwen/Qwen2.5-72B-Instruct
+          && Qwen/Qwen2.5-VL-72B-Instruct && deepseek-ai/DeepSeek-V3-0324 && meta-llama/Meta-Llama-3.1-70B-Instruct
+          && Qwen/QwQ-32B-Preview && meta-llama/Llama-3.3-70B-Instruct && meta-llama/Llama-3.2-3B-Instruct
+          && FLUX.1-dev && StableDiffusion && meta-llama/Meta-Llama-3.1-8B-Instruct
+          && deepseek-ai/DeepSeek-R1 && meta-llama/Meta-Llama-3-70B-Instruct && meta-llama/Meta-Llama-3.1-405B-FP8
+          && Qwen/Qwen2.5-VL-7B-Instruct && meta-llama/Meta-Llama-3.1-405B-Instruct
+          && Qwen/QwQ-32B && deepseek-ai/DeepSeek-V3 && NousResearch/Hermes-3-Llama-3.1-70B
+          && meta-llama/Meta-Llama-3.1-405B && mistralai/Pixtral-12B-2409 && Qwen/Qwen2.5-Coder-32B-Instruct
+          && TTS allowed now, your model Qwen/QWQ-32B'', ''type'': '''', ''param'':
+          None, ''code'': 40301}","param":null,"type":"API_ERROR"}}
+
+          '
+        exclude_param: null
+        last_test_timestamp: 1743631790
+        latency_median: 0
+        max_output: null
+        price_per_input_token: 0.2
+        price_per_output_token: 0.2
+        provider_model_id: Qwen/QWQ-32B
+        quantisation: 16
+        rtt_from_makehub: 8.24
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 50
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99885
+        working: true
+        assistant_ready: false
+        display_name: QWQ 32B (FP16)
+    provider_name: hyperbolic
+  mistral:
+    api_key_name: API_KEY_MISTRAL
+    models:
+      mistral/devstral-small-fp8:
+        base_url: https://api.mistral.ai/v1
+        context: 256
+        error_in_function_calling: null
+        exclude_param:
+        - max_completion_tokens
+        - op:remove_include_usage
+        last_test_timestamp: 1743631792
+        latency_median: 256.6182613372803
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.3
+        provider_model_id: devstral-small-latest
+        quantisation: 16
+        rtt_from_makehub: 3.68
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 133.93200638637572
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.98814
+        working: false
+        assistant_ready: false
+        display_name: DevStral Small (FP8)
+      mistral/codestral:
+        base_url: https://api.mistral.ai/v1
+        context: 256
+        exclude_param:
+        - max_completion_tokens
+        - op:remove_include_usage
+        max_output: null
+        price_per_input_token: 0.3
+        price_per_output_token: 0.9
+        quantisation: 16
+        rtt_from_makehub: 3.68
+        provider_model_id: codestral-latest
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 113.41566234110384
+        latency_median: 206.8157196044922
+        assistant_ready: false
+        display_name: Mistral Codestral
+      mistral/mistral-small-24B-fp16:
+        base_url: https://api.mistral.ai/v1
+        context: 32
+        error_in_function_calling: null
+        exclude_param:
+        - max_completion_tokens
+        - op:remove_include_usage
+        last_test_timestamp: 1743631792
+        latency_median: 225.54779052734372
+        max_output: null
+        price_per_input_token: 1
+        price_per_output_token: 1
+        provider_model_id: mistral-small-latest
+        quantisation: 16
+        rtt_from_makehub: 3.68
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 57.12213499704684
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.98814
+        working: false
+        assistant_ready: false
+        display_name: Mistral Small 24B
+      mistral/open-mistral-nemo:
+        base_url: https://api.mistral.ai/v1
+        context: 131
+        error_in_function_calling: null
+        exclude_param:
+        - max_completion_tokens
+        - op:remove_include_usage
+        last_test_timestamp: 1743631793
+        latency_median: 202.8212547302246
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.15
+        provider_model_id: open-mistral-nemo
+        quantisation: 16
+        rtt_from_makehub: 3.68
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 75.68062708392489
+        throughput_p25: 103.5
+        throughput_p5: 79.4
+        token_ratio: 0.99546
+        working: false
+        assistant_ready: false
+        display_name: Open Mistral Nemo
+    provider_name: mistral
+  nebius-base:
+    api_key_name: API_KEY_NEBIUS
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631797
+        latency_median: 417.84071922302246
+        max_output: null
+        price_per_input_token: 0.8
+        price_per_output_token: 2.4
+        provider_model_id: deepseek-ai/DeepSeek-R1-0528
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 39.39085511755723
+        throughput_p25: null
+        throughput_p5: null
+        assistant_ready: false
+        display_name: DeepSeek R1 (05/28)
+      qwen/Qwen3-14B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631797
+        latency_median: 420.08256912231445
+        max_output: null
+        price_per_input_token: 0.08
+        price_per_output_token: 0.24
+        provider_model_id: Qwen/Qwen3-14B
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 100.92385255190256
+        throughput_p25: null
+        throughput_p5: null
+        assistant_ready: false
+        display_name: Qwen 3 14B
+      qwen/Qwen3-32B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631797
+        latency_median: 551.9697666168213
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.3
+        provider_model_id: Qwen/Qwen3-32B
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 51.44013890178586
+        throughput_p25: null
+        throughput_p5: null
+        assistant_ready: false
+        display_name: Qwen 3 32B Turbo
+      qwen/Qwen3-30B-A3B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631797
+        latency_median: 425.5251884460449
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.3
+        provider_model_id: Qwen/Qwen3-30B-A3B
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 81.09263190844895
+        throughput_p25: null
+        throughput_p5: null
+        assistant_ready: false
+        display_name: Qwen 3 30B
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631797
+        latency_median: 474.66015815734863
+        max_output: null
+        price_per_input_token: 0.2
+        price_per_output_token: 0.6
+        provider_model_id: Qwen/Qwen3-235B-A22B
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 28.719342040394714
+        throughput_p25: null
+        throughput_p5: null
+        assistant_ready: false
+        display_name: Qwen 3 235B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743631797
+        latency_median: 474.881649017334
+        max_output: null
+        price_per_input_token: 0.8
+        price_per_output_token: 2.4
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 34.85811331335845
+        throughput_p25: 5.4
+        throughput_p5: 3.7
+        working: false
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743631797
+        latency_median: 534.2440605163574
+        max_output: null
+        price_per_input_token: 0.5
+        price_per_output_token: 1.5
+        provider_model_id: deepseek-ai/DeepSeek-V3-0324
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 27.894828025952147
+        throughput_p25: 6.0
+        throughput_p5: 3.0
+        working: true
+        assistant_ready: false
+        display_name: DeepSeek V3 (03/24)
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743631797
+        latency_median: 468.31536293029785
+        max_output: null
+        price_per_input_token: 0.5
+        price_per_output_token: 1.5
+        provider_model_id: deepseek-ai/DeepSeek-V3
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 32.84634366187477
+        throughput_p25: 6.0
+        throughput_p5: 3.0
+        working: true
+        assistant_ready: false
+        display_name: DeepSeek V3
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631795
+        latency_median: 387.7320289611816
+        max_output: null
+        price_per_input_token: 0.13
+        price_per_output_token: 0.4
+        provider_model_id: meta-llama/Meta-Llama-3.1-70B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 36.16610195359537
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631797
+        latency_median: 656.1529636383057
+        max_output: null
+        price_per_input_token: 0.02
+        price_per_output_token: 0.06
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 80.69786860707181
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      mistral/open-mistral-nemo:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: Model did not use the function
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          "Error code: 400 - {''detail'': ''Invalid request. Please check the parameters
+          and try again. Details: This model does not support auto tool, please use
+          tool_choice.''}", ''param'': None, ''type'': ''API_ERROR''}}'
+        last_test_timestamp: 1743631798
+        latency_median: 371.5174198150635
+        max_output: null
+        price_per_input_token: 0.04
+        price_per_output_token: 0.12
+        provider_model_id: mistralai/Mistral-Nemo-Instruct-2407
+        quantisation: 16
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 41.48793806341339
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: false
+        display_name: Open Mistral Nemo
+      qwen/QWQ-32b-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 32
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"API
+          error: Error code: 404 - {''detail'': ''The model `Qwen/QWQ-32B` does not
+          exist.''}","param":null,"type":"API_ERROR"}}
+
+          '
+        last_test_timestamp: 1743631799
+        latency_median: null
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.45
+        provider_model_id: Qwen/QWQ-32B
+        quantisation: 16
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: null
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: false
+        display_name: QWQ 32B (FP16)
+    provider_name: nebius
+  nebius-fast:
+    api_key_name: API_KEY_NEBIUS
+    models:
+      qwen/Qwen3-4B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631799
+        latency_median: 415.3270721435547
+        max_output: null
+        price_per_input_token: 0.08
+        price_per_output_token: 0.24
+        provider_model_id: Qwen/Qwen3-4B-fast
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 127.99293193793358
+        throughput_p25: null
+        throughput_p5: null
+        assistant_ready: false
+        display_name: Qwen 3 4B
+      qwen/Qwen3-30B-A3B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631799
+        latency_median: 417.7944660186768
+        max_output: null
+        price_per_input_token: 0.3
+        price_per_output_token: 0.9
+        provider_model_id: Qwen/Qwen3-30B-A3B-fast
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 147.4659572437648
+        throughput_p25: null
+        throughput_p5: null
+        assistant_ready: false
+        display_name: Qwen 3 30B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743631799
+        latency_median: 543.2443618774414
+        max_output: null
+        price_per_input_token: 2
+        price_per_output_token: 6
+        provider_model_id: deepseek-ai/DeepSeek-R1-fast
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 95.67508018462796
+        throughput_p25: 5.4
+        throughput_p5: 3.7
+        working: false
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743631800
+        latency_median: 511.4507675170898
+        max_output: null
+        price_per_input_token: 2
+        price_per_output_token: 6
+        provider_model_id: deepseek-ai/DeepSeek-V3-0324-fast
+        quantisation: 8
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 79.49124740473445
+        throughput_p25: 6.0
+        throughput_p5: 3.0
+        working: true
+        assistant_ready: false
+        display_name: DeepSeek V3 (03/24)
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631799
+        latency_median: 436.8178844451904
+        max_output: null
+        price_per_input_token: 0.25
+        price_per_output_token: 0.75
+        provider_model_id: meta-llama/Meta-Llama-3.1-70B-Instruct-fast
+        quantisation: 16
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 134.0225911073477
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631799
+        latency_median: 347.81575202941895
+        max_output: null
+        price_per_input_token: 0.03
+        price_per_output_token: 0.09
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct-fast
+        quantisation: 16
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 193.83838267134664
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      mistral/open-mistral-nemo:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        error_in_function_calling: Model did not use the function
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          "Error code: 400 - {''detail'': ''Invalid request. Please check the parameters
+          and try again. Details: This model does not support auto tool, please use
+          tool_choice.''}", ''param'': None, ''type'': ''API_ERROR''}}'
+        last_test_timestamp: 1743631801
+        latency_median: 352.69737243652344
+        max_output: null
+        price_per_input_token: 0.08
+        price_per_output_token: 0.24
+        provider_model_id: mistralai/Mistral-Nemo-Instruct-2407-fast
+        quantisation: 16
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 145.12986866941057
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: false
+        display_name: Open Mistral Nemo
+      qwen/QWQ-32b-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 32
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"API
+          error: Error code: 404 - {''detail'': ''The model `Qwen/QWQ-32B-fast` does
+          not exist.''}","param":null,"type":"API_ERROR"}}
+
+          '
+        last_test_timestamp: 1743631803
+        latency_median: null
+        max_output: null
+        price_per_input_token: 0.5
+        price_per_output_token: 1.5
+        provider_model_id: Qwen/QWQ-32B-fast
+        quantisation: 16
+        rtt_from_makehub: 114.66
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: null
+        throughput_p25: null
+        throughput_p5: null
+        working: true
+        assistant_ready: false
+        display_name: QWQ 32B (FP16)
+    provider_name: nebius
+  novitai:
+    api_key_name: API_KEY_NOVITAI
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        error_in_function_calling: null
+        exclude_param:
+        - tool_choice
+        last_test_timestamp: 1743631801
+        latency_median: 816.9989585876465
+        max_output: 128
+        price_per_input_token: 0.7
+        price_per_output_token: 2.5
+        provider_model_id: deepseek/deepseek-r1-0528
+        quantisation: 8
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 28.872229398670328
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01224
+        assistant_ready: false
+        display_name: DeepSeek R1 (05/28)
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        error_in_function_calling: null
+        exclude_param:
+        - tool_choice
+        last_test_timestamp: 1743631801
+        latency_median: 717.8061008453369
+        max_output: 128
+        price_per_input_token: 0.17
+        price_per_output_token: 0.85
+        provider_model_id: meta-llama/llama-4-maverick-17b-128e-instruct-fp8
+        quantisation: 8
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 84.86319482521756
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01224
+        assistant_ready: false
+        display_name: Llama 4 Maverick 17B 128E
+      qwen/Qwen3-14B-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        error_in_function_calling: null
+        exclude_param:
+        - tool_choice
+        last_test_timestamp: 1743631801
+        latency_median: 54987.45322227478
+        max_output: 128
+        price_per_input_token: 0.07
+        price_per_output_token: 0.275
+        provider_model_id: qwen/qwen3-14b-fp8
+        quantisation: 8
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 73.81181316969048
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01224
+        assistant_ready: false
+        display_name: Qwen 3 14B
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        error_in_function_calling: null
+        exclude_param:
+        - tool_choice
+        last_test_timestamp: 1743631801
+        latency_median: 555.6232929229736
+        max_output: 128
+        price_per_input_token: 0.2
+        price_per_output_token: 0.8
+        provider_model_id: qwen/qwen3-235b-a22b-fp8
+        quantisation: 8
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 31.274880429495123
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01224
+        assistant_ready: false
+        display_name: Qwen 3 235B
+      qwen/Qwen3-30B-A3B-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        error_in_function_calling: null
+        exclude_param:
+        - tool_choice
+        last_test_timestamp: 1743631801
+        latency_median: 705.9605121612549
+        max_output: 128
+        price_per_input_token: 0.1
+        price_per_output_token: 0.45
+        provider_model_id: qwen/qwen3-30b-a3b-fp8
+        quantisation: 8
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 246.10849347220184
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01224
+        assistant_ready: false
+        display_name: Qwen 3 30B
+      qwen/Qwen3-32B-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        error_in_function_calling: null
+        exclude_param:
+        - tool_choice
+        last_test_timestamp: 1743631801
+        latency_median: 783.7629318237305
+        max_output: 128
+        price_per_input_token: 0.1
+        price_per_output_token: 0.45
+        provider_model_id: qwen/qwen3-32b-fp8
+        quantisation: 8
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 53.046503469201696
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01224
+        assistant_ready: false
+        display_name: Qwen 3 32B Turbo
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 64
+        error_in_function_calling: null
+        exclude_param:
+        - tool_choice
+        last_test_timestamp: 1743631801
+        latency_median: 989.8219108581544
+        max_output: null
+        price_per_input_token: 4
+        price_per_output_token: 4
+        provider_model_id: deepseek/deepseek-r1
+        quantisation: 8
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 30.62712939249617
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01205
+        working: false
+        assistant_ready: true
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 64
+        error_in_function_calling: null
+        exclude_param:
+        - tool_choice
+        last_test_timestamp: 1743631801
+        latency_median: 1231.7895889282229
+        max_output: null
+        price_per_input_token: 0.89
+        price_per_output_token: 0.89
+        provider_model_id: deepseek/deepseek_v3
+        quantisation: 8
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 23.86574245302021
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01224
+        working: true
+        assistant_ready: true
+        display_name: DeepSeek V3
+      google/gemma-2-9b-fp16:
+        base_url: https://api.novita.ai/v3/openai
+        context: 8
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"Error
+          code: 400 - {''code'': 400, ''reason'': ''INVALID_REQUEST_BODY'', ''message'':
+          ''model features function calling not support'', ''metadata'': {}}","param":null,"type":"API_ERROR"}}
+
+          '
+        exclude_param:
+        - tool_choice
+        last_test_timestamp: 1743631802
+        latency_median: 784.7189903259277
+        max_output: null
+        price_per_input_token: 0.08
+        price_per_output_token: 0.08
+        provider_model_id: google/gemma-2-9b-it
+        quantisation: 16
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 31.25832078818321
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01649
+        assistant_ready: false
+        display_name: Gemma 2 9B
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.novita.ai/v3/openai
+        context: 33
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"Error
+          code: 400 - {''code'': 400, ''reason'': ''INVALID_REQUEST_BODY'', ''message'':
+          ''model features function calling not support'', ''metadata'': {}}","param":null,"type":"API_ERROR"}}
+
+          '
+        exclude_param:
+        - tool_choice
+        failed_reason: Completions.create() got an unexpected keyword argument 'auto_tool_choice'
+        last_test_timestamp: 1743631804
+        latency_median: 773.428201675415
+        max_output: null
+        price_per_input_token: 0.34
+        price_per_output_token: 0.39
+        provider_model_id: meta-llama/llama-3.1-70b-instruct
+        quantisation: 16
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 26.19011383851619
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.9988
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.novita.ai/v3/openai
+        context: 16
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"Error
+          code: 400 - {''code'': 400, ''reason'': ''INVALID_REQUEST_BODY'', ''message'':
+          ''model features function calling not support'', ''metadata'': {}}","param":null,"type":"API_ERROR"}}
+
+          '
+        exclude_param:
+        - tool_choice
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          ''Error code: 400 - {\''code\'': 400, \''message\'': \''"auto" tool choice
+          requires --enable-auto-tool-choice and --tool-call-parser to be set\'',
+          \''type\'': \''BadRequestError\''}'', ''param'': None, ''type'': ''API_ERROR''}}'
+        last_test_timestamp: 1743631804
+        latency_median: 1059.2710971832275
+        max_output: null
+        price_per_input_token: 0.05
+        price_per_output_token: 0.05
+        provider_model_id: meta-llama/llama-3.1-8b-instruct
+        quantisation: 16
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 78.64213936588355
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99882
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.novita.ai/v3/openai
+        context: 131
+        error_in_function_calling: null
+        exclude_param:
+        - tool_choice
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          ''Error code: 400 - {\''code\'': 400, \''message\'': \''"auto" tool choice
+          requires --enable-auto-tool-choice and --tool-call-parser to be set\'',
+          \''type\'': \''BadRequestError\''}'', ''param'': None, ''type'': ''API_ERROR''}}'
+        last_test_timestamp: 1743631803
+        latency_median: 701.2486457824707
+        max_output: null
+        price_per_input_token: 0.39
+        price_per_output_token: 0.39
+        provider_model_id: meta-llama/llama-3.3-70b-instruct
+        quantisation: 16
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 72.2576227418296
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99916
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      mistral/open-mistral-nemo:
+        base_url: https://api.novita.ai/v3/openai
+        context: 131
+        error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"Error
+          code: 400 - {''code'': 400, ''reason'': ''INVALID_REQUEST_BODY'', ''message'':
+          ''model features function calling not support'', ''metadata'': {}}","param":null,"type":"API_ERROR"}}
+
+          '
+        exclude_param:
+        - tool_choice
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          ''Error code: 400 - {\''code\'': 400, \''message\'': \''"auto" tool choice
+          requires --enable-auto-tool-choice and --tool-call-parser to be set\'',
+          \''type\'': \''BadRequestError\''}'', ''param'': None, ''type'': ''API_ERROR''}}'
+        last_test_timestamp: 1743631807
+        latency_median: 729.4862270355225
+        max_output: null
+        price_per_input_token: 0.04
+        price_per_output_token: 0.17
+        provider_model_id: mistralai/mistral-nemo
+        quantisation: 16
+        rtt_from_makehub: 98.06
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 50.987586301912
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.94922
+        working: false
+        assistant_ready: false
+        display_name: Open Mistral Nemo
+    provider_name: novitai
+  openai:
+    api_key_name: API_KEY_OPENAI
+    models:
+      openai/o3:
+        base_url: https://api.openai.com/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981971
+        latency_median: 24615.476369857788
+        max_output: null
+        price_per_input_token: 10
+        price_per_output_token: 40
+        provider_model_id: o3-2025-04-16
+        quantisation: null
+        rtt_from_makehub: 3.01
+        support_function_calling: true
+        support_function_calling_streaming: true
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 59.26689929362593
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99
+        working: true
+        assistant_ready: false
+        display_name: O3
+      openai/o4-mini:
+        base_url: https://api.openai.com/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981971
+        latency_median: 1181.941270828247
+        max_output: null
+        price_per_input_token: 1.1
+        price_per_output_token: 4.4
+        provider_model_id: o4-mini-2025-04-16
+        quantisation: null
+        rtt_from_makehub: 3.01
+        support_function_calling: true
+        support_function_calling_streaming: true
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 47.740364660070895
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99
+        working: true
+        assistant_ready: false
+        display_name: o4 Mini
+      openai/gpt-4.5:
+        base_url: https://api.openai.com/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631805
+        latency_median: 698.1587409973145
+        max_output: null
+        price_per_input_token: 75
+        price_per_output_token: 150
+        provider_model_id: gpt-4.5-preview
+        quantisation: null
+        rtt_from_makehub: 3.01
+        support_function_calling: true
+        support_function_calling_streaming: true
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 47.25119161481692
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01361
+        working: true
+        assistant_ready: true
+        display_name: GPT-4.5
+      openai/gpt-4o:
+        base_url: https://api.openai.com/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981971
+        latency_median: 403.97071838378906
+        max_output: null
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        rtt_from_makehub: 3.01
+        support_function_calling: true
+        support_function_calling_streaming: true
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 62.74987460541059
+        throughput_p25: 69.4
+        throughput_p5: 47.9
+        token_ratio: 0.99666
+        working: true
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: https://api.openai.com/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743981971
+        latency_median: 397.11642265319824
+        max_output: null
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        rtt_from_makehub: 3.01
+        support_function_calling: true
+        support_function_calling_streaming: true
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 72.7982511635334
+        throughput_p25: 64.0
+        throughput_p5: 56.6
+        token_ratio: 0.99
+        working: true
+        assistant_ready: true
+        display_name: GPT-4o Mini
+      openai/gpt-4.1:
+        base_url: https://api.openai.com/v1
+        context: 1000
+        error_in_function_calling: null
+        last_test_timestamp: 1743981971
+        latency_median: 1055.9799671173096
+        max_output: null
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: gpt-4.1-2025-04-14
+        quantisation: null
+        rtt_from_makehub: 3.01
+        support_function_calling: true
+        support_function_calling_streaming: true
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 81.6535892172122
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01361
+        working: true
+        assistant_ready: true
+        display_name: GPT-4.1
+      openai/gpt-4.1-mini:
+        base_url: https://api.openai.com/v1
+        context: 1000
+        error_in_function_calling: null
+        last_test_timestamp: 1743981971
+        latency_median: 813.9584064483643
+        max_output: null
+        price_per_input_token: 0.4
+        price_per_output_token: 1.6
+        provider_model_id: gpt-4.1-mini
+        quantisation: null
+        rtt_from_makehub: 3.01
+        support_function_calling: true
+        support_function_calling_streaming: true
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 50.7092880750244
+        throughput_p25: 64.0
+        throughput_p5: 56.6
+        token_ratio: 0.99
+        working: true
+        assistant_ready: true
+        display_name: GPT-4.1 Mini
+      openai/gpt-4.1-nano:
+        base_url: https://api.openai.com/v1
+        context: 1000
+        error_in_function_calling: null
+        last_test_timestamp: 1743981971
+        latency_median: 317.9047107696533
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.4
+        provider_model_id: gpt-4.1-nano
+        quantisation: null
+        rtt_from_makehub: 3.01
+        support_function_calling: true
+        support_function_calling_streaming: true
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 112.0594862449308
+        throughput_p25: 64.0
+        throughput_p5: 56.6
+        token_ratio: 0.99
+        working: true
+        assistant_ready: true
+        display_name: GPT-4.1 Nano
+    provider_name: openai
+  parasail:
+    api_key_name: API_KEY_PARASAIL
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631807
+        latency_median: 0.0
+        max_output: null
+        price_per_input_token: 1.95
+        price_per_output_token: 5
+        provider_model_id: deepseek-r1-0528
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 40
+        assistant_ready: true
+        display_name: DeepSeek R1 (05/28)
+      mistral/devstral-small-fp16:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631807
+        latency_median: 0.0
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.4
+        provider_model_id: mistral-devstral-small
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 50
+        assistant_ready: true
+        display_name: DevStral (FP16)
+      meta/Llama-4-Scout-17B-16E-fp16:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631807
+        latency_median: 463.1803035736084
+        max_output: null
+        price_per_input_token: 0.09
+        price_per_output_token: 0.48
+        provider_model_id: parasail-llama-4-scout-instruct
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 90.16964164787372
+        assistant_ready: true
+        display_name: Llama 4 Scout 17B 16E
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631807
+        latency_median: 0.0
+        max_output: null
+        price_per_input_token: 1.95
+        price_per_output_token: 5
+        provider_model_id: parasail-deepseek-r1-fp8
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 50
+        assistant_ready: true
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631807
+        latency_median: 644.2594528198242
+        max_output: null
+        price_per_input_token: 0.74
+        price_per_output_token: 1.5
+        provider_model_id: parasail-deepseek-v3-0324
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 108.52703470207038
+        assistant_ready: true
+        display_name: DeepSeek V3 (03/24)
+      google/gemma-3-27B:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631807
+        latency_median: 445.0607299804688
+        max_output: null
+        price_per_input_token: 0.25
+        price_per_output_token: 0.4
+        provider_model_id: parasail-gemma3-27b-it
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 69.35574349090628
+        assistant_ready: true
+        display_name: Gemma 3 27B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631807
+        latency_median: 0.0
+        max_output: null
+        price_per_input_token: 0.19
+        price_per_output_token: 0.85
+        provider_model_id: llama-4-maverick-instruct-fp8
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 100
+        assistant_ready: true
+        display_name: Llama 4 Maverick 17B 128E
+  replicate:
+    api_key_name: API_KEY_REPLICATE
+    models:
+      openai/o4-mini:
+        base_url: https://api.replicate.com/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631807
+        latency_median: 0.0
+        max_output: null
+        price_per_input_token: 1
+        price_per_output_token: 4
+        provider_model_id: openai/o4-mini
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 100
+        assistant_ready: true
+        display_name: o4 Mini
+      openai/gpt-4.1:
+        base_url: https://api.replicate.com/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631807
+        latency_median: 0.0
+        max_output: null
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: openai/gpt-4.1
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 100
+        assistant_ready: true
+        display_name: GPT-4.1
+      anthropic/claude-3-7-sonnet:
+        base_url: https://api.replicate.com/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631807
+        latency_median: 0.0
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: anthropic/claude-3.7
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 100
+        assistant_ready: true
+        display_name: Claude 3.7 Sonnet
+      anthropic/claude-3-5-sonnet:
+        base_url: https://api.replicate.com/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631807
+        latency_median: 0.0
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: anthropic/claude-3.5-sonnet
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 100
+        assistant_ready: true
+        display_name: Claude 3.5 Sonnet
+  sambanova:
+    api_key_name: API_KEY_SAMBANOVA
+    models:
+      deepseek/deepseek-R1-distill-llama-70b-fp16:
+        base_url: https://api.sambanova.ai/v1
+        context: null
+        error_in_function_calling: Model did not use the function
+        failed_reason: 'Error code: 500 - {''error'': ''Internal server error''}'
+        last_test_timestamp: 1743631809
+        latency_median: 1203.7034034729004
+        max_output: null
+        price_per_input_token: 0.7
+        price_per_output_token: 1.4
+        provider_model_id: DeepSeek-R1-Distill-Llama-70B
+        quantisation: 16
+        rtt_from_makehub: 30.23
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 2089.34184121261
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.00171
+        working: null
+        assistant_ready: false
+        display_name: DeepSeek R1 Distill 70B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.sambanova.ai/v1
+        context: null
+        error_in_function_calling: Model did not use the function
+        exclude_param: null
+        failed_reason: 'Error code: 400 - {''error'': {''code'': 400, ''message'':
+          ''Something went wrong!'', ''param'': None, ''type'': ''API_ERROR''}}'
+        last_test_timestamp: 1743631808
+        latency_median: 1268.803596496582
+        max_output: null
+        price_per_input_token: 5
+        price_per_output_token: 7
+        provider_model_id: DeepSeek-R1
+        quantisation: 8
+        rtt_from_makehub: 30.23
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 447.18345712733606
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: null
+        working: null
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.sambanova.ai/v1
+        context: 16
+        error_in_function_calling: Model did not use the function
+        last_test_timestamp: 1743631811
+        latency_median: 811.3381862640381
+        max_output: null
+        price_per_input_token: 1
+        price_per_output_token: 1.5
+        provider_model_id: DeepSeek-V3-0324
+        quantisation: 8
+        rtt_from_makehub: 30.23
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: false
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 169.27122597725457
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        working: null
+        assistant_ready: false
+        display_name: DeepSeek V3 (03/24)
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.sambanova.ai/v1
+        context: 16
+        error_in_function_calling: null
+        last_test_timestamp: 1743631809
+        latency_median: 313.2567405700684
+        max_output: null
+        price_per_input_token: 0.1
+        price_per_output_token: 0.2
+        provider_model_id: Meta-Llama-3.1-8B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 30.23
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 50778.498789346246
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        working: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.sambanova.ai/v1
+        context: 16
+        error_in_function_calling: null
+        last_test_timestamp: 1743631810
+        latency_median: 290.241003036499
+        max_output: null
+        price_per_input_token: 0.6
+        price_per_output_token: 1.2
+        provider_model_id: Meta-Llama-3.3-70B-Instruct
+        quantisation: 16
+        rtt_from_makehub: 30.23
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 579.4077870409383
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        working: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.sambanova.ai/v1
+        context: 8
+        error_in_function_calling: null
+        last_test_timestamp: 1743631810
+        latency_median: 1791.7075157165527
+        max_output: null
+        price_per_input_token: 0.4
+        price_per_output_token: 0.7
+        provider_model_id: Llama-4-Scout-17B-16E-Instruct
+        quantisation: 16
+        rtt_from_makehub: 30.23
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 48573.29473074696
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        working: null
+        assistant_ready: true
+        display_name: Llama 4 Scout 17B 16E
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.sambanova.ai/v1
+        context: 8
+        error_in_function_calling: null
+        last_test_timestamp: 1743631810
+        latency_median: 516.7140960693359
+        max_output: null
+        price_per_input_token: 0.63
+        price_per_output_token: 1.8
+        provider_model_id: Llama-4-Maverick-17B-128E-Instruct
+        quantisation: 8
+        rtt_from_makehub: 30.23
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 50766.79193083574
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.0
+        working: null
+        assistant_ready: true
+        display_name: Llama 4 Maverick 17B 128E
+  together:
+    api_key_name: API_KEY_TOGETHER
+    models:
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631816
+        latency_median: 258.6398124694824
+        max_output: 128
+        price_per_input_token: 0.2
+        price_per_output_token: 0.6
+        provider_model_id: Qwen/Qwen3-235B-A22B-fp8-tput
+        quantisation: 8
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 36.86847997294314
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01224
+        assistant_ready: false
+        display_name: Qwen 3 235B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631816
+        latency_median: 2145.0233459472656
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 7
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 55.36735653455165
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.01533
+        working: false
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631819
+        latency_median: 1469.0897464752195
+        max_output: null
+        price_per_input_token: 1.25
+        price_per_output_token: 1.25
+        provider_model_id: deepseek-ai/DeepSeek-V3
+        quantisation: 8
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 31.352039042942604
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 1.02352
+        working: true
+        assistant_ready: false
+        display_name: DeepSeek V3
+      meta/Llama-3.1-70B-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631816
+        latency_median: 329.11086082458496
+        max_output: null
+        price_per_input_token: 0.88
+        price_per_output_token: 0.88
+        provider_model_id: meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+        quantisation: 8
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 139.75570216512165
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99884
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 70B Turbo
+      meta/Llama-3.1-8B-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631816
+        latency_median: 283.8866710662842
+        max_output: null
+        price_per_input_token: 0.18
+        price_per_output_token: 0.18
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+        quantisation: 8
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 94.68146083501746
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99892
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.1 8B Turbo
+      meta/Llama-3.3-70B-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743631820
+        latency_median: 200.0796794891357
+        max_output: null
+        price_per_input_token: 0.88
+        price_per_output_token: 0.88
+        provider_model_id: meta-llama/Llama-3.3-70B-Instruct-Turbo
+        quantisation: 8
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 180.7955279683473
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99904
+        working: true
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 524
+        error_in_function_calling: null
+        last_test_timestamp: 1743905232
+        latency_median: 187.5946521759033
+        max_output: null
+        price_per_input_token: 0.27
+        price_per_output_token: 0.85
+        provider_model_id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+        quantisation: 8
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 82.94435597521196
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.9992
+        assistant_ready: true
+        display_name: Llama 4 Maverick 17B 128E
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 128
+        error_in_function_calling: null
+        last_test_timestamp: 1743905263
+        latency_median: 193.60113143920896
+        max_output: null
+        price_per_input_token: 0.18
+        price_per_output_token: 0.59
+        provider_model_id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+        quantisation: 8
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 102.53412281175775
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.9995
+        assistant_ready: true
+        display_name: Llama 4 Scout 17B 16E
+      mistral/mistral-small-24B-fp16:
+        base_url: https://api.together.xyz/v1
+        context: 32
+        error_in_function_calling: null
+        last_test_timestamp: 1743631829
+        latency_median: 230.53479194641116
+        max_output: null
+        price_per_input_token: 0.8
+        price_per_output_token: 0.8
+        provider_model_id: mistralai/Mistral-Small-24B-Instruct-2501
+        quantisation: 16
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: false
+        target_url: ''
+        throughput_median: 86.19576353315797
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.98734
+        working: true
+        assistant_ready: false
+        display_name: Mistral Small 24B
+      qwen/QWQ-32b-fp16:
+        base_url: https://api.together.xyz/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631820
+        latency_median: 241.81509017944336
+        max_output: null
+        price_per_input_token: 1.2
+        price_per_output_token: 1.2
+        provider_model_id: Qwen/QWQ-32B
+        quantisation: 16
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 52.21897762054844
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.99885
+        working: true
+        assistant_ready: false
+        display_name: QWQ 32B (FP16)
+      qwen/Qwen2.5-Coder-32B:
+        base_url: https://api.together.xyz/v1
+        context: 33
+        error_in_function_calling: null
+        last_test_timestamp: 1743631823
+        latency_median: 274.11508560180664
+        max_output: null
+        price_per_input_token: 0.8
+        price_per_output_token: 0.8
+        provider_model_id: Qwen/QWQ-32B-Preview
+        quantisation: 16
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 57.80933124385803
+        throughput_p25: null
+        throughput_p5: null
+        token_ratio: 0.999
+        assistant_ready: false
+        display_name: Qwen 2.5 Coder 32B
+    provider_name: together
+  xai:
+    api_key_name: API_KEY_XAI
+    models:
+      xai/grok-3:
+        base_url: https://api.x.ai/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631829
+        latency_median: 325.4265785217285
+        max_output: null
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: grok-3-beta
+        quantisation: null
+        rtt_from_makehub: 17.43
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 84.8041699438117
+        throughput_p25: 65.9
+        throughput_p5: 60.4
+        token_ratio: 1.01695
+        working: false
+        assistant_ready: true
+        display_name: Grok 3
+      xai/grok-3-mini:
+        base_url: https://api.x.ai/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631829
+        latency_median: 485.454797744751
+        max_output: null
+        price_per_input_token: 0.3
+        price_per_output_token: 0.5
+        provider_model_id: grok-3-mini
+        quantisation: null
+        rtt_from_makehub: 17.43
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 13.666357597523769
+        throughput_p25: 65.9
+        throughput_p5: 60.4
+        token_ratio: 1.01695
+        working: false
+        assistant_ready: true
+        display_name: Grok 3 Mini
+    provider_name: xai
+  xai-fast:
+    api_key_name: API_KEY_XAI
+    models:
+      xai/grok-3:
+        base_url: https://api.x.ai/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631829
+        latency_median: 371.7849254608154
+        max_output: null
+        price_per_input_token: 5
+        price_per_output_token: 25
+        provider_model_id: grok-3-mini-fast
+        quantisation: null
+        rtt_from_makehub: 17.43
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 42.88018888411671
+        throughput_p25: 65.9
+        throughput_p5: 60.4
+        token_ratio: 1.01695
+        working: false
+        assistant_ready: true
+        display_name: Grok 3
+      xai/grok-3-mini:
+        base_url: https://api.x.ai/v1
+        context: 131
+        error_in_function_calling: null
+        last_test_timestamp: 1743631829
+        latency_median: 485.454797744751
+        max_output: null
+        price_per_input_token: 0.6
+        price_per_output_token: 4
+        provider_model_id: grok-3-mini-fast
+        quantisation: null
+        rtt_from_makehub: 17.43
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 13.666357597523769
+        throughput_p25: 65.9
+        throughput_p5: 60.4
+        token_ratio: 1.01695
+        working: false
+        assistant_ready: true
+        display_name: Grok 3 Mini
+  dontmindme:
+    api_key_name: API_KEY_DONTMINDME
+    models:
+      google/gemini-2.5-pro-preview:
+        base_url: https://openrouter.ai/api/v1
+        context: 1048
+        error_in_function_calling: null
+        last_test_timestamp: 1743631830
+        latency_median: 847.1598625183105
+        max_output: 8
+        price_per_input_token: 1.25
+        price_per_output_token: 10
+        provider_model_id: google/gemini-2.5-pro-preview-03-25
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 8.661407696819012
+        assistant_ready: true
+        display_name: Gemini 2.5 Pro
+      anthropic/claude-3-5-sonnet:
+        base_url: https://openrouter.ai/api/v1
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743631830
+        latency_median: 939.791202545166
+        max_output: 8
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: anthropic/claude-3.5-sonnet
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 71.07825271565676
+        assistant_ready: true
+        display_name: Claude 3.5 Sonnet
+      anthropic/claude-3-7-sonnet:
+        base_url: https://openrouter.ai/api/v1
+        context: 200
+        error_in_function_calling: null
+        last_test_timestamp: 1743631830
+        latency_median: 1029.6647548675537
+        max_output: 8
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: anthropic/claude-3.7-sonnet
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 121.12114124000117
+        assistant_ready: true
+        display_name: Claude 3.7 Sonnet
+      openai/gpt-4.1:
+        base_url: https://openrouter.ai/api/v1
+        context: 1000
+        error_in_function_calling: null
+        last_test_timestamp: 1743631830
+        latency_median: 807.0352077484131
+        max_output: 8
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: openai/gpt-4.1
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 51.913333048659965
+        assistant_ready: true
+        display_name: GPT-4.1
+      google/gemini-2.5-flash-preview:
+        base_url: https://openrouter.ai/api/v1
+        context: 1048
+        error_in_function_calling: null
+        last_test_timestamp: 1743631830
+        latency_median: 595.2446460723877
+        max_output: 8
+        price_per_input_token: 1.25
+        price_per_output_token: 10
+        provider_model_id: google/gemini-2.5-flash-preview:thinking
+        quantisation: null
+        rtt_from_makehub: 3.99
+        support_function_calling: false
+        support_function_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
+        target_url: ''
+        throughput_median: 1.3309204612127
+        assistant_ready: true
+        display_name: Gemini 2.5 Flash
+    provider_name: dontmindme

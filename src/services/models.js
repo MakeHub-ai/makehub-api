@@ -158,6 +158,8 @@ export async function filterProviders(request, userPreferences = {}) {
     modelId: model.model_id, // This is the gateway's internal ID for the model
     providerModelId: model.provider_model_id, // This is the ID the provider API expects
     baseUrl: model.base_url,
+    ApiKeyName: model.api_key_name, // Ajouter la clé API
+    adapter: model.adapter,
     supportsToolCalling: model.support_tool_calling,
     supportsVision: modelSupportsFeature(model, 'vision'), // Explicitly add this
     contextWindow: model.context_window,

@@ -407,30 +407,6 @@ chat.get('/models', async (c) => {
   }
 });
 
-/**
- * GET /chat/health
- * Vérification de santé des providers
- */
-chat.get('/health', async (c) => {
-  try {
-    const { getProvidersHealth } = await import('../providers/index.js');
-    const health = getProvidersHealth();
-    
-    return c.json({
-      status: 'ok',
-      providers: health,
-      timestamp: new Date().toISOString()
-    });
-    
-  } catch (error) {
-    console.error('Health check error:', error);
-    return c.json({
-      status: 'error',
-      message: error.message,
-      timestamp: new Date().toISOString()
-    }, 500);
-  }
-});
 
 /**
  * POST /chat/estimate

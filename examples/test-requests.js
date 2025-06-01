@@ -47,7 +47,6 @@ async function testModels() {
   try {
     const response = await api.get('/v1/chat/models');
     console.log(`✅ Found ${response.data.data.length} models`);
-    console.log('🤖 Available models:', response.data.data.map(m => m.id).join(', '));
   } catch (error) {
     console.error('❌ Models test failed:', error.response?.data || error.message);
   }
@@ -60,7 +59,7 @@ async function testSimpleChat() {
   console.log('\n💬 Testing simple chat completion...');
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'gpt-4o',
+      model: 'anthropic/claude-3-5-sonnet',
       messages: [
         { role: 'user', content: 'Say hello in French!' }
       ],
@@ -82,9 +81,9 @@ async function testStreamingChat() {
   console.log('\n🌊 Testing streaming chat completion...');
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'gpt-4o',
+      model: 'anthropic/claude-3-5-sonnet',
       messages: [
-        { role: 'user', content: 'Count from 1 to 5 slowly' }
+        { role: 'user', content: 'Count from 1 to 10 slowly' }
       ],
       stream: true,
       max_tokens: 100
@@ -222,7 +221,7 @@ async function testCostEstimation() {
   console.log('\n💰 Testing cost estimation...');
   try {
     const response = await api.post('/v1/chat/estimate', {
-      model: 'gpt-4o',
+      model: 'anthropic/claude-3-5-sonnet',
       messages: [
         { role: 'user', content: 'Write a short story about a robot learning to paint.' }
       ],
@@ -256,7 +255,7 @@ async function testVision() {
   
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'gpt-4o',
+      model: 'anthropic/claude-3-5-sonnet',
       messages: [
         {
           role: 'user',

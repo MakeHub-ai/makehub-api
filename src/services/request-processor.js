@@ -25,7 +25,7 @@ async function calculateTokenCost(inputTokens, outputTokens, provider, model_id)
     
     if (error) throw error;
     
-    return (inputTokens * data.price_per_input_token) + (outputTokens * data.price_per_output_token);
+    return (inputTokens * data.price_per_input_token / 1000) + (outputTokens * data.price_per_output_token / 1000);
   } catch (error) {
     console.error(`Error calculating token cost for ${provider} model ${model_id}:`, error);
     throw new Error('Failed to calculate token cost - pricing data unavailable');
