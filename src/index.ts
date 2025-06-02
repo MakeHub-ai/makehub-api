@@ -369,21 +369,13 @@ function setupErrorHandlers(): void {
 function displayStartupInfo(): void {
   console.log('');
   console.log('🚀 ============================================');
-  console.log('🚀  LLM API Gateway - TypeScript Edition');
+  console.log('🚀  Makehub API - TypeScript Edition');
   console.log('🚀 ============================================');
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🏠 Host: ${host}`);
-  console.log(`🚪 Port: ${port}`);
-  console.log(`🔗 URL: http://${host}:${port}`);
-  console.log('');
-  console.log('📡 Available Endpoints:');
-  console.log(`   Chat: http://${host}:${port}/v1/chat/completions`);
-  console.log(`   Models: http://${host}:${port}/v1/chat/models`);
-  console.log(`   Estimate: http://${host}:${port}/v1/chat/estimate`);
-  console.log(`   Webhook: http://${host}:${port}/webhook/calculate-tokens`);
-  console.log(`   Health: http://${host}:${port}/health`);
-  console.log('');
-}
+  if (process.env.NODE_ENV === 'development') {
+    console.log('');
+    console.log('🔧 Running in development mode');
+  }
+  }
 
 /**
  * Interface pour les options du serveur
@@ -415,11 +407,6 @@ async function startServer(options?: Partial<ServerOptions>): Promise<void> {
       hostname: serverHost
     }, (info) => {
       serverStatus = 'running';
-      console.log(`✅ Server is running on http://${info.address}:${info.port}`);
-      console.log(`⏰ Started at: ${new Date().toISOString()}`);
-      console.log('');
-      console.log('🎯 Ready to handle requests!');
-      console.log('');
     });
     
     // Retourner une promesse qui ne se résout jamais (serveur en continu)

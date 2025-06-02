@@ -273,7 +273,6 @@ export async function triggerWebhookAsync(
   // Programmer l'envoi de la requête de manière asynchrone
   setTimeout(async () => {
     try {
-      console.log('🔄 Déclenchement asynchrone du webhook de calcul des tokens...');
       
       // Valider la configuration
       validateConfig(defaultConfig);
@@ -290,10 +289,8 @@ export async function triggerWebhookAsync(
       
       // Logger le résultat
       if (result.success) {
-        console.log(`✅ ${result.message} (${result.duration}ms via ${result.method})`);
       } else {
         if (result.error?.includes('déjà en cours')) {
-          console.log(`ℹ️ ${result.message}`);
         } else {
           console.error(`❌ ${result.message} (${result.duration}ms via ${result.method})`);
         }
@@ -305,7 +302,6 @@ export async function triggerWebhookAsync(
   }, delay);
   
   // Cette fonction retourne immédiatement sans attendre l'exécution du webhook
-  console.log(`⏲️ Webhook programmé pour exécution dans ${delay}ms`);
 }
 
 /**

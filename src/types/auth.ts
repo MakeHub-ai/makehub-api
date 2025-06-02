@@ -30,10 +30,12 @@ export interface UserPreferences {
 
 /**
  * Types pour les variables Hono Context
+ * Ajout de la signature d'index pour la compatibilité avec Hono
  */
 export interface HonoVariables {
   auth: AuthData;
   balance: number;
+  [key: string]: any; // Signature d'index requise par Hono
 }
 
 /**

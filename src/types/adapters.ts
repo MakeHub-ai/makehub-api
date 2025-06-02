@@ -30,7 +30,7 @@ export interface AdapterInterface {
   ): Promise<AxiosResponse | ChatCompletion>;
 }
 
-export type AdapterType = 'openai';
+export type AdapterType = 'openai' | 'bedrock';
 
 export type AdapterErrorCode = 
   | 'API_ERROR'

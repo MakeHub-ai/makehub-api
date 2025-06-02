@@ -196,7 +196,6 @@ webhook.post('/calculate-tokens', webhookAuthMiddleware, async (c: Context) => {
       timestamp: new Date().toISOString()
     };
     
-    console.log('⚠️ Webhook calculation already in progress, rejecting request');
     return c.json(conflictResponse, 409); // Conflict
   }
 
@@ -205,7 +204,6 @@ webhook.post('/calculate-tokens', webhookAuthMiddleware, async (c: Context) => {
   const startTime = Date.now();
   
   try {
-    console.log('🔄 Démarrage du calcul des tokens via webhook...');
     
     // Récupérer les paramètres de requête (optionnels)
     const batchSize = parseInt(c.req.query('batch_size') || '20');
@@ -249,7 +247,6 @@ webhook.post('/calculate-tokens', webhookAuthMiddleware, async (c: Context) => {
   } finally {
     // Libérer le sémaphore quoi qu'il arrive
     isProcessing = false;
-    console.log('🔓 Webhook processing lock released');
   }
 });
 
@@ -259,14 +256,12 @@ webhook.post('/calculate-tokens', webhookAuthMiddleware, async (c: Context) => {
  */
 webhook.post('/force-process', webhookAuthMiddleware, async (c: Context) => {
   try {
-    console.log('⚠️ Force processing webhook triggered');
     
     // Reset du sémaphore
     const wasProcessing = isProcessing;
     isProcessing = false;
     
     if (wasProcessing) {
-      console.log('🔓 Forced release of processing lock');
     }
     
     // Traitement normal
@@ -296,7 +291,6 @@ webhook.post('/force-process', webhookAuthMiddleware, async (c: Context) => {
   } finally {
     // Toujours libérer le sémaphore
     isProcessing = false;
-    console.log('🔓 Force processing lock released');
   }
 });
 

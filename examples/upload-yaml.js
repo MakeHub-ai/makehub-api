@@ -1,7 +1,7 @@
 import fs from 'fs';
 import yaml from 'js-yaml';
 import readline from 'readline';
-import { supabase } from '../src/config/database.js';
+import { supabase } from '../dist/config/database.js';
 
 // Interface pour les inputs utilisateur
 const rl = readline.createInterface({
@@ -37,6 +37,108 @@ function convertContextWindow(yamlContext) {
   return yamlContext;
 }
 
+/**
+ * Détermine l'adapter et les paramètres extra selon le provider et les données du modèle
+ * @param {string} providerName - Nom du provider
+ * @param {object} modelData - Données du modèle depuis le YAML
+ * @returns {object} - {adapter: string, extraParam: object}
+ */
+
+/**
+ * Détermine l'adapter et les paramètres extra selon le provider et les données du modèle
+ * @param {string} providerName - Nom du provider
+ * @param {object} modelData - Données du modèle depuis le YAML
+ * @returns {object} - {adapter: string, extraParam: object, cleanBaseUrl: string|null}
+ */
+function determineAdapterAndParams(providerName, modelData) {
+  // Fonction utilitaire pour nettoyer les URLs de proxy
+  function getCleanBaseUrl(baseUrl, targetUrl) {
+    // Si c'est une URL de proxy, utiliser target_url ou null
+    if (baseUrl && baseUrl.includes('proxy_')) {
+      return targetUrl || null;
+    }
+    // Sinon garder l'URL originale
+    return baseUrl || null;
+  }
+
+  // Azure OpenAI
+  if (providerName.startsWith('azure-')) {
+    const region = providerName.replace('azure-', '');
+    const deployment = modelData.provider_model_id || 'unknown-deployment';
+    const cleanBaseUrl = getCleanBaseUrl(modelData.base_url, modelData.target_url);
+    
+    return {
+      adapter: 'azure-openai',
+      cleanBaseUrl: cleanBaseUrl,
+      extraParam: {
+        api_version: '2024-02-15-preview',
+        deployment_name: deployment,
+        endpoint: cleanBaseUrl || `https://unknown.openai.azure.com`,
+        region: region,
+        // Variables d'environnement spécifiques à cette région
+        endpoint_env: `AZURE_OPENAI_ENDPOINT_${region.toUpperCase().replace(/[-]/g, '')}`,
+        api_version_env: `AZURE_OPENAI_API_VERSION_${region.toUpperCase().replace(/[-]/g, '')}`,
+        api_key_env: `AZURE_OPENAI_API_KEY_${region.toUpperCase().replace(/[-]/g, '')}`
+      }
+    };
+  }
+  
+  // AWS Bedrock
+  if (providerName === 'bedrock' || modelData.provider_model_id?.includes('arn:aws:bedrock')) {
+    // Extraire la région depuis l'ARN si disponible
+    let region = 'us-east-1'; // Valeur par défaut
+    if (modelData.provider_model_id?.includes('arn:aws:bedrock')) {
+      const arnParts = modelData.provider_model_id.split(':');
+      if (arnParts.length > 3) {
+        region = arnParts[3]; // us-east-2, eu-west-1, etc.
+      }
+    }
+    
+    return {
+      adapter: 'bedrock',
+      cleanBaseUrl: null, // Bedrock n'a pas besoin de base_url
+      extraParam: {
+        region: region,
+        service: 'bedrock-runtime',
+        // Variables d'environnement spécifiques à cette région
+        aws_access_key_env: `AWS_ACCESS_KEY_ID_BEDROCK_${region.toUpperCase().replace(/[-]/g, '_')}`,
+        aws_secret_key_env: `AWS_SECRET_ACCESS_KEY_BEDROCK_${region.toUpperCase().replace(/[-]/g, '_')}`,
+        aws_region_env: `AWS_REGION_BEDROCK_${region.toUpperCase().replace(/[-]/g, '_')}`
+      }
+    };
+  }
+
+  // Vertex AI (Google Cloud)
+  if (providerName === 'vertex') {
+    const cleanBaseUrl = getCleanBaseUrl(modelData.base_url, modelData.target_url);
+    
+    return {
+      adapter: 'vertex',
+      cleanBaseUrl: cleanBaseUrl,
+      extraParam: {
+        project_id: 'cs-poc-430lnj79urvf1fpvk3obdby', // À extraire depuis l'URL si possible
+        location: 'us-central1', // À extraire depuis l'URL si possible
+        endpoint: cleanBaseUrl
+      }
+    };
+  }
+  
+  // OpenAI-compatible par défaut (tous les autres providers)
+  const cleanBaseUrl = getCleanBaseUrl(modelData.base_url, modelData.target_url);
+  
+  return {
+    adapter: 'openai',
+    cleanBaseUrl: cleanBaseUrl,
+    extraParam: {
+      // Garder quelques infos utiles depuis le YAML pour référence
+      exclude_param: modelData.exclude_param || null,
+      max_output: modelData.max_output || null,
+      working: modelData.working || null,
+      assistant_ready: modelData.assistant_ready || null
+    }
+  };
+}
+
 // Fonction pour parser le YAML et extraire les modèles
 function parseYamlToModels(yamlContent) {
   const data = yaml.load(yamlContent);
@@ -48,36 +150,25 @@ function parseYamlToModels(yamlContent) {
         // Utiliser directement modelName comme model_id (ex: deepseek/deepseek-R1-05-28-fp8)
         const modelId = modelName;
         
+        // Détecter le type d'adapter et construire adapter + extra_param
+        const { adapter, extraParam, cleanBaseUrl } = determineAdapterAndParams(providerName, modelData);
+
         const model = {
           model_id: modelId,
           provider: providerName,
           provider_model_id: modelData.provider_model_id || modelName,
-          base_url: modelData.base_url || null,
+          base_url: cleanBaseUrl, // Utiliser l'URL nettoyée
           api_key_name: providerData.api_key_name || null,
+          adapter: adapter, // Nouveau champ
           window_size: convertContextWindow(modelData.context),
           support_tool_calling: modelData.support_tool_calling || false,
           context_window: convertContextWindow(modelData.context),
           price_per_input_token: convertPrice(modelData.price_per_input_token),
           price_per_output_token: convertPrice(modelData.price_per_output_token),
           quantisation: modelData.quantisation ? String(modelData.quantisation) : null,
-          extra_param: {
-            display_name: modelData.display_name || null,
-            working: modelData.working || null,
-            assistant_ready: modelData.assistant_ready || null,
-            support_function_calling: modelData.support_function_calling || null,
-            support_function_calling_streaming: modelData.support_function_calling_streaming || null,
-            support_tool_calling_streaming: modelData.support_tool_calling_streaming || null,
-            max_output: modelData.max_output || null,
-            target_url: modelData.target_url || null,
-            exclude_param: modelData.exclude_param || null,
-            // Garder les valeurs originales pour référence
-            original_yaml_values: {
-              context: modelData.context,
-              price_per_input_token: modelData.price_per_input_token,
-              price_per_output_token: modelData.price_per_output_token
-            }
-          }
+          extra_param: extraParam
         };
+
 
         models.push(model);
       }
@@ -92,8 +183,8 @@ async function getExistingModels() {
   try {
     const { data, error } = await supabase
       .from('models')
-      .select('model_id, provider, provider_model_id, base_url, api_key_name, window_size, support_tool_calling, context_window, price_per_input_token, price_per_output_token, quantisation, extra_param');
-    
+      .select('model_id, provider, provider_model_id, base_url, api_key_name, adapter, window_size, support_tool_calling, context_window, price_per_input_token, price_per_output_token, quantisation, extra_param');
+
     if (error) throw error;
     return data || [];
   } catch (error) {
@@ -139,6 +230,7 @@ function analyzeChanges(newModels, existingModels) {
         existing.provider_model_id !== newModel.provider_model_id ||
         existing.base_url !== newModel.base_url ||
         existing.api_key_name !== newModel.api_key_name ||
+        existing.adapter !== newModel.adapter ||
         existing.window_size !== newModel.window_size ||
         existing.support_tool_calling !== newModel.support_tool_calling ||
         existing.context_window !== newModel.context_window ||
@@ -187,12 +279,13 @@ function displayChangesPreview(changes) {
     console.log(`\n✅ NOUVEAUX MODÈLES (${newModels.length}):`);
     newModels.forEach(change => {
       const model = change.model;
-      const original = model.extra_param.original_yaml_values;
       console.log(`  • ${model.model_id} (${model.provider})`);
+      console.log(`    Adapter: ${model.adapter}`);
       console.log(`    API Key: ${model.api_key_name || 'N/A'}`);
-      console.log(`    Prix input/output: ${model.price_per_input_token}/${model.price_per_output_token} (YAML: ${original.price_per_input_token}/${original.price_per_output_token})`);
-      console.log(`    Context window: ${model.context_window || 'N/A'} (YAML: ${original.context || 'N/A'})`);
+      console.log(`    Prix input/output: ${model.price_per_input_token}/${model.price_per_output_token}`);
+      console.log(`    Context window: ${model.context_window || 'N/A'}`);
       console.log(`    Tool calling: ${model.support_tool_calling}`);
+      console.log(`    Base URL: ${model.base_url || 'N/A'}`);
       console.log('');
     });
   }
@@ -273,6 +366,7 @@ async function executeUpserts(changes) {
         provider_model_id: change.model.provider_model_id,
         base_url: change.model.base_url,
         api_key_name: change.model.api_key_name,
+        adapter: change.model.adapter, // ← Ajouter cette ligne
         window_size: change.model.window_size,
         support_tool_calling: change.model.support_tool_calling,
         context_window: change.model.context_window,

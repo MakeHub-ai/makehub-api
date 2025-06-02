@@ -228,7 +228,6 @@ async function processReadyRequests(
   };
 
   try {
-    console.log('Processing requests with status "ready_to_compute"');
     
     // Validation des paramètres
     if (batchSize <= 0 || batchSize > 1000) {
@@ -250,14 +249,12 @@ async function processReadyRequests(
       .eq('status', 'ready_to_compute')
       .limit(batchSize);
     
-    console.log(`Found ${requests?.length || 0} requests to process`);
     
     if (error) {
       throw new Error(`Failed to fetch requests: ${error.message}`);
     }
     
     if (!requests || requests.length === 0) {
-      console.log('No requests to process');
       stats.endTime = Date.now();
       stats.duration = stats.endTime - stats.startTime;
       return stats;
@@ -268,7 +265,6 @@ async function processReadyRequests(
     for (const request of typedRequests) {
       // Vérifier si on a dépassé la limite de temps
       if (Date.now() - stats.startTime > timeLimit) {
-        console.log(`Limite de temps atteinte (${timeLimit}ms). Arrêt du traitement après ${stats.processed} requêtes.`);
         break;
       }
       
@@ -293,7 +289,6 @@ async function processReadyRequests(
     stats.endTime = Date.now();
     stats.duration = stats.endTime - stats.startTime;
     
-    console.log(`Processing completed: ${stats.processed} processed, ${stats.errors} errors in ${stats.duration}ms`);
     
     return stats;
   } catch (error) {
@@ -381,7 +376,6 @@ async function processIndividualRequest(
     throw new Error(`Failed to update request status: ${updateError.message}`);
   }
   
-  console.log(`Processed request ${request.request_id} for user ${request.user_id} - Status updated to 'completed'`);
   stats.processed++;
 }
 
@@ -502,7 +496,6 @@ function startProcessor(intervalMinutes: number = 5): void {
     throw new Error('Interval must be between 1 and 60 minutes');
   }
   
-  console.log(`Starting request processor (checks every ${intervalMinutes} minutes)`);
   
   // Exécution initiale
   processReadyRequests()
@@ -516,9 +509,7 @@ function startProcessor(intervalMinutes: number = 5): void {
   // Set up periodic execution
   const intervalId = setInterval(async () => {
     try {
-      console.log(`Running scheduled request processing at ${new Date().toISOString()}`);
       const stats = await processReadyRequests();
-      console.log(`Scheduled processing completed: ${stats.processed} processed, ${stats.errors} errors in ${stats.duration}ms`);
     } catch (error) {
       console.error('Scheduled processing failed:', error);
     }
@@ -526,7 +517,6 @@ function startProcessor(intervalMinutes: number = 5): void {
   
   // Cleanup function
   const cleanup = () => {
-    console.log('Stopping request processor...');
     clearInterval(intervalId);
     freeAllEncoders();
   };

@@ -51,11 +51,8 @@ async function authenticateWithApiKey(apiKey: string): Promise<AuthData> {
     throw new Error('API key must be a non-empty string');
   }
 
-  console.log('🔑 Authenticating with API key:', apiKey);
-  
   // Mode test : accepter la clé de test directement
   if (apiKey === 'test-api-key-123') {
-    console.log('✅ Using test API key');
     const testUserData: TestAuthData = {
       user: {
         id: '3dfeb923-1e33-4a3a-9473-ee9637446ae4',
@@ -80,11 +77,9 @@ async function authenticateWithApiKey(apiKey: string): Promise<AuthData> {
   const cachedData = cacheUtils.getAuthData(apiKey);
   
   if (cachedData) {
-    console.log('✅ Found cached API key data');
     return cachedData;
   }
   
-  console.log('🔍 Querying database for API key...');
   
   // Requête combinée pour récupérer la clé API et les infos utilisateur
   const { data, error } = await supabase
@@ -101,10 +96,8 @@ async function authenticateWithApiKey(apiKey: string): Promise<AuthData> {
     .eq('is_active', true)
     .single();
   
-  console.log('📊 Database response:', { data, error });
   
   if (error || !data) {
-    console.log('❌ API key not found or invalid');
     throw new Error('Invalid API key');
   }
 

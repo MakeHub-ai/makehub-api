@@ -1,4 +1,5 @@
 import { OpenAIAdapter } from './openai.js';
+import { BedrockAdapter } from './bedrock.js';
 import { BaseAdapter, AdapterError } from './base.js';
 import type { AdapterType, AdapterConfig, AdapterInterface } from '../types/index.js';
 
@@ -8,7 +9,9 @@ import type { AdapterType, AdapterConfig, AdapterInterface } from '../types/inde
  */
 export const adapters: Record<AdapterType, new (config?: AdapterConfig) => BaseAdapter> = {
   openai: OpenAIAdapter,
+  bedrock: BedrockAdapter,
 };
+
 
 /**
  * Crée une instance d'adapter basée sur le type
@@ -76,7 +79,9 @@ export function getAdapterInfo(adapterType: string): {
   
   const descriptions: Record<AdapterType, string> = {
     openai: 'OpenAI compatible API adapter (works with OpenAI, Together, Azure OpenAI, etc.)',
+    bedrock: 'AWS Bedrock adapter for Claude and other Bedrock models',
   };
+
 
   return {
     name: normalizedType,

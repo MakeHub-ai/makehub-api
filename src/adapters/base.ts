@@ -136,7 +136,7 @@ export abstract class BaseAdapter implements AdapterInterface {
   /**
    * Configure l'adapter avec de nouveaux paramètres
    */
-  configure(config: Partial<AdapterConfig>): void {
+  configure(config: Partial<AdapterConfig>, model?: Model): void {
     if (config.apiKey !== undefined) {
       this.apiKey = config.apiKey;
     }
@@ -144,8 +144,10 @@ export abstract class BaseAdapter implements AdapterInterface {
       this.baseURL = config.baseURL;
     }
     this.config = { ...this.config, ...config };
+    
+    // La classe de base ne fait rien avec le modèle
+    // Les adapters spécialisés (Bedrock, Azure) overrideront cette méthode
   }
-
   /**
    * Prépare les paramètres de base pour une requête
    */
@@ -256,7 +258,6 @@ export abstract class BaseAdapter implements AdapterInterface {
    */
   protected logMetrics(operation: string, duration: number, success: boolean): void {
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[${this.name.toUpperCase()}] ${operation}: ${duration}ms - ${success ? 'SUCCESS' : 'FAILED'}`);
     }
   }
 

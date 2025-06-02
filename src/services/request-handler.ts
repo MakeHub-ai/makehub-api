@@ -148,8 +148,13 @@ export class RequestHandler {
           apiKey: process.env[combination.ApiKeyName],
           baseURL: combination.baseUrl
         };
-        
+
         adapter = createAdapter(combination.adapter, adapterConfig);
+
+        // Configurer l'adapter avec les informations du modèle pour Bedrock/Azure
+        if (typeof adapter.configure === 'function') {
+          adapter.configure(adapterConfig, combination.model);
+}
         
         // Vérifier que l'adapter est configuré
         if (!adapter.isConfigured()) {
@@ -535,7 +540,6 @@ export class RequestHandler {
         console.error(`Failed to insert into requests table for ${requestId}:`, requestError);
         return; 
       }
-      console.log(`Successfully inserted into requests for ${requestId}`);
 
       // 2. Insérer le contenu de la requête avec la réponse complète
       try {
@@ -546,7 +550,6 @@ export class RequestHandler {
             request_json: request,
             response_json: responseJson
           });
-        console.log(`Successfully inserted into requests_content for ${requestId}`);
       } catch (contentError) {
         console.error(`Failed to insert into requests_content for ${requestId}:`, contentError);
       }
@@ -583,7 +586,6 @@ export class RequestHandler {
         await updateApiKeyUsage(authData.user.id, authData.apiKey.name);
       }
 
-      console.log(`Request ${requestId} logged successfully`);
 
     } catch (error) {
       console.error('Failed to log successful request:', error);
