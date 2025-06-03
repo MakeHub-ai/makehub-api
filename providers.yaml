@@ -212,7 +212,7 @@ providers:
         max_output: null
         price_per_input_token: 15
         price_per_output_token: 75
-        provider_model_id: claude-opus-4-20250514
+        provider_model_id: claude-opus-4@20250514
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
@@ -234,7 +234,7 @@ providers:
         max_output: null
         price_per_input_token: 3
         price_per_output_token: 15
-        provider_model_id: claude-3-5-sonnet-latest
+        provider_model_id: claude-3-5-sonnet-v2@20241022
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
@@ -256,7 +256,7 @@ providers:
         max_output: null
         price_per_input_token: 3
         price_per_output_token: 15
-        provider_model_id: claude-3-7-sonnet-latest
+        provider_model_id: claude-3-7-sonnet@20250219
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
@@ -278,7 +278,7 @@ providers:
         max_output: null
         price_per_input_token: 3
         price_per_output_token: 15
-        provider_model_id: claude-sonnet-4
+        provider_model_id: claude-sonnet-4@20250514
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
@@ -454,7 +454,7 @@ providers:
     api_key_name: API_KEY_AZUREOPENAI_EASTUS
     models:
       openai/gpt-4.1:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         last_test_timestamp: 1743981963
@@ -478,7 +478,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4.1
       openai/gpt-4o:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         failed_reason: '''Stream'' object has no attribute ''model_dump'''
@@ -503,7 +503,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
       openai/gpt-4o-mini:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 128
         error_in_function_calling: null
         last_test_timestamp: 1743981963
@@ -530,7 +530,7 @@ providers:
     api_key_name: API_KEY_AZUREOPENAI_GERMANYWESTCENTRAL
     models:
       openai/gpt-4.1:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         last_test_timestamp: 1743981964
@@ -554,7 +554,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4.1
       openai/gpt-4o:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         failed_reason: '''Stream'' object has no attribute ''model_dump'''
@@ -579,7 +579,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
       openai/gpt-4o-mini:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 128
         error_in_function_calling: null
         last_test_timestamp: 1743981963
@@ -606,7 +606,7 @@ providers:
     api_key_name: API_KEY_AZUREOPENAI_NORWAYEAST
     models:
       openai/gpt-4o:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         failed_reason: '''Stream'' object has no attribute ''model_dump'''
@@ -631,7 +631,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
       openai/gpt-4o-mini:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 128
         error_in_function_calling: null
         last_test_timestamp: 1743981967
@@ -658,7 +658,7 @@ providers:
     api_key_name: API_KEY_AZUREOPENAI_SWEDENCENTRAL
     models:
       xai/grok-3:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         last_test_timestamp: 1743981967
@@ -682,7 +682,7 @@ providers:
         assistant_ready: true
         display_name: Grok 3
       xai/grok-3-mini:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 128
         error_in_function_calling: null
         last_test_timestamp: 1743981967
@@ -706,7 +706,7 @@ providers:
         assistant_ready: true
         display_name: Grok 3 Mini
       openai/gpt-4o:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         failed_reason: '''Stream'' object has no attribute ''model_dump'''
@@ -731,7 +731,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
       openai/gpt-4o-mini:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 128
         error_in_function_calling: null
         last_test_timestamp: 1743981966
@@ -755,7 +755,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o Mini
       openai/o4-mini:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 150
         error_in_function_calling: null
         last_test_timestamp: 1743981967
@@ -779,7 +779,7 @@ providers:
         assistant_ready: false
         display_name: o4 Mini
       openai/gpt-4.1:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         last_test_timestamp: 1743981967
@@ -803,7 +803,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4.1
       openai/gpt-4.1-mini:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 128
         error_in_function_calling: null
         last_test_timestamp: 1743981967
@@ -827,7 +827,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4.1 Mini
       openai/gpt-4.1-nano:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 128
         error_in_function_calling: null
         last_test_timestamp: 1743981967
@@ -854,7 +854,7 @@ providers:
     api_key_name: API_KEY_AZUREOPENAI_SWITERLANDNORTH
     models:
       openai/gpt-4.1:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         last_test_timestamp: 1743981968
@@ -878,7 +878,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4.1
       openai/gpt-4o:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         failed_reason: '''Stream'' object has no attribute ''model_dump'''
@@ -903,7 +903,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
       openai/gpt-4o-mini:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 128
         error_in_function_calling: null
         last_test_timestamp: 1743981968
@@ -930,7 +930,7 @@ providers:
     api_key_name: API_KEY_AZUREOPENAI_UKSOUTH
     models:
       openai/gpt-4o:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         failed_reason: '''Stream'' object has no attribute ''model_dump'''
@@ -955,7 +955,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
       openai/gpt-4o-mini:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 128
         error_in_function_calling: null
         last_test_timestamp: 1743981969
@@ -982,7 +982,7 @@ providers:
     api_key_name: API_KEY_AZUREOPENAI_FRANCECENTRAL
     models:
       openai/gpt-4o:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         failed_reason: '''Stream'' object has no attribute ''model_dump'''
@@ -1007,7 +1007,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
       openai/gpt-4o-mini:
-        base_url: http://proxy_azure:3000/v1
+        base_url: 
         context: 128
         error_in_function_calling: null
         last_test_timestamp: 1743981969
@@ -1034,7 +1034,7 @@ providers:
     api_key_name: AWS_ACCESS_KEY_ID
     models:
       anthropic/claude-4-opus:
-        base_url: http://proxy_bedrock:17912/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         last_test_timestamp: 1743711634
@@ -1046,7 +1046,7 @@ providers:
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
-        support_tool_calling: false
+        support_tool_calling: true
         support_tool_calling_streaming: true
         target_url: ''
         throughput_median: 100.159285417532
@@ -1056,7 +1056,7 @@ providers:
         assistant_ready: true
         display_name: Claude 4 Opus
       anthropic/claude-4-sonnet:
-        base_url: http://proxy_bedrock:17912/v1
+        base_url: 
         context: 131
         error_in_function_calling: null
         last_test_timestamp: 1743711634
@@ -1068,7 +1068,7 @@ providers:
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
-        support_tool_calling: false
+        support_tool_calling: true
         support_tool_calling_streaming: true
         target_url: ''
         throughput_median: 100
@@ -1078,7 +1078,7 @@ providers:
         assistant_ready: true
         display_name: Claude 4 Sonnet
       anthropic/claude-3-5-haiku:
-        base_url: http://proxy_bedrock:17912/v1
+        base_url: 
         context: 200
         error_in_function_calling: null
         last_test_timestamp: 1743711634
@@ -1090,7 +1090,7 @@ providers:
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
-        support_tool_calling: false
+        support_tool_calling: true
         support_tool_calling_streaming: true
         target_url: ''
         throughput_median: 100.159285417532
@@ -1100,7 +1100,7 @@ providers:
         assistant_ready: false
         display_name: Claude 3.5 Haiku
       anthropic/claude-3-5-sonnet:
-        base_url: http://proxy_bedrock:17912/v1
+        base_url: 
         context: 200
         error_in_function_calling: 'HTTP error: 400 - {"error":{"code":400,"message":"API
           error: Error code: 500 - {''detail'': ''An error occurred (ValidationException)
@@ -1117,8 +1117,8 @@ providers:
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
-        support_tool_calling: false
-        support_tool_calling_streaming: false
+        support_tool_calling: true
+        support_tool_calling_streaming: true
         target_url: ''
         throughput_median: 4362.502715821102
         throughput_p25: 71.6
@@ -1127,7 +1127,7 @@ providers:
         assistant_ready: false
         display_name: Claude 3.5 Sonnet
       anthropic/claude-3-7-sonnet:
-        base_url: http://proxy_bedrock:17912/v1
+        base_url: 
         context: 200
         error_in_function_calling: null
         last_test_timestamp: 1743711634
@@ -1139,7 +1139,7 @@ providers:
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
-        support_tool_calling: false
+        support_tool_calling: true
         support_tool_calling_streaming: true
         target_url: ''
         throughput_median: 5654.817766459441

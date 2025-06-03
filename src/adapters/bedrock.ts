@@ -8,8 +8,32 @@ import type {
   ChatCompletion, 
   ChatCompletionChunk,
   AdapterConfig,
-  Model
+  Model,
+  ToolCall
 } from '../types/index.js';
+
+/**
+ * Interface pour les tools au format Anthropic/Bedrock
+ */
+interface BedrockTool {
+  name: string;
+  description?: string;
+  input_schema: {
+    type: 'object';
+    properties: Record<string, any>;
+    required?: string[];
+  };
+}
+
+/**
+ * Interface pour les tool calls dans les réponses Bedrock
+ */
+interface BedrockToolUse {
+  type: 'tool_use';
+  id: string;
+  name: string;
+  input: Record<string, any>;
+}
 
 /**
  * Interface pour les requêtes Bedrock (format Anthropic)
@@ -18,8 +42,13 @@ interface BedrockAnthropicRequest {
   messages: Array<{
     role: 'user' | 'assistant';
     content: string | Array<{
-      type: 'text' | 'image';
+      type: 'text' | 'image' | 'tool_use' | 'tool_result';
       text?: string;
+      id?: string;
+      name?: string;
+      input?: Record<string, any>;
+      tool_use_id?: string;
+      content?: string | Array<{ type: string; text?: string; }>;
       source?: {
         type: 'base64';
         media_type: string;
@@ -32,6 +61,7 @@ interface BedrockAnthropicRequest {
   top_p?: number;
   stop_sequences?: string[];
   system?: string;
+  tools?: BedrockTool[];
   anthropic_version?: string;
 }
 
@@ -43,11 +73,14 @@ interface BedrockAnthropicResponse {
   type: 'message';
   role: 'assistant';
   content: Array<{
-    type: 'text';
-    text: string;
+    type: 'text' | 'tool_use';
+    text?: string;
+    id?: string;
+    name?: string;
+    input?: Record<string, any>;
   }>;
   model: string;
-  stop_reason: 'end_turn' | 'max_tokens' | 'stop_sequence';
+  stop_reason: 'end_turn' | 'max_tokens' | 'stop_sequence' | 'tool_use';
   stop_sequence?: string;
   usage: {
     input_tokens: number;
@@ -75,12 +108,16 @@ interface BedrockStreamEvent {
   };
   index?: number;
   content_block?: {
-    type: 'text';
-    text: string;
+    type: 'text' | 'tool_use';
+    text?: string;
+    id?: string;
+    name?: string;
+    input?: Record<string, any>;
   };
   delta?: {
-    type: 'text_delta';
+    type: 'text_delta' | 'input_json_delta';
     text?: string;
+    partial_json?: string;
     stop_reason?: string;
     stop_sequence?: string;
   };
@@ -90,7 +127,7 @@ interface BedrockStreamEvent {
 }
 
 /**
- * Adapter pour AWS Bedrock
+ * Adapter pour AWS Bedrock avec support complet des tool calling
  * Supporte les modèles Claude et autres modèles disponibles sur Bedrock
  */
 export class BedrockAdapter extends BaseAdapter {
@@ -107,7 +144,6 @@ export class BedrockAdapter extends BaseAdapter {
    * Extrait la région depuis la configuration
    */
   private extractRegionFromConfig(config: AdapterConfig): string {
-    // Essayer d'extraire depuis baseURL ou defaulter
     const envRegion = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION;
     return envRegion || 'us-east-1';
   }
@@ -122,16 +158,10 @@ export class BedrockAdapter extends BaseAdapter {
     if (model?.extra_param) {
       this.region = model.extra_param.region || this.region;
       
-      // Configurer les credentials depuis les variables d'environnement
       const accessKeyEnv = model.extra_param.aws_access_key_env;
       const secretKeyEnv = model.extra_param.aws_secret_key_env;
       const regionEnv = model.extra_param.aws_region_env;
 
-      // Vérifier les variables d'environnement
-      if (!accessKeyEnv || !secretKeyEnv || !regionEnv) {
-        console.warn('Missing AWS environment variables for Bedrock configuration. Using default credentials.');
-      }
-      
       if (accessKeyEnv && secretKeyEnv && regionEnv) {
         const accessKey = process.env[accessKeyEnv];
         const secretKey = process.env[secretKeyEnv];
@@ -171,40 +201,109 @@ export class BedrockAdapter extends BaseAdapter {
   }
 
   getEndpoint(model: string): string {
-    // Bedrock n'utilise pas d'endpoint HTTP classique
     return `bedrock:${this.region}:${model}`;
   }
 
-  transformRequest(standardRequest: StandardRequest): BedrockAnthropicRequest {
-    const modelInfo = standardRequest.model;
-    const messages = standardRequest.messages || [];
-    
-    // Séparer les messages système des autres
-    let systemMessage = '';
-    const conversationMessages: BedrockAnthropicRequest['messages'] = [];
+  /**
+   * Convertit les tools OpenAI vers le format Bedrock/Anthropic
+   */
+  private convertToolsToBedrockFormat(tools: any[]): BedrockTool[] {
+    return tools.map(tool => {
+      if (tool.type !== 'function') {
+        throw this.createError('Only function tools are supported in Bedrock', 400, 'VALIDATION_ERROR');
+      }
+
+      const bedrockTool: BedrockTool = {
+        name: tool.function.name,
+        description: tool.function.description,
+        input_schema: {
+          type: 'object',
+          properties: tool.function.parameters?.properties || {},
+          required: tool.function.parameters?.required || []
+        }
+      };
+
+      return bedrockTool;
+    });
+  }
+
+  /**
+   * Convertit les tool calls Bedrock vers le format OpenAI
+   */
+  private convertBedrockToolCallsToOpenAI(content: BedrockAnthropicResponse['content']): ToolCall[] {
+    const toolCalls: ToolCall[] = [];
+
+    content.forEach((item: BedrockAnthropicResponse['content'][0]) => {
+      if (item.type === 'tool_use' && item.id && item.name && item.input) {
+        toolCalls.push({
+          id: item.id,
+          type: 'function',
+          function: {
+            name: item.name,
+            arguments: JSON.stringify(item.input)
+          }
+        });
+      }
+    });
+
+    return toolCalls;
+  }
+
+  /**
+   * Convertit les messages avec tool results vers le format Bedrock
+   */
+  private convertMessagesToBedrockFormat(messages: any[]): BedrockAnthropicRequest['messages'] {
+    const convertedMessages: BedrockAnthropicRequest['messages'] = [];
     
     for (const message of messages) {
       if (message.role === 'system') {
-        systemMessage += (typeof message.content === 'string' ? message.content : '');
-      } else if (message.role === 'user' || message.role === 'assistant') {
-        // Convertir le contenu
+        continue; // Géré séparément
+      }
+
+      if (message.role === 'tool') {
+        // Convertir le message tool en format Bedrock tool_result
+        const lastMessage = convertedMessages[convertedMessages.length - 1];
+        if (lastMessage && lastMessage.role === 'user') {
+          // Ajouter le tool_result au dernier message user
+          if (typeof lastMessage.content === 'string') {
+            lastMessage.content = [{ type: 'text', text: lastMessage.content }];
+          }
+          (lastMessage.content as any[]).push({
+            type: 'tool_result',
+            tool_use_id: message.tool_call_id,
+            content: message.content
+          });
+        } else {
+          // Créer un nouveau message user avec le tool_result
+          convertedMessages.push({
+            role: 'user',
+            content: [{
+              type: 'tool_result',
+              tool_use_id: message.tool_call_id,
+              content: message.content
+            }]
+          });
+        }
+        continue;
+      }
+
+      if (message.role === 'user' || message.role === 'assistant') {
         let content: string | Array<any>;
         
         if (typeof message.content === 'string') {
           content = message.content;
         } else if (Array.isArray(message.content)) {
           // Gérer le contenu multimodal
-          content = message.content.map(item => {
+          content = message.content.map((item: any) => {
             if (item.type === 'text') {
               return { type: 'text', text: item.text };
             } else if (item.type === 'image_url') {
               // Convertir l'image URL en format Bedrock
-              // Note: Bedrock nécessite des images en base64
               return {
                 type: 'image',
                 source: {
                   type: 'base64',
-                  media_type: 'image/jpeg', // Assumption par défaut
+                  media_type: 'image/jpeg',
                   data: item.image_url?.url || ''
                 }
               };
@@ -214,18 +313,50 @@ export class BedrockAdapter extends BaseAdapter {
         } else {
           content = '';
         }
+
+        // Ajouter les tool calls si présents (pour les messages assistant)
+        if (message.role === 'assistant' && message.tool_calls) {
+          if (typeof content === 'string') {
+            content = content ? [{ type: 'text', text: content }] : [];
+          }
+          
+          message.tool_calls.forEach((toolCall: ToolCall) => {
+            (content as any[]).push({
+              type: 'tool_use',
+              id: toolCall.id,
+              name: toolCall.function.name,
+              input: JSON.parse(toolCall.function.arguments)
+            });
+          });
+        }
         
-        conversationMessages.push({
+        convertedMessages.push({
           role: message.role,
           content
         });
       }
     }
     
+    return convertedMessages;
+  }
+
+  transformRequest(standardRequest: StandardRequest): BedrockAnthropicRequest {
+    const messages = standardRequest.messages || [];
+    
+    // Séparer les messages système des autres
+    let systemMessage = '';
+    const conversationMessages = messages.filter(msg => {
+      if (msg.role === 'system') {
+        systemMessage += (typeof msg.content === 'string' ? msg.content : '');
+        return false;
+      }
+      return true;
+    });
+    
     const bedrockRequest: BedrockAnthropicRequest = {
-      messages: conversationMessages,
+      messages: this.convertMessagesToBedrockFormat(conversationMessages),
       max_tokens: standardRequest.max_tokens || 4096,
-      anthropic_version: 'bedrock-2023-05-31' // Version Bedrock pour Anthropic
+      anthropic_version: 'bedrock-2023-05-31'
     };
     
     // Ajouter les paramètres optionnels
@@ -246,17 +377,36 @@ export class BedrockAdapter extends BaseAdapter {
     if (systemMessage) {
       bedrockRequest.system = systemMessage;
     }
+
+    // Convertir les tools au format Bedrock
+    if (standardRequest.tools && standardRequest.tools.length > 0) {
+      bedrockRequest.tools = this.convertToolsToBedrockFormat(standardRequest.tools);
+    }
     
     return bedrockRequest;
   }
 
   transformResponse(response: BedrockAnthropicResponse): ChatCompletion {
-    const content = response.content
-      .filter(item => item.type === 'text')
-      .map(item => item.text)
-      .join('');
-    
-    return {
+    // Extraire le texte et les tool calls
+    let textContent = '';
+    const toolCalls: ToolCall[] = [];
+
+    response.content.forEach(item => {
+      if (item.type === 'text' && item.text) {
+        textContent += item.text;
+      } else if (item.type === 'tool_use' && item.id && item.name && item.input) {
+        toolCalls.push({
+          id: item.id,
+          type: 'function',
+          function: {
+            name: item.name,
+            arguments: JSON.stringify(item.input)
+          }
+        });
+      }
+    });
+
+    const completion: ChatCompletion = {
       id: response.id || `bedrock-${Date.now()}`,
       object: 'chat.completion',
       created: Math.floor(Date.now() / 1000),
@@ -265,7 +415,7 @@ export class BedrockAdapter extends BaseAdapter {
         index: 0,
         message: {
           role: 'assistant',
-          content: content
+          content: textContent || null
         },
         finish_reason: this.mapFinishReason(response.stop_reason)
       }],
@@ -275,26 +425,32 @@ export class BedrockAdapter extends BaseAdapter {
         total_tokens: response.usage.input_tokens + response.usage.output_tokens
       }
     };
+
+    // Ajouter les tool calls si présents
+    if (toolCalls.length > 0) {
+      completion.choices[0].message.tool_calls = toolCalls;
+      completion.choices[0].finish_reason = 'tool_calls';
+    }
+
+    return completion;
   }
 
   transformStreamChunk(chunk: string): ChatCompletionChunk | null {
-    
     try {
       const event: BedrockStreamEvent = JSON.parse(chunk);
       const timestamp = Math.floor(Date.now() / 1000);
       
-      
       // Message start - premier chunk avec les métadonnées
       if (event.type === 'message_start' && event.message) {
-        const chunkResult = {
+        return {
           id: event.message.id,
-          object: 'chat.completion.chunk' as const,
+          object: 'chat.completion.chunk',
           created: timestamp,
           model: event.message.model,
           choices: [{
             index: 0,
             delta: {
-              role: 'assistant' as const
+              role: 'assistant'
             },
             finish_reason: null
           }],
@@ -304,37 +460,88 @@ export class BedrockAdapter extends BaseAdapter {
             total_tokens: undefined
           }
         };
-        return chunkResult;
       }
       
-      // Content block start - début du contenu (optionnel, juste pour info)
-      if (event.type === 'content_block_start') {
-        return null; // On peut ignorer cet événement ou retourner un chunk vide
+      // Content block start - début d'un bloc de contenu
+      if (event.type === 'content_block_start' && event.content_block) {
+        if (event.content_block.type === 'tool_use') {
+          // Début d'un tool call
+          return {
+            id: `bedrock-stream-${Date.now()}`,
+            object: 'chat.completion.chunk',
+            created: timestamp,
+            model: 'bedrock-model',
+            choices: [{
+              index: 0,
+              delta: {
+                tool_calls: [{
+                  index: event.index || 0,
+                  id: event.content_block.id || '',
+                  type: 'function',
+                  function: {
+                    name: event.content_block.name || '',
+                    arguments: ''
+                  }
+                } as any]
+              },
+              finish_reason: null
+            }]
+          };
+        }
+        return null; // Ignorer les autres types de content_block_start
       }
       
-      // Content block delta - contenu du message
-      if (event.type === 'content_block_delta' && event.delta?.text) {
-        const chunkResult = {
-          id: `bedrock-stream-${Date.now()}`,
-          object: 'chat.completion.chunk' as const,
-          created: timestamp,
-          model: 'bedrock-model',
-          choices: [{
-            index: 0,
-            delta: {
-              content: event.delta.text
-            },
-            finish_reason: null
-          }]
-        };
-        return chunkResult;
+      // Content block delta - contenu du message ou arguments des tools
+      if (event.type === 'content_block_delta' && event.delta) {
+        if (event.delta.type === 'text_delta' && event.delta.text) {
+          // Texte normal
+          return {
+            id: `bedrock-stream-${Date.now()}`,
+            object: 'chat.completion.chunk',
+            created: timestamp,
+            model: 'bedrock-model',
+            choices: [{
+              index: 0,
+              delta: {
+                content: event.delta.text
+              },
+              finish_reason: null
+            }]
+          };
+        } else if (event.delta.type === 'input_json_delta' && event.delta.partial_json) {
+          // Arguments des tool calls
+          return {
+            id: `bedrock-stream-${Date.now()}`,
+            object: 'chat.completion.chunk',
+            created: timestamp,
+            model: 'bedrock-model',
+            choices: [{
+              index: 0,
+              delta: {
+                tool_calls: [{
+                  index: event.index || 0,
+                  function: {
+                    name: '',
+                    arguments: event.delta.partial_json
+                  }
+                } as any]
+              },
+              finish_reason: null
+            }]
+          };
+        }
+      }
+      
+      // Content block stop - fin d'un bloc de contenu
+      if (event.type === 'content_block_stop') {
+        return null; // Pas besoin de chunk spécial pour la fin d'un bloc
       }
       
       // Message delta - mise à jour avec finish_reason
       if (event.type === 'message_delta' && event.delta) {
-        const chunkResult = {
+        return {
           id: `bedrock-stream-${Date.now()}`,
-          object: 'chat.completion.chunk' as const,
+          object: 'chat.completion.chunk',
           created: timestamp,
           model: 'bedrock-model',
           choices: [{
@@ -348,42 +555,50 @@ export class BedrockAdapter extends BaseAdapter {
             total_tokens: undefined
           } : undefined
         };
-        return chunkResult;
       }
       
       // Message stop - fin du stream
       if (event.type === 'message_stop') {
-        const chunkResult = {
+        return {
           id: `bedrock-stream-${Date.now()}`,
-          object: 'chat.completion.chunk' as const,
+          object: 'chat.completion.chunk',
           created: timestamp,
           model: 'bedrock-model',
           choices: [{
             index: 0,
             delta: {},
-            finish_reason: 'stop' as const
+            finish_reason: 'stop'
           }]
         };
-        return chunkResult;
-      }
-      
-      // Content block stop - fin d'un bloc de contenu (optionnel)
-      if (event.type === 'content_block_stop') {
-        return null; // On peut ignorer cet événement
       }
       
       return null;
     } catch (error) {
-      console.error('❌ Failed to parse Bedrock stream chunk:', chunk, error);
+      console.error('Failed to parse Bedrock stream chunk:', chunk, error);
       return null;
     }
+  }
+
+  /**
+   * Mappe les raisons d'arrêt Bedrock vers le format OpenAI
+   */
+  protected mapFinishReason(reason: string | null | undefined): 'stop' | 'length' | 'tool_calls' | 'content_filter' | null {
+    if (!reason) return null;
+    
+    const mappings: Record<string, 'stop' | 'length' | 'tool_calls' | 'content_filter'> = {
+      'end_turn': 'stop',
+      'stop_sequence': 'stop',
+      'max_tokens': 'length',
+      'tool_use': 'tool_calls'
+    };
+
+    return mappings[reason.toLowerCase()] || 'stop';
   }
 
   handleError(error: unknown): AdapterError {
     if (error && typeof error === 'object' && 'name' in error) {
       const awsError = error as any;
       
-      // Erreurs AWS spécifiques
       switch (awsError.name) {
         case 'ValidationException':
           return new AdapterError(
@@ -452,31 +667,24 @@ export class BedrockAdapter extends BaseAdapter {
       }
     });
 
-    // Traiter le stream AWS
     (async () => {
       try {
         for await (const event of responseStream) {
-          
-          // Les événements AWS Bedrock ont différents types
           if (event.chunk && event.chunk.bytes) {
             try {
-              // Décoder le chunk depuis AWS
               const decoder = new TextDecoder();
               const chunkText = decoder.decode(event.chunk.bytes);
               
               // Pousser l'événement AWS brut au format SSE
-              // Le request-handler appellera transformStreamChunk pour la transformation
               const sseData = `data: ${chunkText}\n\n`;
               readable.push(sseData);
               
             } catch (parseError) {
               console.error('Error processing AWS chunk:', parseError);
-              console.error('Raw chunk:', new TextDecoder().decode(event.chunk.bytes));
             }
           }
         }
         
-        // Marquer la fin du stream
         readable.push('data: [DONE]\n\n');
         readable.push(null);
       } catch (error) {
@@ -503,7 +711,6 @@ export class BedrockAdapter extends BaseAdapter {
 
     try {
       if (isStreaming) {
-        // Requête streaming
         const command = new InvokeModelWithResponseStreamCommand({
           modelId: model,
           body: requestBody,
@@ -517,13 +724,11 @@ export class BedrockAdapter extends BaseAdapter {
           throw this.createError('Empty response from Bedrock', 500, 'API_ERROR');
         }
 
-        // Créer un stream compatible avec le format attendu
         const streamData = this.createBedrockStream(response.body);
         
         const duration = Date.now() - startTime;
         this.logMetrics('makeStreamRequest', duration, true);
         
-        // Retourner un objet qui ressemble à une AxiosResponse
         return {
           data: streamData,
           status: 200,
@@ -534,7 +739,7 @@ export class BedrockAdapter extends BaseAdapter {
             'connection': 'keep-alive'
           },
           config: {
-            method: 'POST' as const,
+            method: 'POST',
             url: `bedrock:${this.region}:${model}`,
             headers: {
               'Content-Type': 'application/json',
@@ -543,10 +748,8 @@ export class BedrockAdapter extends BaseAdapter {
           },
           request: {}
         } as unknown as AxiosResponse;
-
         
       } else {
-        // Requête non-streaming
         const command = new InvokeModelCommand({
           modelId: model,
           body: requestBody,
@@ -560,7 +763,6 @@ export class BedrockAdapter extends BaseAdapter {
           throw this.createError('Empty response from Bedrock', 500, 'API_ERROR');
         }
 
-        // Décoder la réponse
         const responseText = new TextDecoder().decode(response.body);
         const bedrockResponse: BedrockAnthropicResponse = JSON.parse(responseText);
         
@@ -578,16 +780,11 @@ export class BedrockAdapter extends BaseAdapter {
   }
 
   /**
-   * Validation spécifique à Bedrock
+   * Validation spécifique à Bedrock avec support des tools
    */
   protected performValidation(request: StandardRequest, model: Model) {
     const baseValidation = super.performValidation(request, model);
     const bedrockErrors: string[] = [];
-
-    // Vérifier que max_tokens est défini (requis par Bedrock)
-    if (!request.max_tokens) {
-      bedrockErrors.push('max_tokens is required for Bedrock models');
-    }
 
     // Vérifier les limites de tokens selon le modèle
     if (request.max_tokens && request.max_tokens > 8192) {
@@ -601,9 +798,78 @@ export class BedrockAdapter extends BaseAdapter {
       console.warn(`Bedrock model ${model.provider_model_id} may not be a valid Bedrock model identifier`);
     }
 
+    // Validation des tools
+    if (request.tools && request.tools.length > 0) {
+      if (!model.support_tool_calling) {
+        bedrockErrors.push('Model does not support tool calling');
+      } else {
+        // Valider chaque tool
+        request.tools.forEach((tool, index) => {
+          if (tool.type !== 'function') {
+            bedrockErrors.push(`Tool ${index}: only 'function' type is supported in Bedrock`);
+          }
+          if (!tool.function.name) {
+            bedrockErrors.push(`Tool ${index}: function name is required`);
+          }
+          if (!tool.function.parameters || typeof tool.function.parameters !== 'object') {
+            bedrockErrors.push(`Tool ${index}: function parameters must be an object`);
+          }
+          if (tool.function.parameters && !tool.function.parameters.type) {
+            bedrockErrors.push(`Tool ${index}: function parameters must have a 'type' property`);
+          }
+        });
+      }
+    }
+
+    // Validation des tool choice (Bedrock ne supporte pas tool_choice explicite)
+    if (request.tool_choice && request.tool_choice !== 'auto') {
+      console.warn('Bedrock does not support explicit tool_choice, using auto mode');
+    }
+
+    // Validation des messages avec tool calls et tool results
+    if (request.messages) {
+      let hasToolCalls = false;
+      let hasToolResults = false;
+      
+      request.messages.forEach((message, index) => {
+        if (message.tool_calls && message.tool_calls.length > 0) {
+          hasToolCalls = true;
+          if (message.role !== 'assistant') {
+            bedrockErrors.push(`Message ${index}: tool_calls can only be in assistant messages`);
+          }
+        }
+        if (message.role === 'tool') {
+          hasToolResults = true;
+          if (!message.tool_call_id) {
+            bedrockErrors.push(`Message ${index}: tool message must have tool_call_id`);
+          }
+        }
+      });
+      
+      // Si on a des tool calls, on doit soit avoir des tools définis, soit des tool results
+      if (hasToolCalls && !request.tools && !hasToolResults) {
+        bedrockErrors.push('Tool calls found in messages but no tools defined in request');
+      }
+    }
+
     return {
       valid: baseValidation.valid && bedrockErrors.length === 0,
       errors: [...baseValidation.errors, ...bedrockErrors]
+    };
+  }
+
+  /**
+   * Obtient les informations spécifiques à Bedrock
+   */
+  getBedrockInfo(): {
+    region: string;
+    modelInfo?: Model;
+    supportsTools: boolean;
+  } {
+    return {
+      region: this.region,
+      modelInfo: this.modelInfo,
+      supportsTools: this.modelInfo?.support_tool_calling || false
     };
   }
 }

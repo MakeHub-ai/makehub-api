@@ -40,7 +40,9 @@ export interface Tool {
 
 export type ToolChoice = 
   | 'auto' 
-  | 'none' 
+  | 'none'
+  | 'any'
+  | 'required'
   | {
       type: 'function';
       function: {

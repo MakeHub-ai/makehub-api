@@ -59,7 +59,7 @@ async function testSimpleChat() {
   console.log('\n💬 Testing simple chat completion...');
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'anthropic/claude-3-5-haiku',
+      model: 'anthropic/claude-3-7-sonnet',
       messages: [
         { role: 'user', content: 'Say hello in French!' }
       ],
@@ -81,12 +81,12 @@ async function testStreamingChat() {
   console.log('\n🌊 Testing streaming chat completion...');
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'anthropic/claude-3-5-haiku',
+      model: 'anthropic/claude-3-7-sonnet',
       messages: [
-        { role: 'user', content: 'Count from 1 to 10 slowly' }
+        { role: 'user', content: 'Count from 1 to 100 slowly' }
       ],
       stream: true,
-      max_tokens: 100
+      max_tokens: 200
     }, {
       responseType: 'stream'
     });
@@ -173,7 +173,7 @@ async function testToolCalling() {
   console.log('\n🔧 Testing tool calling...');
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'gpt-4',
+      model: 'anthropic/claude-3-7-sonnet',
       messages: [
         { role: 'user', content: 'What\'s 15 * 23? Use the calculator tool.' }
       ],
@@ -221,7 +221,7 @@ async function testCostEstimation() {
   console.log('\n💰 Testing cost estimation...');
   try {
     const response = await api.post('/v1/chat/estimate', {
-      model: 'anthropic/claude-3-5-haiku',
+      model: 'anthropic/claude-3-7-sonnet',
       messages: [
         { role: 'user', content: 'Write a short story about a robot learning to paint.' }
       ],
@@ -255,7 +255,7 @@ async function testVision() {
   
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'anthropic/claude-3-5-haiku',
+      model: 'anthropic/claude-3-7-sonnet',
       messages: [
         {
           role: 'user',
@@ -311,13 +311,13 @@ async function runAllTests() {
   //await testHealth();
   //await testModels();
   //await testSimpleChat();
-  await testStreamingChat();
-  /**
-  await testToolCalling();
-  await testCostEstimation();
-  await testVision();
-  await testFallback();
-   */
+  //await testStreamingChat();
+  
+  //await testToolCalling();
+  //await testCostEstimation();
+  //await testVision();
+  //await testFallback();
+  
   console.log('\n✅ All tests completed!');
 }
 

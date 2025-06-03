@@ -50,7 +50,7 @@ function convertContextWindow(yamlContext) {
  * @param {object} modelData - Données du modèle depuis le YAML
  * @returns {object} - {adapter: string, extraParam: object, cleanBaseUrl: string|null}
  */
-function determineAdapterAndParams(providerName, modelData) {
+function determineAdapterAndParams(providerName, modelData, modelId) {
   // Fonction utilitaire pour nettoyer les URLs de proxy
   function getCleanBaseUrl(baseUrl, targetUrl) {
     // Si c'est une URL de proxy, utiliser target_url ou null
@@ -108,19 +108,33 @@ function determineAdapterAndParams(providerName, modelData) {
     };
   }
 
-  // Vertex AI (Google Cloud)
+  // Vertex AI (uniquement pour Claude d'Anthropic)
   if (providerName === 'vertex') {
     const cleanBaseUrl = getCleanBaseUrl(modelData.base_url, modelData.target_url);
     
-    return {
-      adapter: 'vertex',
-      cleanBaseUrl: cleanBaseUrl,
-      extraParam: {
-        project_id: 'cs-poc-430lnj79urvf1fpvk3obdby', // À extraire depuis l'URL si possible
-        location: 'us-central1', // À extraire depuis l'URL si possible
-        endpoint: cleanBaseUrl
-      }
-    };
+    // Vertex adapter seulement pour les modèles Claude
+    if (modelId.startsWith('anthropic/')) {
+      let projectId = process.env.VERTEX_PROJECT_ID || 'cs-poc-430lnj79urvf1fpvk3obdby';
+      let region = process.env.VERTEX_REGION || 'us-central1';
+      
+      return {
+        adapter: 'vertex-anthropic',
+        cleanBaseUrl: cleanBaseUrl, // Le proxy ou null
+        extraParam: {
+          project_id: projectId,
+          region: region,
+          gcp_project_env: 'VERTEX_PROJECT_ID',
+          gcp_region_env: 'VERTEX_REGION'
+        }
+      };
+    } else {
+      // Les modèles Google (Gemini) restent avec l'adapter OpenAI
+      return {
+        adapter: 'openai',
+        cleanBaseUrl: cleanBaseUrl,
+        extraParam: {}
+      };
+    }
   }
   
   // OpenAI-compatible par défaut (tous les autres providers)
@@ -151,7 +165,7 @@ function parseYamlToModels(yamlContent) {
         const modelId = modelName;
         
         // Détecter le type d'adapter et construire adapter + extra_param
-        const { adapter, extraParam, cleanBaseUrl } = determineAdapterAndParams(providerName, modelData);
+        const { adapter, extraParam, cleanBaseUrl } = determineAdapterAndParams(providerName, modelData, modelId);
 
         const model = {
           model_id: modelId,

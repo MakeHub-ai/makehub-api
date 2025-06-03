@@ -151,7 +151,7 @@ export class RequestHandler {
 
         adapter = createAdapter(combination.adapter, adapterConfig);
 
-        // Configurer l'adapter avec les informations du modèle pour Bedrock/Azure
+        // Configurer l'adapter avec les informations du modèle
         if (typeof adapter.configure === 'function') {
           adapter.configure(adapterConfig, combination.model);
 }
@@ -165,6 +165,9 @@ export class RequestHandler {
         // Valider la requête pour ce provider
         if (!adapter.validateRequest(request, combination.model)) {
           console.warn(`Request validation failed for ${combination.provider}`);
+          console.warn('Request object:', JSON.stringify(request, null, 2));
+          console.warn('Model object:', JSON.stringify(combination.model, null, 2));
+          console.warn('Provider model ID:', combination.providerModelId);
           continue;
         }
 
@@ -197,7 +200,6 @@ export class RequestHandler {
           await this.logFailedRequest(requestId, authData.user.id, request, error, startTime, combination);
           throw error;
         }
-
         // Sinon, c'est une erreur technique, on notifie et on continue
         console.error(`Provider ${combination.provider} failed:`, error instanceof Error ? error.message : 'Unknown error');
         
@@ -394,6 +396,8 @@ export class RequestHandler {
       ...request,
       model: combination.model // Passer l'objet model complet
     };
+
+    console.log(`Executing non-streaming request for provider ${combination.provider} with model_id ${combination.providerModelId}`);
 
     const response = await adapter.makeRequest(enrichedRequest, combination.providerModelId, false);
 

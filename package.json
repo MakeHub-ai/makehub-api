@@ -11,19 +11,23 @@
     "prebuild": "npm run clean"
   },
   "dependencies": {
+    "@anthropic-ai/vertex-sdk": "^0.11.4",
     "@aws-sdk/client-bedrock-runtime": "^3.821.0",
     "@aws-sdk/credential-provider-env": "^3.821.0",
     "@hono/node-server": "^1.8.0",
     "@supabase/supabase-js": "^2.38.0",
     "axios": "^1.6.0",
     "dotenv": "^16.3.0",
-    "hono": "^3.12.0",
+    "google-auth-library": "^9.15.1",
+    "hono": "^4.0.0",
+    "js-yaml": "^4.1.0",
     "node-cache": "^5.1.2",
     "tiktoken": "^1.0.0",
     "uuid": "^9.0.0",
     "zod": "^3.22.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.0",
     "@types/node": "^20.10.0",
     "@types/uuid": "^9.0.0",
     "tsx": "^4.6.0",
