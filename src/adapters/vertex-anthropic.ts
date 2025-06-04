@@ -76,7 +76,7 @@ export class VertexAnthropicAdapter extends BaseAdapter {
   buildHeaders(request: StandardRequest): Record<string, string> {
     return {
       'Content-Type': 'application/json',
-              'User-Agent': 'LLM-Gateway-Vertex/1.0'
+      'User-Agent': 'LLM-Gateway-Vertex/1.0'
     };
   }
 
@@ -305,8 +305,7 @@ export class VertexAnthropicAdapter extends BaseAdapter {
       const timestamp = Math.floor(Date.now() / 1000);
       const modelId = this.modelInfo?.model_id || event.message?.model || 'vertex-anthropic-model';
 
-      // Logique de transformation similaire à l'adapter original
-      // mais optimisée pour le SDK natif
+      // Message start - premier chunk avec les métadonnées
       if (event.type === 'message_start' && event.message) {
         return {
           id: event.message.id,
@@ -324,8 +323,38 @@ export class VertexAnthropicAdapter extends BaseAdapter {
         };
       }
 
+      // Content block start - début d'un bloc de contenu (text ou tool_use)
+      if (event.type === 'content_block_start' && event.content_block) {
+        if (event.content_block.type === 'tool_use') {
+          // Début d'un tool call
+          return {
+            id: event.message?.id || `vertex-${Date.now()}`,
+            object: 'chat.completion.chunk' as const,
+            created: timestamp,
+            model: modelId,
+            choices: [{
+              index: 0,
+              delta: {
+                tool_calls: [{
+                  id: event.content_block.id || '',
+                  type: 'function' as const,
+                  function: {
+                    name: event.content_block.name || '',
+                    arguments: ''
+                  }
+                }]
+              },
+              finish_reason: null
+            }]
+          };
+        }
+        return null; // Ignorer les autres types de content_block_start pour le texte
+      }
+
+      // Content block delta - contenu du message ou arguments des tools
       if (event.type === 'content_block_delta' && event.delta) {
         if (event.delta.type === 'text_delta' && typeof event.delta.text === 'string') {
+          // Texte normal
           return {
             id: event.message?.id || `vertex-${Date.now()}`,
             object: 'chat.completion.chunk' as const,
@@ -337,10 +366,69 @@ export class VertexAnthropicAdapter extends BaseAdapter {
               finish_reason: null
             }]
           };
+        } else if (event.delta.type === 'input_json_delta' && event.delta.partial_json) {
+          // Arguments des tool calls (JSON partiel)
+          return {
+            id: event.message?.id || `vertex-${Date.now()}`,
+            object: 'chat.completion.chunk' as const,
+            created: timestamp,
+            model: modelId,
+            choices: [{
+              index: 0,
+              delta: {
+                tool_calls: [{
+                  function: {
+                    name: '',
+                    arguments: event.delta.partial_json
+                  }
+                }]
+              },
+              finish_reason: null
+            }]
+          };
         }
       }
 
-      // Gestion des autres types d'événements...
+      // Content block stop - fin d'un bloc de contenu
+      if (event.type === 'content_block_stop') {
+        return null; // Pas besoin de chunk spécial pour la fin d'un bloc
+      }
+
+      // Message delta - mise à jour avec finish_reason et usage final
+      if (event.type === 'message_delta' && event.delta) {
+        return {
+          id: event.message?.id || `vertex-${Date.now()}`,
+          object: 'chat.completion.chunk' as const,
+          created: timestamp,
+          model: modelId,
+          choices: [{
+            index: 0,
+            delta: {},
+            finish_reason: this.mapFinishReason(event.delta.stop_reason)
+          }],
+          usage: event.usage ? {
+            completion_tokens: event.usage.output_tokens,
+            prompt_tokens: undefined,
+            total_tokens: undefined
+          } : undefined
+        };
+      }
+
+      // Message stop - fin du stream
+      if (event.type === 'message_stop') {
+        return {
+          id: event.message?.id || `vertex-${Date.now()}`,
+          object: 'chat.completion.chunk' as const,
+          created: timestamp,
+          model: modelId,
+          choices: [{
+            index: 0,
+            delta: {},
+            finish_reason: 'stop'
+          }]
+        };
+      }
+
       return null;
 
     } catch (error) {
@@ -476,7 +564,59 @@ export class VertexAnthropicAdapter extends BaseAdapter {
       vertexErrors.push('Vertex Region is required');
     }
 
-    // Validation similaire à l'adapter original...
+    // Validation des tools (similaire à Bedrock)
+    if (request.tools && request.tools.length > 0) {
+      if (!model.support_tool_calling) {
+        vertexErrors.push('Model does not support tool calling');
+      } else {
+        // Valider chaque tool
+        request.tools.forEach((tool, index) => {
+          if (tool.type !== 'function') {
+            vertexErrors.push(`Tool ${index}: only 'function' type is supported in Vertex/Anthropic`);
+          }
+          if (!tool.function.name) {
+            vertexErrors.push(`Tool ${index}: function name is required`);
+          }
+          if (!tool.function.parameters || typeof tool.function.parameters !== 'object') {
+            vertexErrors.push(`Tool ${index}: function parameters must be an object`);
+          }
+          if (tool.function.parameters && !tool.function.parameters.type) {
+            vertexErrors.push(`Tool ${index}: function parameters must have a 'type' property`);
+          }
+        });
+      }
+    }
+
+    // Validation des tool choice (Vertex/Anthropic ne supporte pas tool_choice explicite)
+    if (request.tool_choice && request.tool_choice !== 'auto') {
+      console.warn('Vertex/Anthropic does not support explicit tool_choice, using auto mode');
+    }
+
+    // Validation des messages avec tool calls et tool results
+    if (request.messages) {
+      let hasToolCalls = false;
+      let hasToolResults = false;
+      
+      request.messages.forEach((message, index) => {
+        if (message.tool_calls && message.tool_calls.length > 0) {
+          hasToolCalls = true;
+          if (message.role !== 'assistant') {
+            vertexErrors.push(`Message ${index}: tool_calls can only be in assistant messages`);
+          }
+        }
+        if (message.role === 'tool') {
+          hasToolResults = true;
+          if (!message.tool_call_id) {
+            vertexErrors.push(`Message ${index}: tool message must have tool_call_id`);
+          }
+        }
+      });
+      
+      // Si on a des tool calls, on doit soit avoir des tools définis, soit des tool results
+      if (hasToolCalls && !request.tools && !hasToolResults) {
+        vertexErrors.push('Tool calls found in messages but no tools defined in request');
+      }
+    }
 
     return {
       valid: baseValidation.valid && vertexErrors.length === 0,

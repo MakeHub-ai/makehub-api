@@ -215,6 +215,162 @@ async function testToolCalling() {
 }
 
 /**
+ * Test avec tool calling en streaming
+ */
+async function testStreamingToolCalling() {
+  console.log('\n🌊🔧 Testing streaming tool calling...');
+  try {
+    const response = await api.post('/v1/chat/completions', {
+      model: 'anthropic/claude-3-7-sonnet',
+      messages: [
+        { role: 'user', content: 'What\'s 25 * 17? Then calculate 100 / 4. Use the calculator tool for both.' }
+      ],
+      tools: [
+        {
+          type: 'function',
+          function: {
+            name: 'calculator',
+            description: 'Perform basic arithmetic operations',
+            parameters: {
+              type: 'object',
+              properties: {
+                operation: {
+                  type: 'string',
+                  enum: ['add', 'subtract', 'multiply', 'divide']
+                },
+                a: { type: 'number' },
+                b: { type: 'number' }
+              },
+              required: ['operation', 'a', 'b']
+            }
+          }
+        }
+      ],
+      tool_choice: 'auto',
+      stream: true
+    }, {
+      responseType: 'stream'
+    });
+
+    console.log('✅ Streaming tool calling started...');
+    let content = '';
+    let toolCalls = [];
+    
+    let buffer = '';
+    let errorHandled = false;
+
+    response.data.on('data', (chunk) => {
+      if (errorHandled) return;
+      buffer += chunk.toString();
+      
+      // Vérifier si c'est une erreur JSON
+      try {
+        const jsonData = JSON.parse(buffer);
+        if (jsonData.error) {
+          console.error('❌ Streaming tool calling failed with JSON error:', jsonData);
+          errorHandled = true;
+          response.data.destroy();
+          return;
+        }
+      } catch (e) {
+        // Continue vers le traitement ligne par ligne
+      }
+
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        if (errorHandled) break;
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') {
+            if (!errorHandled) {
+              console.log('\n✅ Streaming tool calling completed');
+              if (content) {
+                console.log('📝 Content:', content);
+              }
+              if (toolCalls.length > 0) {
+                console.log('🔧 Tool calls detected:');
+                toolCalls.forEach((call, index) => {
+                  console.log(`   ${index + 1}. ${call.function.name}(${call.function.arguments})`);
+                });
+              }
+            }
+            errorHandled = true;
+            return;
+          }
+          
+          try {
+            const parsed = JSON.parse(data);
+            const delta = parsed.choices?.[0]?.delta;
+            
+            // Gérer le contenu texte
+            if (delta?.content) {
+              process.stdout.write(delta.content);
+              content += delta.content;
+            }
+            
+            // Gérer les tool calls
+            if (delta?.tool_calls) {
+              delta.tool_calls.forEach((toolCall) => {
+                const index = toolCall.index;
+                
+                // Initialiser l'outil si c'est le premier chunk
+                if (!toolCalls[index]) {
+                  toolCalls[index] = {
+                    id: toolCall.id || '',
+                    type: toolCall.type || 'function',
+                    function: {
+                      name: toolCall.function?.name || '',
+                      arguments: toolCall.function?.arguments || ''
+                    }
+                  };
+                } else {
+                  // Accumuler les arguments
+                  if (toolCall.function?.arguments) {
+                    toolCalls[index].function.arguments += toolCall.function.arguments;
+                  }
+                  if (toolCall.function?.name) {
+                    toolCalls[index].function.name = toolCall.function.name;
+                  }
+                  if (toolCall.id) {
+                    toolCalls[index].id = toolCall.id;
+                  }
+                }
+                
+                // Afficher en temps réel
+                console.log(`\n🔧 Tool call ${index + 1}: ${toolCalls[index].function.name || 'loading...'}${toolCalls[index].function.arguments ? `(${toolCalls[index].function.arguments})` : ''}`);
+              });
+            }
+          } catch (e) {
+            // Ignorer les erreurs de parsing pour les lignes non-JSON
+          }
+        }
+      }
+    });
+
+    response.data.on('error', (err) => {
+      if (!errorHandled) {
+        console.error('❌ Streaming tool calling connection error:', err.message);
+        errorHandled = true;
+      }
+    });
+    
+    response.data.on('end', () => {
+      if (!errorHandled && !content && toolCalls.length === 0 && !buffer.includes("[DONE]")) {
+        console.error('❌ Streaming tool calling ended prematurely.');
+        if (buffer.length > 0) {
+          console.error('Remaining buffer:', buffer);
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Streaming tool calling setup failed:', error.response?.data || error.message);
+  }
+}
+
+/**
  * Test d'estimation de coût
  */
 async function testCostEstimation() {
@@ -314,6 +470,7 @@ async function runAllTests() {
   //await testStreamingChat();
   
   //await testToolCalling();
+  await testStreamingToolCalling();
   //await testCostEstimation();
   //await testVision();
   //await testFallback();
@@ -332,6 +489,7 @@ export {
   testSimpleChat,
   testStreamingChat,
   testToolCalling,
+  testStreamingToolCalling,
   testCostEstimation,
   testVision,
   testFallback,

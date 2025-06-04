@@ -139,7 +139,6 @@ export const flushAllCaches = (): void => {
 // Événements de cache pour le debugging
 if (process.env.NODE_ENV === 'development') {
   const logCacheEvent = (cacheName: string, event: string, key: string) => {
-    console.log(`Cache [${cacheName}] ${event}: ${key}`);
   };
 
   cache.on('set', (key: string, value: any) => {
