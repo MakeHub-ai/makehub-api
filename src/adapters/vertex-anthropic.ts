@@ -336,6 +336,7 @@ export class VertexAnthropicAdapter extends BaseAdapter {
               index: 0,
               delta: {
                 tool_calls: [{
+                  index: event.index || 0,
                   id: event.content_block.id || '',
                   type: 'function' as const,
                   function: {
@@ -377,6 +378,7 @@ export class VertexAnthropicAdapter extends BaseAdapter {
               index: 0,
               delta: {
                 tool_calls: [{
+                  index: event.index || 0,
                   function: {
                     name: '',
                     arguments: event.delta.partial_json

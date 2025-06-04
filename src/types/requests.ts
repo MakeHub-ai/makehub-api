@@ -22,6 +22,7 @@ export interface ChatMessageContent {
 
 export interface ToolCall {
   id: string;
+  index?: number;
   type: 'function';
   function: {
     name: string;

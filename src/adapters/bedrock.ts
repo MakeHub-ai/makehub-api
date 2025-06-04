@@ -482,7 +482,7 @@ export class BedrockAdapter extends BaseAdapter {
                     name: event.content_block.name || '',
                     arguments: ''
                   }
-                } as any]
+                }]
               },
               finish_reason: null
             }]
@@ -524,7 +524,7 @@ export class BedrockAdapter extends BaseAdapter {
                     name: '',
                     arguments: event.delta.partial_json
                   }
-                } as any]
+                }]
               },
               finish_reason: null
             }]
