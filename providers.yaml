@@ -1042,7 +1042,7 @@ providers:
         max_output: null
         price_per_input_token: 15
         price_per_output_token: 75
-        provider_model_id: arn:aws:bedrock:us-east-2:783764599435:inference-profile/us.anthropic.claude-opus-4-20250514-v1:0
+        provider_model_id: arn:aws:bedrock:us-east-2:303258618041:inference-profile/us.anthropic.claude-opus-4-20250514-v1:0
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
@@ -1064,7 +1064,7 @@ providers:
         max_output: null
         price_per_input_token: 3
         price_per_output_token: 15
-        provider_model_id: arn:aws:bedrock:us-east-2:783764599435:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+        provider_model_id: arn:aws:bedrock:us-east-2:303258618041:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
@@ -1086,7 +1086,7 @@ providers:
         max_output: null
         price_per_input_token: 0.8
         price_per_output_token: 4
-        provider_model_id: arn:aws:bedrock:us-east-2:783764599435:inference-profile/us.anthropic.claude-3-5-haiku-20241022-v1:0
+        provider_model_id: arn:aws:bedrock:us-east-2:303258618041:inference-profile/us.anthropic.claude-3-5-haiku-20241022-v1:0
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
@@ -1113,7 +1113,7 @@ providers:
         max_output: null
         price_per_input_token: 3
         price_per_output_token: 15
-        provider_model_id: arn:aws:bedrock:us-east-1:783764599435:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+        provider_model_id: arn:aws:bedrock:us-east-1:3032586180415:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
@@ -1135,7 +1135,7 @@ providers:
         max_output: null
         price_per_input_token: 3
         price_per_output_token: 15
-        provider_model_id: arn:aws:bedrock:us-east-2:783764599435:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0
+        provider_model_id: arn:aws:bedrock:us-east-2:303258618041:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0
         quantisation: null
         support_function_calling: false
         support_function_calling_streaming: false
