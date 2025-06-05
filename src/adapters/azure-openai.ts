@@ -233,6 +233,7 @@ export class AzureOpenAIAdapter extends BaseAdapter {
         let code: AdapterError['code'] = 'API_ERROR';
         if (status === 401) code = 'AUTHENTICATION_ERROR';
         else if (status === 429) code = 'RATE_LIMIT_ERROR';
+        else if (status === 404) code = 'CONFIGURATION_ERROR'; // 404 = configuration error, permettre fallback
         else if (status >= 400 && status < 500) code = 'VALIDATION_ERROR';
         else if (status >= 500) code = 'API_ERROR';
         

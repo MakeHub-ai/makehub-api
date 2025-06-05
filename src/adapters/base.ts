@@ -56,16 +56,58 @@ export abstract class BaseAdapter implements AdapterInterface {
   }
 
   /**
-   * Détermine si une erreur est une erreur API (4xx)
+   * Détermine si une erreur est une erreur API (4xx) qui ne devrait pas déclencher de fallback
+   * Les erreurs de configuration permettent le fallback
+   * Si on return false, cela signifie que le fallback est autorisé
+   * Si on return true, cela signifie que le fallback n'est pas autorisé
+   * On veut que toutes les erreurs fassent un fallback sauf les 400 Bad Request
    */
   isAPIError(error: unknown): boolean {
+    let status: number | undefined;
+    let errorDetails: { message?: string; code?: string; adapter?: string; provider?: string } = {};
+
+    // Extraction du status et des détails selon le type d'erreur
     if (error instanceof AdapterError) {
-      return error.status >= 400 && error.status < 500;
+      status = error.status;
+      errorDetails = {
+        message: error.message,
+        code: error.code,
+        adapter: error.adapter,
+      };
+      
+      // Les erreurs de configuration permettent toujours le fallback
+      if (error.code === 'CONFIGURATION_ERROR') {
+        return false;
+      }
+    } else if (error && typeof error === 'object' && 'status' in error) {
+      status = (error as any).status;
+      if ('message' in error) {
+        errorDetails.message = (error as any).message;
+      }
     }
-    if (error && typeof error === 'object' && 'status' in error) {
-      const status = (error as any).status;
-      return typeof status === 'number' && status >= 400 && status < 500;
+
+    // Si on a un status code
+    if (typeof status === 'number') {
+      // Seul le 400 Bad Request empêche le fallback
+      if (status === 400) {
+        console.error('Bad Request (400) - Erreur remontée à l\'utilisateur:', {
+          status,
+          ...errorDetails
+        });
+        return true; // Pas de fallback, erreur remontée à l'utilisateur
+      }
+      
+      // Toutes les autres erreurs (401, 403, 404, 429, 5xx, etc.) permettent le fallback
+      if (status >= 400) {
+        console.warn(`Erreur ${status} - Fallback autorisé:`, {
+          status,
+          ...errorDetails
+        });
+        return false; // Fallback autorisé
+      }
     }
+
+    // Pour les erreurs sans status ou avec status < 400, on autorise le fallback
     return false;
   }
 

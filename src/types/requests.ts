@@ -67,6 +67,7 @@ export interface StandardRequest {
   tools?: Tool[];
   tool_choice?: ToolChoice;
   user?: string;
+  provider?: string | string[]; // Provider(s) to use for this request
 }
 
 /**

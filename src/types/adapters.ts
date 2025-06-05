@@ -39,6 +39,7 @@ export type AdapterErrorCode =
   | 'TIMEOUT_ERROR'
   | 'RATE_LIMIT_ERROR'
   | 'AUTHENTICATION_ERROR'
+  | 'CONFIGURATION_ERROR'
   | 'UNKNOWN_ERROR';
 
 export class AdapterError extends Error {

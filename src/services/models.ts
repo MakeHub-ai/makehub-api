@@ -124,7 +124,7 @@ export async function filterProviders(
   userPreferences: UserPreferences = {},
   filterOptions: FilterOptions = {}
 ): Promise<ProviderCombination[]> {
-  const { model: requestedModel, stream = false, tools = null } = request;
+  const { model: requestedModel, stream = false, tools = null, provider: requestedProvider } = request;
   
   // Récupérer tous les modèles
   const allModels = await getAllModels();
@@ -135,6 +135,21 @@ export async function filterProviders(
     if (requestedModel && typeof requestedModel === 'string') {
       if (model.model_id !== requestedModel && model.provider_model_id !== requestedModel) {
         return false;
+      }
+    }
+    
+    // Filter by requested provider(s) if specified
+    if (requestedProvider) {
+      if (typeof requestedProvider === 'string') {
+        // Single provider
+        if (model.provider !== requestedProvider) {
+          return false;
+        }
+      } else if (Array.isArray(requestedProvider) && requestedProvider.length > 0) {
+        // List of providers
+        if (!requestedProvider.includes(model.provider)) {
+          return false;
+        }
       }
     }
     
@@ -164,7 +179,7 @@ export async function filterProviders(
       }
     }
 
-    // Filter by providers if specified
+    // Filter by providers if specified in filterOptions (for backward compatibility)
     if (filterOptions.providers && filterOptions.providers.length > 0) {
       if (!filterOptions.providers.includes(model.provider)) {
         return false;

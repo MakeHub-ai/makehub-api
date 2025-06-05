@@ -76,6 +76,7 @@ const chatCompletionSchema = z.object({
       })
     })
   ]).optional(),
+  provider: z.union([z.string(), z.array(z.string())]).optional(),
   user: z.string().optional()
 });
 
@@ -94,6 +95,7 @@ const completionSchema = z.object({
   echo: z.boolean().optional().default(false),
   best_of: z.number().int().min(1).optional(),
   logit_bias: z.object({}).passthrough().optional(),
+  provider: z.union([z.string(), z.array(z.string())]).optional(),
   user: z.string().optional(),
   suffix: z.string().optional()
 });
@@ -196,6 +198,7 @@ chat.post('/completions', async (c: Context<{ Variables: HonoVariables }>) => {
       stop: validatedRequest.stop,
       tools: validatedRequest.tools,
       tool_choice: validatedRequest.tool_choice,
+      provider: validatedRequest.provider,
       user: validatedRequest.user
     };
     
@@ -263,8 +266,6 @@ chat.post('/completions', async (c: Context<{ Variables: HonoVariables }>) => {
     }
     
   } catch (error) {
-    console.error('Chat completion error:', error);
-    
     // Erreurs de validation
     if (error instanceof z.ZodError) {
       const validationError = handleValidationError(error);
@@ -313,6 +314,7 @@ chat.post('/completion', async (c: Context<{ Variables: HonoVariables }>) => {
         presence_penalty: validatedRequest.presence_penalty,
         stop: validatedRequest.stop,
         stream: !!validatedRequest.stream,
+        provider: validatedRequest.provider,
         user: validatedRequest.user
       };
       
@@ -511,6 +513,7 @@ chat.post('/estimate', async (c: Context<{ Variables: HonoVariables }>) => {
       stop: validatedRequest.stop,
       tools: validatedRequest.tools,
       tool_choice: validatedRequest.tool_choice,
+      provider: validatedRequest.provider,
       user: validatedRequest.user
     };
     

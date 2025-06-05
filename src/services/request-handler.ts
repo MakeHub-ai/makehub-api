@@ -136,6 +136,18 @@ export class RequestHandler {
   ): Promise<ChatCompletion | AsyncGenerator<ChatCompletionChunk>> {
     let lastError: unknown = null;
 
+    // Pour le streaming, on doit implémenter le fallback différemment
+    if (request.stream) {
+      return this.executeStreamingWithFallback(
+        request,
+        providerCombinations,
+        requestId,
+        authData,
+        startTime
+      );
+    }
+
+    // Pour les requêtes non-streaming, on garde la logique existante
     for (let i = 0; i < providerCombinations.length; i++) {
       const combination = providerCombinations[i];
       let adapter: BaseAdapter | undefined;
@@ -154,7 +166,7 @@ export class RequestHandler {
         // Configurer l'adapter avec les informations du modèle
         if (typeof adapter.configure === 'function') {
           adapter.configure(adapterConfig, combination.model);
-}
+        }
         
         // Vérifier que l'adapter est configuré
         if (!adapter.isConfigured()) {
@@ -171,26 +183,14 @@ export class RequestHandler {
           continue;
         }
 
-        // Exécuter selon le mode (streaming ou non)
-        if (request.stream) {
-          return await this.handleStreamingRequest(
-            request,
-            adapter,
-            combination,
-            requestId,
-            authData,
-            startTime
-          );
-        } else {
-          return await this.handleNonStreamingRequest(
-            request,
-            adapter,
-            combination,
-            requestId,
-            authData,
-            startTime
-          );
-        }
+        return await this.handleNonStreamingRequest(
+          request,
+          adapter,
+          combination,
+          requestId,
+          authData,
+          startTime
+        );
 
       } catch (error) {
         lastError = error;
@@ -213,6 +213,98 @@ export class RequestHandler {
 
     // Si on arrive ici, aucun provider n'a fonctionné
     throw lastError || new Error('All providers failed');
+  }
+
+  /**
+   * Exécute une requête streaming avec fallback
+   */
+  async executeStreamingWithFallback(
+    request: StandardRequest, 
+    providerCombinations: ProviderCombination[], 
+    requestId: string, 
+    authData: AuthData, 
+    startTime: number
+  ): Promise<AsyncGenerator<ChatCompletionChunk>> {
+    const self = this;
+    let lastError: unknown = null;
+
+    async function* streamGeneratorWithFallback(): AsyncGenerator<ChatCompletionChunk> {
+      for (let i = 0; i < providerCombinations.length; i++) {
+        const combination = providerCombinations[i];
+        let adapter: BaseAdapter | undefined;
+        
+        try {
+          console.log(`Trying provider ${combination.provider} with model ${combination.modelId} (streaming attempt ${i + 1}/${providerCombinations.length})`);
+          
+          // Créer l'adapter avec la configuration appropriée
+          const adapterConfig = {
+            apiKey: process.env[combination.ApiKeyName],
+            baseURL: combination.baseUrl
+          };
+
+          adapter = createAdapter(combination.adapter, adapterConfig);
+
+          // Configurer l'adapter avec les informations du modèle
+          if (typeof adapter.configure === 'function') {
+            adapter.configure(adapterConfig, combination.model);
+          }
+          
+          // Vérifier que l'adapter est configuré
+          if (!adapter.isConfigured()) {
+            console.warn(`Adapter ${combination.adapter} is not properly configured`);
+            continue;
+          }
+          
+          // Valider la requête pour ce provider
+          if (!adapter.validateRequest(request, combination.model)) {
+            console.warn(`Request validation failed for ${combination.provider}`);
+            continue;
+          }
+
+          // Tenter la requête streaming
+          const generator = await self.handleStreamingRequest(
+            request,
+            adapter,
+            combination,
+            requestId,
+            authData,
+            startTime
+          );
+
+          // Si on arrive ici, la requête a réussi, yield tous les chunks
+          yield* generator;
+          return; // Succès, on sort de la boucle
+
+        } catch (error) {
+          lastError = error;
+          
+          // Si c'est une APIError (erreur métier), on la retourne directement
+          if (adapter && adapter.isAPIError(error)) {
+            await self.logFailedRequest(requestId, authData.user.id, request, error, startTime, combination);
+            throw error;
+          }
+          
+          // Sinon, c'est une erreur technique, on notifie et on continue
+          console.error(`Streaming provider ${combination.provider} failed:`, error instanceof Error ? error.message : 'Unknown error');
+          
+          // Envoyer notification d'erreur (asynchrone)
+          self.notifyError(error, combination, request).catch(console.error);
+          
+          // Si c'est le dernier provider, on lance l'erreur
+          if (i === providerCombinations.length - 1) {
+            throw lastError || new Error('All streaming providers failed');
+          }
+          
+          // Sinon, on continue avec le provider suivant
+          continue;
+        }
+      }
+      
+      // Si on arrive ici, aucun provider n'a fonctionné
+      throw lastError || new Error('All streaming providers failed');
+    }
+
+    return streamGeneratorWithFallback();
   }
 
   /**
