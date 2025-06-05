@@ -66,7 +66,7 @@ export class RequestHandler {
       const providerCombinations = await filterProviders(request, authData.user.id, authData.userPreferences);
       
       if (providerCombinations.length === 0) {
-        throw new Error('No compatible providers found for this request');
+        throw new Error(`No provider available for model_id: ${request.model || 'unknown'}`);
       }
 
       // 2. Exécuter avec fallback
@@ -81,6 +81,11 @@ export class RequestHandler {
       return result;
 
     } catch (error) {
+      // Si c'est une erreur de modèle non trouvé, on la renvoie directement sans logging
+      if (error instanceof Error && error.message.includes('No provider available for model_id')) {
+        throw error;
+      }
+      
       // Log l'erreur finale si aucun provider n'a fonctionné
       await this.logFailedRequest(requestId, authData.user.id, request, error, startTime);
       throw error;

@@ -29,16 +29,59 @@ const api = axios.create({
  * Extrait le message d'erreur de façon intelligente
  */
 function extractErrorMessage(error) {
+  console.log('Error details:', {
+    status: error.response?.status,
+    statusText: error.response?.statusText,
+    contentType: error.response?.headers?.['content-type'],
+    contentLength: error.response?.headers?.['content-length'],
+    message: error.message
+  });
+  
   if (error.response?.data) {
+    // Si c'est un Buffer, le convertir en string
+    if (Buffer.isBuffer(error.response.data)) {
+      const dataStr = error.response.data.toString();
+      try {
+        const parsed = JSON.parse(dataStr);
+        return parsed.error?.message || parsed.message || dataStr;
+      } catch {
+        return dataStr;
+      }
+    }
+    
+    // Si c'est un Stream, lire son contenu
+    if (error.response.data && typeof error.response.data.read === 'function') {
+      try {
+        const content = error.response.data.read();
+        if (content) {
+          const dataStr = content.toString();
+          try {
+            const parsed = JSON.parse(dataStr);
+            return parsed.error?.message || parsed.message || dataStr;
+          } catch {
+            return dataStr;
+          }
+        }
+      } catch (readError) {
+        console.log('Could not read stream content:', readError.message);
+      }
+    }
+    
     // Si c'est un objet JSON avec un message d'erreur
-    if (typeof error.response.data === 'object') {
+    if (typeof error.response.data === 'object' && error.response.data.constructor === Object) {
       return error.response.data.error?.message || 
              error.response.data.message || 
-             JSON.stringify(error.response.data);
+             'Error object received';
     }
+    
     // Si c'est une string
     if (typeof error.response.data === 'string') {
-      return error.response.data;
+      try {
+        const parsed = JSON.parse(error.response.data);
+        return parsed.error?.message || parsed.message || error.response.data;
+      } catch {
+        return error.response.data;
+      }
     }
   }
   return error.message || 'Unknown error';
@@ -66,6 +109,18 @@ async function testModels() {
   try {
     const response = await api.get('/v1/chat/models');
     console.log(`✅ Found ${response.data.data.length} models`);
+    
+    // Afficher les modèles qui supportent tool calling
+    const toolCallingModels = response.data.data.filter(model => model.support_tool_calling);
+    console.log(`🔧 Models supporting tool calling (${toolCallingModels.length}):`);
+    toolCallingModels.slice(0, 5).forEach(model => {
+      const working = model.working ? '✅' : '❌';
+      console.log(`   ${working} ${model.id} (${model.provider}) - streaming: ${model.support_tool_calling_streaming ? '✅' : '❌'}`);
+    });
+    
+    if (toolCallingModels.length > 5) {
+      console.log(`   ... and ${toolCallingModels.length - 5} more`);
+    }
   } catch (error) {
     console.error('❌ Models test failed:', extractErrorMessage(error));
   }
@@ -78,7 +133,7 @@ async function testSimpleChat() {
   console.log('\n💬 Testing simple chat completion...');
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'openai/gpt-4o',
+      model: 'deepseek/deepseek-V3-fp8',
       messages: [
         { role: 'user', content: 'Say hello in French!' }
       ],
@@ -100,12 +155,12 @@ async function testStreamingChat() {
   console.log('\n🌊 Testing streaming chat completion...');
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'openai/gpt-4o',
+      model: 'deepseek/deepseek-V3-fp8',
       messages: [
-        { role: 'user', content: 'Count from 1 to 100 slowly' }
+        { role: 'user', content: 'Count from 1 to 5 slowly' }
       ],
       stream: true,
-      max_tokens: 200
+      max_tokens: 100
     }, {
       responseType: 'stream'
     });
@@ -188,11 +243,11 @@ async function testStreamingChat() {
 /**
  * Test avec tool calling
  */
-async function testToolCalling() {
-  console.log('\n🔧 Testing tool calling...');
+async function testToolCalling(modelToUse = 'openai/gpt-4o') {
+  console.log(`\n🔧 Testing tool calling with model: ${modelToUse}...`);
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'openai/gpt-4o',
+      model: modelToUse,
       messages: [
         { role: 'user', content: 'What\'s 15 * 23? Use the calculator tool.' }
       ],
@@ -236,11 +291,11 @@ async function testToolCalling() {
 /**
  * Test avec tool calling en streaming
  */
-async function testStreamingToolCalling() {
-  console.log('\n🌊🔧 Testing streaming tool calling...');
+async function testStreamingToolCalling(modelToUse = 'openai/gpt-4o') {
+  console.log(`\n🌊🔧 Testing streaming tool calling with model: ${modelToUse}...`);
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'openai/gpt-4o',
+      model: modelToUse,
       messages: [
         { role: 'user', content: 'What\'s 25 * 17? Then calculate 100 / 4. Use the calculator tool for both.' }
       ],
@@ -474,6 +529,29 @@ async function testFallback() {
 }
 
 /**
+ * Trouve le premier modèle qui supporte le tool calling et qui fonctionne
+ */
+async function findWorkingToolCallingModel() {
+  try {
+    const response = await api.get('/v1/chat/models');
+    const workingToolModels = response.data.data.filter(model => 
+      model.support_tool_calling && model.working
+    );
+    
+    if (workingToolModels.length > 0) {
+      console.log(`🔧 Found working tool calling model: ${workingToolModels[0].id}`);
+      return workingToolModels[0].id;
+    }
+    
+    console.log('⚠️ No working tool calling models found, using fallback');
+    return 'openai/gpt-4o'; // fallback
+  } catch (error) {
+    console.log('⚠️ Could not fetch models, using fallback');
+    return 'openai/gpt-4o'; // fallback
+  }
+}
+
+/**
  * Exécuter tous les tests
  */
 async function runAllTests() {
@@ -484,8 +562,11 @@ async function runAllTests() {
   //await testSimpleChat();
   //await testStreamingChat();
   
-  //await testToolCalling();
-  await testStreamingToolCalling();
+  // Trouver un modèle qui supporte le tool calling
+  const toolCallingModel = await findWorkingToolCallingModel();
+  
+  await testToolCalling(toolCallingModel);
+  //await testStreamingToolCalling(toolCallingModel);
   //await testCostEstimation();
   //await testVision();
   //await testFallback();

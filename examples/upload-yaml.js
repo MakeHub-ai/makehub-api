@@ -33,8 +33,7 @@ function convertPrice(yamlPrice) {
 function convertContextWindow(yamlContext) {
   if (!yamlContext) return null;
   // Si la valeur est déjà grande (>10000), on assume qu'elle est déjà en unités absolues
-  if (yamlContext > 10000) return yamlContext;
-  return yamlContext;
+  return yamlContext * 1e6; // Convertit en unités absolues (1M tokens)
 }
 
 /**

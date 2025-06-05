@@ -410,37 +410,119 @@ export async function filterProviders(
     throw new Error('model_id is required and must be specified');
   }
   
+  console.log(`🔍 Searching providers for model_id: "${requestedModel}"`);
+  console.log(`📋 Request requirements:`);
+  console.log(`   - Tools required: ${tools && tools.length > 0 ? 'YES' : 'NO'}`);
+  
+  const hasImages = request.messages?.some(m => 
+    Array.isArray(m.content) && m.content.some(item => item.type === 'image_url')
+  );
+  console.log(`   - Vision required: ${hasImages ? 'YES' : 'NO'}`);
+  
+  const totalTokens = estimateTokensFromRequest(request);
+  console.log(`   - Estimated tokens: ${totalTokens}`);
+  
   // 2. Récupérer UNIQUEMENT les providers qui offrent ce model_id
   const allModels = await getAllModels();
+  console.log(`📊 Total models in database: ${allModels.length}`);
+  
+  // Vérifier les correspondances exactes
+  const exactMatches = allModels.filter(model => model.model_id === requestedModel);
+  const providerMatches = allModels.filter(model => model.provider_model_id === requestedModel);
+  
+  console.log(`🎯 Exact model_id matches: ${exactMatches.length}`);
+  if (exactMatches.length > 0) {
+    console.log(`   Found in providers: ${exactMatches.map(m => m.provider).join(', ')}`);
+  }
+  
+  console.log(`🎯 Provider model_id matches: ${providerMatches.length}`);
+  if (providerMatches.length > 0) {
+    console.log(`   Found in providers: ${providerMatches.map(m => m.provider).join(', ')}`);
+  }
+  
   let availableModels = allModels.filter(model => {
     // Correspondance exacte sur model_id OU provider_model_id
-    if (model.model_id !== requestedModel && model.provider_model_id !== requestedModel) {
+    const modelMatch = model.model_id === requestedModel || model.provider_model_id === requestedModel;
+    
+    if (!modelMatch) {
       return false;
     }
     
+    console.log(`\n🔍 Checking provider: ${model.provider} (${model.model_id})`);
+    
     // Filtres de compatibilité
     if (tools && tools.length > 0 && !model.support_tool_calling) {
+      console.log(`   ❌ Rejected: No tool calling support`);
       return false;
     }
 
-    const hasImages = request.messages?.some(m => 
-      Array.isArray(m.content) && m.content.some(item => item.type === 'image_url')
-    );
     if (hasImages && !model.support_vision) {
+      console.log(`   ❌ Rejected: No vision support`);
       return false;
     }
 
     // Context window strict
-    const totalTokens = estimateTokensFromRequest(request);
     if (model.context_window && totalTokens > model.context_window) {
+      console.log(`   ❌ Rejected: Context window too small (${model.context_window} < ${totalTokens})`);
       return false;
     }
+    
+    console.log(`   ✅ Accepted: All requirements met`);
+    console.log(`      - Tool calling: ${model.support_tool_calling ? 'YES' : 'NO'}`);
+    console.log(`      - Vision: ${model.support_vision ? 'YES' : 'NO'}`);
+    console.log(`      - Context window: ${model.context_window || 'unlimited'}`);
+    console.log(`      - Base URL: ${model.base_url}`);
+    console.log(`      - API Key name: ${model.api_key_name}`);
     
     return true;
   });
   
+  console.log(`\n📈 Summary:`);
+  console.log(`   - Models checked: ${exactMatches.length + providerMatches.length}`);
+  console.log(`   - Models passed filters: ${availableModels.length}`);
+  
   if (availableModels.length === 0) {
-    throw new Error(`No providers found for model_id: ${requestedModel}, or model incompatible with request requirements`);
+    console.log(`\n❌ DEBUG: No providers found. Possible reasons:`);
+    
+    if (exactMatches.length === 0 && providerMatches.length === 0) {
+      console.log(`   1. Model "${requestedModel}" does not exist in database`);
+      console.log(`   2. Check if the model_id or provider_model_id is correct`);
+      
+      // Suggérer des modèles similaires
+      const similarModels = allModels.filter(m => 
+        m.model_id.toLowerCase().includes(requestedModel.toLowerCase()) ||
+        m.provider_model_id.toLowerCase().includes(requestedModel.toLowerCase())
+      ).slice(0, 5);
+      
+      if (similarModels.length > 0) {
+        console.log(`   3. Similar models found:`);
+        similarModels.forEach(m => {
+          console.log(`      - ${m.model_id} (provider: ${m.provider})`);
+        });
+      }
+    } else {
+      console.log(`   1. Model exists but failed compatibility checks:`);
+      
+      const allMatchingModels = [...exactMatches, ...providerMatches];
+      allMatchingModels.forEach(model => {
+        const reasons = [];
+        if (tools && tools.length > 0 && !model.support_tool_calling) {
+          reasons.push('no tool calling');
+        }
+        if (hasImages && !model.support_vision) {
+          reasons.push('no vision');
+        }
+        if (model.context_window && totalTokens > model.context_window) {
+          reasons.push(`context too small (${model.context_window})`);
+        }
+        
+        if (reasons.length > 0) {
+          console.log(`      - ${model.provider}: ${reasons.join(', ')}`);
+        }
+      });
+    }
+    
+    throw new Error(`No provider available for model_id: ${requestedModel}. This model may not exist or may be incompatible with your request requirements (tool calling, vision, context window).`);
   }
   
   /**
