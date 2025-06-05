@@ -226,3 +226,37 @@ export interface ProviderCombination {
   };
   extraParams: Record<string, any>;
 }
+
+// Dans src/types/requests.ts, AJOUTER ces interfaces après ProviderCombination :
+
+/**
+ * Métriques de performance d'un modèle
+ */
+export interface ModelPerformanceMetrics {
+  throughput_median: number | null;  // tokens/seconde
+  latency_median: number | null;     // millisecondes (time_to_first_chunk)
+  sample_count: number;              // nombre de mesures
+}
+
+/**
+ * Score vectoriel 3D d'un modèle
+ */
+export interface ModelVectorScore {
+  model: Model;
+  score: number;                     // distance euclidienne (plus bas = meilleur)
+  normalizedPrice: number;           // 0-1
+  normalizedThroughput: number;      // 0-1 
+  normalizedLatency: number;         // 0-1
+  cachingBoost: boolean;             // true si caching détecté
+  hasSufficientMetrics: boolean;     // true si assez de données perf
+}
+
+// MODIFIER l'interface FilterOptions existante :
+interface FilterOptions {
+  requireToolCalling?: boolean;
+  requireVision?: boolean;
+  maxCostPerToken?: number;
+  providers?: string[];
+  ratio_sp?: number;                 // AJOUTER cette ligne
+  metricsWindowSize?: number;        // AJOUTER cette ligne
+}

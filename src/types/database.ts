@@ -7,6 +7,7 @@ export interface Model {
   provider: string;
   provider_model_id: string;
   support_tool_calling: boolean;
+  support_vision: boolean;
   price_per_input_token: number;
   price_per_output_token: number;
   context_window: number | null;
@@ -18,6 +19,7 @@ export interface Model {
   created_at: string;
   is_fallback?: boolean;
 }
+
 
 export interface RequestRow {
   request_id: string;

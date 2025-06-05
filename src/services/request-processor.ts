@@ -238,7 +238,7 @@ async function processReadyRequests(
       throw new Error('Time limit must be between 1ms and 300000ms (5 minutes)');
     }
     
-    // Get requests that need processing
+    // Get requests that need processing (exclusion des requêtes avec erreur pour double sécurité)
     const { data: requests, error } = await supabase
       .from('requests')
       .select(`
@@ -247,6 +247,7 @@ async function processReadyRequests(
         models!inner(tokenizer_name)
       `)
       .eq('status', 'ready_to_compute')
+      .is('error_message', null)
       .limit(batchSize);
     
     
@@ -353,23 +354,28 @@ async function processIndividualRequest(
     throw new Error(`Cost calculation failed: ${costResult.error}`);
   }
   
-  const { error: transactionError } = await supabase
+  const { data: transactionData, error: transactionError } = await supabase
     .from('transactions')
     .insert({
       user_id: request.user_id,
       amount: costResult.amount,
       type: 'debit' as TransactionType,
       request_id: request.request_id,
-    });
+    })
+    .select('id')
+    .single();
   
-  if (transactionError) {
-    throw new Error(`Failed to create transaction: ${transactionError.message}`);
+  if (transactionError || !transactionData) {
+    throw new Error(`Failed to create transaction: ${transactionError?.message || 'No transaction data returned'}`);
   }
   
-  // Mettre à jour le status de la requête à 'completed'
+  // Mettre à jour le status de la requête à 'completed' et associer la transaction
   const { error: updateError } = await supabase
     .from('requests')
-    .update({ status: 'completed' as RequestStatus })
+    .update({ 
+      status: 'completed' as RequestStatus,
+      transaction_id: transactionData.id
+    })
     .eq('request_id', request.request_id);
   
   if (updateError) {

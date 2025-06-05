@@ -39,8 +39,11 @@ export type {
   ModelsList,
   CostEstimate,
   ApiError,
-  ProviderCombination
+  ProviderCombination,
+  ModelPerformanceMetrics,
+  ModelVectorScore,
 } from './requests.js';
+
 
 // Auth types
 export type {

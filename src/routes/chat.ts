@@ -249,14 +249,11 @@ chat.post('/completions', async (c: Context<{ Variables: HonoVariables }>) => {
           stream.write(`data: ${JSON.stringify(errorChunk)}\n\n`);
           stream.write('data: [DONE]\n\n');
         } finally {
-          // Déclencher le webhook asynchrone après la fin du streaming
-          triggerWebhookAsync(3000); // 3 secondes de délai pour laisser le stream se terminer
+          // Ne déclencher le webhook que si le streaming s'est bien passé (pas d'erreur)
+          // Le webhook sera déclenché depuis request-handler lors du log de succès
         }
       });
     } else {
-      // Déclencher le webhook asynchrone après la réponse non-streaming
-      triggerWebhookAsync(2000); // 2 secondes de délai pour laisser la requête se terminer
-      
       // Type guard pour vérifier que c'est une ChatCompletion
       if (isChatCompletion(result)) {
         return c.json(result);
@@ -378,8 +375,8 @@ chat.post('/completion', async (c: Context<{ Variables: HonoVariables }>) => {
             stream.write(`data: ${JSON.stringify(errorChunk)}\n\n`);
             stream.write('data: [DONE]\n\n');
           } finally {
-            // Déclencher le webhook asynchrone après la fin du streaming
-            triggerWebhookAsync(3000);
+            // Ne déclencher le webhook que si le streaming s'est bien passé (pas d'erreur)
+            // Le webhook sera déclenché depuis request-handler lors du log de succès
           }
         });
       } else {
@@ -407,9 +404,6 @@ chat.post('/completion', async (c: Context<{ Variables: HonoVariables }>) => {
     
     // Pour les requêtes non-streaming avec multiple prompts
     if (!validatedRequest.stream) {
-      // Déclencher le webhook asynchrone
-      triggerWebhookAsync(2000);
-      
       // Si un seul prompt, retourner directement l'objet
       if (results.length === 1) {
         return c.json(results[0]);
@@ -519,7 +513,11 @@ chat.post('/estimate', async (c: Context<{ Variables: HonoVariables }>) => {
     
     // Obtenir les combinaisons de providers
     const { filterProviders } = await import('../services/models.js');
-    const combinations = await filterProviders(standardRequest, authData.userPreferences);
+    const combinations = await filterProviders(standardRequest, authData.user.id, authData.userPreferences, {
+      ratio_sp: 50
+    });
+
+
     
     if (combinations.length === 0) {
       const errorResponse: ApiError = {

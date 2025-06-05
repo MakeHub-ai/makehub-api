@@ -4,6 +4,7 @@ import { createAdapter } from '../adapters/index.js';
 import { filterProviders, estimateRequestCost } from './models.js';
 import { updateApiKeyUsage } from '../middleware/auth.js';
 import { cacheUtils } from '../config/cache.js';
+import { triggerWebhookAsync } from './webhook-trigger.js';
 import axios from 'axios';
 import type { 
   StandardRequest, 
@@ -62,7 +63,7 @@ export class RequestHandler {
       this.validateRequest(request);
       
       // 1. Obtenir les combinaisons model/provider disponibles
-      const providerCombinations = await filterProviders(request, authData.userPreferences);
+      const providerCombinations = await filterProviders(request, authData.user.id, authData.userPreferences);
       
       if (providerCombinations.length === 0) {
         throw new Error('No compatible providers found for this request');
@@ -682,6 +683,8 @@ export class RequestHandler {
         await updateApiKeyUsage(authData.user.id, authData.apiKey.name);
       }
 
+      // Déclencher le webhook pour traiter cette requête réussie
+      triggerWebhookAsync(2000); // 2 secondes de délai
 
     } catch (error) {
       console.error('Failed to log successful request:', error);
