@@ -22,9 +22,12 @@ const ESSENTIAL_MODEL_FIELDS = [
   'context', // pour context_window
   'price_per_input_token',
   'price_per_output_token',
+  'price_cached_token', // prix pour les tokens en cache
   'provider_model_id',
   'quantisation',
   'support_tool_calling',
+  'support_input_cache', // support du cache d'entrée
+  'support_vision', // support de la vision
   'max_output', // pour certains providers
   'assistant_ready', // pour filtrer les modèles prêts pour Cline
   'display_name', // pour affichage dans l'interface
@@ -48,6 +51,19 @@ function cleanModelData(modelData) {
       cleaned[field] = modelData[field];
     }
   });
+  
+  // Ajouter les valeurs par défaut pour les nouveaux champs s'ils ne sont pas présents
+  if (!cleaned.hasOwnProperty('support_input_cache')) {
+    cleaned.support_input_cache = false;
+  }
+  
+  if (!cleaned.hasOwnProperty('support_vision')) {
+    cleaned.support_vision = false;
+  }
+  
+  if (!cleaned.hasOwnProperty('price_cached_token')) {
+    cleaned.price_cached_token = null;
+  }
   
   return cleaned;
 }
@@ -175,9 +191,12 @@ function displayCleaningPreview(originalData, cleanedData, stats) {
   console.log(`  • context - Taille de la fenêtre de contexte`);
   console.log(`  • price_per_input_token - Prix par token d'entrée`);
   console.log(`  • price_per_output_token - Prix par token de sortie`);
+  console.log(`  • price_cached_token - Prix par token en cache`);
   console.log(`  • provider_model_id - ID du modèle chez le provider`);
   console.log(`  • quantisation - Type de quantisation`);
   console.log(`  • support_tool_calling - Support des outils`);
+  console.log(`  • support_input_cache - Support du cache d'entrée`);
+  console.log(`  • support_vision - Support de la vision`);
   console.log(`  • target_url - URL cible pour les proxies`);
   console.log(`  • exclude_param - Paramètres à exclure`);
   console.log(`  • max_output - Limite de sortie`);

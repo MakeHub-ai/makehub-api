@@ -1,8 +1,8 @@
 # Fichier YAML nettoyé - Généré automatiquement
 # Contient uniquement les champs nécessaires pour l'upload vers la base de données
 # Fichier original: providers.yaml
-# Date: 2025-06-05T12:46:16.641Z
-# Réduction: 51.6% des champs supprimés
+# Date: 2025-06-05T13:55:33.893Z
+# Réduction: 39.1% des champs supprimés
 
 providers:
   kluster:
@@ -19,6 +19,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek R1 (05/28)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       mistral/open-mistral-nemo:
         base_url: https://api.kluster.ai/v1
         context: 32
@@ -30,6 +33,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Open Mistral Nemo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-235B-A22B-fp8:
         base_url: https://api.kluster.ai/v1
         context: 32
@@ -41,6 +47,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Qwen 3 235B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Maverick-17B-128E-fp8:
         base_url: https://api.kluster.ai/v1
         context: 32
@@ -52,6 +61,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Llama 4 Maverick 17B 128E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Scout-17B-16E-fp8:
         base_url: https://api.kluster.ai/v1
         context: 32
@@ -63,6 +75,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Llama 4 Scout 17B 16E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-0324-fp8:
         base_url: https://api.kluster.ai/v1
         context: 32
@@ -74,6 +89,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek V3 (03/24)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       google/gemma-3-27B:
         base_url: https://api.kluster.ai/v1
         context: 32
@@ -85,6 +103,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Gemma 3 27B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-fp8:
         base_url: https://api.kluster.ai/v1
         context: 32
@@ -96,6 +117,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.3-70B-fp8:
         base_url: https://api.kluster.ai/v1
         context: 32
@@ -107,6 +131,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Llama 3.3 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   vertex:
     api_key_name: API_KEY_VERTEX
     provider_name: vertex
@@ -122,6 +149,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 4 Opus
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-5-sonnet:
         base_url: http://proxy_vertex_claude:17914/v1
         context: 200
@@ -133,6 +163,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Claude 3.5 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-7-sonnet:
         base_url: http://proxy_vertex_claude:17914/v1
         context: 200
@@ -144,6 +177,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 3.7 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-4-sonnet:
         base_url: http://proxy_vertex_claude:17914/v1
         context: 200
@@ -155,6 +191,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 4 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       google/gemini-2.5-pro-preview:
         base_url: >-
           https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
@@ -167,6 +206,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Gemini 2.5 Pro
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       google/gemini-2.5-flash-preview:
         base_url: >-
           https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
@@ -179,6 +221,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Gemini 2.5 Flash
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   anthropic:
     api_key_name: API_KEY_ANTHROPIC
     provider_name: anthropic
@@ -194,6 +239,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 4 Opus
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-4-sonnet:
         base_url: https://api.anthropic.com/v1/
         context: 200
@@ -205,6 +253,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 4 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-5-haiku:
         base_url: https://api.anthropic.com/v1/
         context: 200
@@ -216,6 +267,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 3.5 Haiku
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-5-sonnet:
         base_url: https://api.anthropic.com/v1/
         context: 200
@@ -227,6 +281,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Claude 3.5 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-7-sonnet:
         base_url: https://api.anthropic.com/v1/
         context: 200
@@ -238,6 +295,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 3.7 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   azure-eastus:
     api_key_name: API_KEY_AZUREOPENAI_EASTUS
     models:
@@ -252,6 +312,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4.1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o:
         base_url: null
         context: 131
@@ -263,6 +326,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o-mini:
         base_url: null
         context: 128
@@ -274,6 +340,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   azure-germanywestcentral:
     api_key_name: API_KEY_AZUREOPENAI_GERMANYWESTCENTRAL
     models:
@@ -288,6 +357,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4.1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o:
         base_url: null
         context: 131
@@ -299,6 +371,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o-mini:
         base_url: null
         context: 128
@@ -310,6 +385,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   azure-norwayeast:
     api_key_name: API_KEY_AZUREOPENAI_NORWAYEAST
     models:
@@ -324,6 +402,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o-mini:
         base_url: null
         context: 128
@@ -335,6 +416,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   azure-swedencentral:
     api_key_name: API_KEY_AZUREOPENAI_SWEDENCENTRAL
     models:
@@ -349,6 +433,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Grok 3
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       xai/grok-3-mini:
         base_url: null
         context: 128
@@ -360,6 +447,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Grok 3 Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o:
         base_url: null
         context: 131
@@ -371,6 +461,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o-mini:
         base_url: null
         context: 128
@@ -382,6 +475,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/o4-mini:
         base_url: null
         context: 150
@@ -393,6 +489,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: o4 Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4.1:
         base_url: null
         context: 131
@@ -404,6 +503,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4.1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4.1-mini:
         base_url: null
         context: 128
@@ -415,6 +517,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4.1 Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4.1-nano:
         base_url: null
         context: 128
@@ -426,6 +531,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4.1 Nano
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   azure-switzerlandnorth:
     api_key_name: API_KEY_AZUREOPENAI_SWITERLANDNORTH
     models:
@@ -440,6 +548,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4.1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o:
         base_url: null
         context: 131
@@ -451,6 +562,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o-mini:
         base_url: null
         context: 128
@@ -462,6 +576,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   azure-uksouth:
     api_key_name: API_KEY_AZUREOPENAI_UKSOUTH
     models:
@@ -476,6 +593,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o-mini:
         base_url: null
         context: 128
@@ -487,6 +607,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   azure-francecentral:
     api_key_name: API_KEY_AZUREOPENAI_FRANCECENTRAL
     models:
@@ -501,6 +624,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o-mini:
         base_url: null
         context: 128
@@ -512,6 +638,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   bedrock:
     api_key_name: AWS_ACCESS_KEY_ID
     models:
@@ -526,6 +655,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 4 Opus
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-4-sonnet:
         base_url: null
         context: 131
@@ -537,6 +669,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 4 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-5-haiku:
         base_url: null
         context: 200
@@ -548,6 +683,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Claude 3.5 Haiku
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-5-sonnet:
         base_url: null
         context: 200
@@ -559,6 +697,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Claude 3.5 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-7-sonnet:
         base_url: null
         context: 200
@@ -570,6 +711,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Claude 3.7 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   centml:
     api_key_name: API_KEY_CENTML
     provider_name: centml
@@ -585,6 +729,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.3-70B-fp16:
         base_url: https://api.centml.com/openai/v1
         context: 131
@@ -596,6 +743,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.3 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Maverick-17B-128E-fp8:
         base_url: https://api.centml.com/openai/v1
         context: 128
@@ -607,6 +757,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Llama 4 Maverick 17B 128E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Scout-17B-16E-fp8:
         base_url: https://api.centml.com/openai/v1
         context: 16
@@ -618,6 +771,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 4 Scout 17B 16E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   cerebras:
     api_key_name: API_KEY_CEREBRAS
     models:
@@ -632,6 +788,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 8B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.3-70B-fp16:
         base_url: https://api.cerebras.ai/v1
         context: 16
@@ -643,6 +802,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.3 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Scout-17B-16E-fp16:
         base_url: https://api.cerebras.ai/v1
         context: 16
@@ -654,6 +816,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Llama 4 Scout 17B 16E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   chutesai:
     api_key_name: API_KEY_CHUTESAI
     models:
@@ -668,6 +833,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DevStral Small (FP8)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-0324-fp8:
         base_url: https://llm.chutes.ai/v1
         context: 65
@@ -679,6 +847,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek V3 (03/24)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-fp8:
         base_url: https://llm.chutes.ai/v1
         context: 15
@@ -690,6 +861,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   deepinfra:
     api_key_name: API_KEY_DEEPINFRA
     provider_name: deepinfra
@@ -705,6 +879,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek R1 (05/28)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-235B-A22B-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 40
@@ -716,6 +893,9 @@ providers:
         max_output: 40
         assistant_ready: false
         display_name: Qwen 3 235B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-30B-A3B-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 40
@@ -727,6 +907,9 @@ providers:
         max_output: 40
         assistant_ready: false
         display_name: Qwen 3 30B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-32B:
         base_url: https://api.deepinfra.com/v1/openai
         context: 40
@@ -738,6 +921,9 @@ providers:
         max_output: 40
         assistant_ready: false
         display_name: Qwen 3 32B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-14B-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 40
@@ -749,6 +935,9 @@ providers:
         max_output: 40
         assistant_ready: false
         display_name: Qwen 3 14B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 15
@@ -760,6 +949,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-0324-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 65
@@ -771,6 +963,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek V3 (03/24)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 64
@@ -782,6 +977,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek V3
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       google/gemma-3-27B:
         base_url: https://api.deepinfra.com/v1/openai
         context: 8
@@ -793,6 +991,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Gemma 3 27B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-70B-fp16:
         base_url: https://api.deepinfra.com/v1/openai
         context: 131
@@ -804,6 +1005,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-8B-fp16:
         base_url: https://api.deepinfra.com/v1/openai
         context: 131
@@ -815,6 +1019,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 8B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-8B-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 131
@@ -826,6 +1033,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 8B Turbo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.3-70B-fp16:
         base_url: https://api.deepinfra.com/v1/openai
         context: 131
@@ -837,6 +1047,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.3 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.3-70B-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 131
@@ -848,6 +1061,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.3 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Maverick-17B-128E-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 1024
@@ -859,6 +1075,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 4 Maverick 17B 128E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Scout-17B-16E-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 16
@@ -870,6 +1089,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 4 Scout 17B 16E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       mistral/mistral-small-24B-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 33
@@ -881,6 +1103,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Mistral Small 24B Turbo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       mistral/open-mistral-nemo:
         base_url: https://api.deepinfra.com/v1/openai
         context: 131
@@ -892,6 +1117,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Open Mistral Nemo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/QWQ-32b-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 128
@@ -903,6 +1131,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: QWQ 32B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen2.5-Coder-32B:
         base_url: https://api.deepinfra.com/v1/openai
         context: 32
@@ -914,6 +1145,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Qwen 2.5 Coder 32B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   deepseek:
     api_key_name: API_KEY_DEEPSEEK
     provider_name: deepseek
@@ -929,6 +1163,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-fp8:
         base_url: https://api.deepseek.com
         context: 64
@@ -940,6 +1177,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek V3
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   fireworks-fast:
     api_key_name: API_KEY_FIREWORKS
     provider_name: fireworks
@@ -955,6 +1195,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   fireworks-base:
     api_key_name: API_KEY_FIREWORKS
     provider_name: fireworks
@@ -970,6 +1213,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek R1 (05/28)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-235B-A22B-fp8:
         base_url: https://api.fireworks.ai/inference/v1
         context: null
@@ -981,6 +1227,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Qwen 3 235B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-fp8:
         base_url: https://api.fireworks.ai/inference/v1
         context: 160
@@ -992,6 +1241,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-0324-fp8:
         base_url: https://api.fireworks.ai/inference/v1
         context: 160
@@ -1003,6 +1255,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek V3 (03/24)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-fp8:
         base_url: https://api.fireworks.ai/inference/v1
         context: 128
@@ -1014,6 +1269,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek V3
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-70B-fp16:
         base_url: https://api.fireworks.ai/inference/v1
         context: 131
@@ -1025,6 +1283,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-8B-fp16:
         base_url: https://api.fireworks.ai/inference/v1
         context: 131
@@ -1036,6 +1297,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 8B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.3-70B-fp16:
         base_url: https://api.fireworks.ai/inference/v1
         context: 128
@@ -1047,6 +1311,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.3 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Maverick-17B-128E-fp8:
         base_url: https://api.fireworks.ai/inference/v1
         context: 1005
@@ -1058,6 +1325,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 4 Maverick 17B 128E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Scout-17B-16E-fp8:
         base_url: https://api.fireworks.ai/inference/v1
         context: 128
@@ -1069,6 +1339,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 4 Scout 17B 16E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/QWQ-32b-fp16:
         base_url: https://api.fireworks.ai/inference/v1
         context: 32
@@ -1080,6 +1353,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: QWQ 32B (FP16)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   google:
     api_key_name: API_KEY_GOOGLE
     provider_name: google
@@ -1095,6 +1371,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Gemini 2.5 Flash
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       google/gemini-2.5-pro-preview:
         base_url: https://generativelanguage.googleapis.com/v1beta/openai/
         context: 2097
@@ -1106,6 +1385,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Gemini 2.5 Pro
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       google/gemini-2.0-flash:
         base_url: https://generativelanguage.googleapis.com/v1beta/openai/
         context: 1056
@@ -1117,6 +1399,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Gemini 2.0 Flash
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       google/gemini-2.0-flash-lite-preview:
         base_url: https://generativelanguage.googleapis.com/v1beta/openai/
         context: 1048
@@ -1128,6 +1413,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Gemini 2.0 Flash Lite
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       google/gemini-2.0-flash-thinking:
         base_url: https://generativelanguage.googleapis.com/v1beta/openai/
         context: 1048
@@ -1139,6 +1427,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Gemini 2.0 Flash Thinking
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   groq:
     api_key_name: API_KEY_GROQ
     provider_name: groq
@@ -1154,6 +1445,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.3 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Scout-17B-16E-fp8:
         base_url: https://api.groq.com/openai/v1
         context: 131
@@ -1165,6 +1459,9 @@ providers:
         max_output: 8
         assistant_ready: false
         display_name: Llama 4 Scout 17B 16E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Maverick-17B-128E-fp8:
         base_url: https://api.groq.com/openai/v1
         context: 131
@@ -1176,6 +1473,9 @@ providers:
         max_output: 8
         assistant_ready: false
         display_name: Llama 4 Maverick 17B 128E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   hyperbolic:
     api_key_name: API_KEY_HYPERBOLIC
     provider_name: hyperbolic
@@ -1191,6 +1491,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-0324-fp8:
         base_url: https://api.hyperbolic.xyz/v1
         context: 131
@@ -1202,6 +1505,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek V3 (03/24)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-fp8:
         base_url: https://api.hyperbolic.xyz/v1
         context: 131
@@ -1213,6 +1519,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek V3
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-70B-fp16:
         base_url: https://api.hyperbolic.xyz/v1
         context: 32
@@ -1224,6 +1533,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-8B-fp16:
         base_url: https://api.hyperbolic.xyz/v1
         context: 32
@@ -1235,6 +1547,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 8B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.3-70B-fp16:
         base_url: https://api.hyperbolic.xyz/v1
         context: 131
@@ -1246,6 +1561,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.3 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/QWQ-32b-fp16:
         base_url: https://api.hyperbolic.xyz/v1
         context: 131
@@ -1257,6 +1575,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: QWQ 32B (FP16)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   mistral:
     api_key_name: API_KEY_MISTRAL
     provider_name: mistral
@@ -1272,6 +1593,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DevStral Small (FP8)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       mistral/codestral:
         base_url: https://api.mistral.ai/v1
         context: 256
@@ -1283,6 +1607,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Mistral Codestral
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       mistral/mistral-small-24B-fp16:
         base_url: https://api.mistral.ai/v1
         context: 32
@@ -1294,6 +1621,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Mistral Small 24B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       mistral/open-mistral-nemo:
         base_url: https://api.mistral.ai/v1
         context: 131
@@ -1305,6 +1635,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Open Mistral Nemo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   nebius-base:
     api_key_name: API_KEY_NEBIUS
     provider_name: nebius
@@ -1320,6 +1653,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek R1 (05/28)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-14B-fp8:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1331,6 +1667,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Qwen 3 14B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-32B-fp8:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1342,6 +1681,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Qwen 3 32B Turbo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-30B-A3B-fp8:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1353,6 +1695,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Qwen 3 30B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-235B-A22B-fp8:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1364,6 +1709,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Qwen 3 235B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-fp8:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1375,6 +1723,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-0324-fp8:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1386,6 +1737,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek V3 (03/24)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-fp8:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1397,6 +1751,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek V3
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-70B-fp16:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1408,6 +1765,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-8B-fp16:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1419,6 +1779,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 8B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       mistral/open-mistral-nemo:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1430,6 +1793,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Open Mistral Nemo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/QWQ-32b-fp16:
         base_url: https://api.studio.nebius.ai/v1/
         context: 32
@@ -1441,6 +1807,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: QWQ 32B (FP16)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   nebius-fast:
     api_key_name: API_KEY_NEBIUS
     provider_name: nebius
@@ -1456,6 +1825,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Qwen 3 4B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-30B-A3B-fp8:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1467,6 +1839,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Qwen 3 30B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-fp8:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1478,6 +1853,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-0324-fp8:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1489,6 +1867,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek V3 (03/24)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-70B-fp16:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1500,6 +1881,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-8B-fp16:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1511,6 +1895,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 8B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       mistral/open-mistral-nemo:
         base_url: https://api.studio.nebius.ai/v1/
         context: 128
@@ -1522,6 +1909,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Open Mistral Nemo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/QWQ-32b-fp16:
         base_url: https://api.studio.nebius.ai/v1/
         context: 32
@@ -1533,6 +1923,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: QWQ 32B (FP16)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   novitai:
     api_key_name: API_KEY_NOVITAI
     provider_name: novitai
@@ -1548,6 +1941,9 @@ providers:
         max_output: 128
         assistant_ready: false
         display_name: DeepSeek R1 (05/28)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Maverick-17B-128E-fp8:
         base_url: https://api.novita.ai/v3/openai
         context: 128
@@ -1559,6 +1955,9 @@ providers:
         max_output: 128
         assistant_ready: false
         display_name: Llama 4 Maverick 17B 128E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-14B-fp8:
         base_url: https://api.novita.ai/v3/openai
         context: 128
@@ -1570,6 +1969,9 @@ providers:
         max_output: 128
         assistant_ready: false
         display_name: Qwen 3 14B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-235B-A22B-fp8:
         base_url: https://api.novita.ai/v3/openai
         context: 128
@@ -1581,6 +1983,9 @@ providers:
         max_output: 128
         assistant_ready: false
         display_name: Qwen 3 235B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-30B-A3B-fp8:
         base_url: https://api.novita.ai/v3/openai
         context: 128
@@ -1592,6 +1997,9 @@ providers:
         max_output: 128
         assistant_ready: false
         display_name: Qwen 3 30B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-32B-fp8:
         base_url: https://api.novita.ai/v3/openai
         context: 128
@@ -1603,6 +2011,9 @@ providers:
         max_output: 128
         assistant_ready: false
         display_name: Qwen 3 32B Turbo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-fp8:
         base_url: https://api.novita.ai/v3/openai
         context: 64
@@ -1614,6 +2025,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-fp8:
         base_url: https://api.novita.ai/v3/openai
         context: 64
@@ -1625,6 +2039,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek V3
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       google/gemma-2-9b-fp16:
         base_url: https://api.novita.ai/v3/openai
         context: 8
@@ -1636,6 +2053,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Gemma 2 9B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-70B-fp16:
         base_url: https://api.novita.ai/v3/openai
         context: 33
@@ -1647,6 +2067,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-8B-fp16:
         base_url: https://api.novita.ai/v3/openai
         context: 16
@@ -1658,6 +2081,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 8B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.3-70B-fp16:
         base_url: https://api.novita.ai/v3/openai
         context: 131
@@ -1669,6 +2095,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.3 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       mistral/open-mistral-nemo:
         base_url: https://api.novita.ai/v3/openai
         context: 131
@@ -1680,6 +2109,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Open Mistral Nemo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   openai:
     api_key_name: API_KEY_OPENAI
     provider_name: openai
@@ -1695,6 +2127,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: O3
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/o4-mini:
         base_url: https://api.openai.com/v1
         context: 128
@@ -1706,6 +2141,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: o4 Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4.5:
         base_url: https://api.openai.com/v1
         context: 128
@@ -1717,6 +2155,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4.5
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o:
         base_url: https://api.openai.com/v1
         context: 128
@@ -1728,6 +2169,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4o-mini:
         base_url: https://api.openai.com/v1
         context: 128
@@ -1739,6 +2183,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4o Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4.1:
         base_url: https://api.openai.com/v1
         context: 1000
@@ -1750,6 +2197,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4.1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4.1-mini:
         base_url: https://api.openai.com/v1
         context: 1000
@@ -1761,6 +2211,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4.1 Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4.1-nano:
         base_url: https://api.openai.com/v1
         context: 1000
@@ -1772,6 +2225,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4.1 Nano
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   parasail:
     api_key_name: API_KEY_PARASAIL
     models:
@@ -1786,6 +2242,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek R1 (05/28)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       mistral/devstral-small-fp16:
         base_url: https://api.parasail.io/v1
         context: 128
@@ -1797,6 +2256,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DevStral (FP16)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Scout-17B-16E-fp16:
         base_url: https://api.parasail.io/v1
         context: 128
@@ -1808,6 +2270,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Llama 4 Scout 17B 16E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-fp8:
         base_url: https://api.parasail.io/v1
         context: 128
@@ -1819,6 +2284,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-0324-fp8:
         base_url: https://api.parasail.io/v1
         context: 128
@@ -1830,6 +2298,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: DeepSeek V3 (03/24)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       google/gemma-3-27B:
         base_url: https://api.parasail.io/v1
         context: 128
@@ -1841,6 +2312,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Gemma 3 27B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Maverick-17B-128E-fp8:
         base_url: https://api.parasail.io/v1
         context: 128
@@ -1852,6 +2326,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Llama 4 Maverick 17B 128E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   replicate:
     api_key_name: API_KEY_REPLICATE
     models:
@@ -1866,6 +2343,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: o4 Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4.1:
         base_url: https://api.replicate.com/v1
         context: 128
@@ -1877,6 +2357,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: GPT-4.1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-7-sonnet:
         base_url: https://api.replicate.com/v1
         context: 128
@@ -1888,6 +2371,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 3.7 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-5-sonnet:
         base_url: https://api.replicate.com/v1
         context: 128
@@ -1899,6 +2385,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 3.5 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   sambanova:
     api_key_name: API_KEY_SAMBANOVA
     models:
@@ -1913,6 +2402,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek R1 Distill 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-fp8:
         base_url: https://api.sambanova.ai/v1
         context: null
@@ -1924,6 +2416,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-0324-fp8:
         base_url: https://api.sambanova.ai/v1
         context: 16
@@ -1935,6 +2430,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek V3 (03/24)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-8B-fp16:
         base_url: https://api.sambanova.ai/v1
         context: 16
@@ -1946,6 +2444,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 8B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.3-70B-fp16:
         base_url: https://api.sambanova.ai/v1
         context: 16
@@ -1957,6 +2458,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.3 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Scout-17B-16E-fp8:
         base_url: https://api.sambanova.ai/v1
         context: 8
@@ -1968,6 +2472,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Llama 4 Scout 17B 16E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Maverick-17B-128E-fp8:
         base_url: https://api.sambanova.ai/v1
         context: 8
@@ -1979,6 +2486,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Llama 4 Maverick 17B 128E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   together:
     api_key_name: API_KEY_TOGETHER
     provider_name: together
@@ -1994,6 +2504,9 @@ providers:
         max_output: 128
         assistant_ready: false
         display_name: Qwen 3 235B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-fp8:
         base_url: https://api.together.xyz/v1
         context: 131
@@ -2005,6 +2518,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek R1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-V3-fp8:
         base_url: https://api.together.xyz/v1
         context: 131
@@ -2016,6 +2532,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: DeepSeek V3
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-70B-fp8:
         base_url: https://api.together.xyz/v1
         context: 131
@@ -2027,6 +2546,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 70B Turbo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.1-8B-fp8:
         base_url: https://api.together.xyz/v1
         context: 131
@@ -2038,6 +2560,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.1 8B Turbo
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.3-70B-fp8:
         base_url: https://api.together.xyz/v1
         context: 128
@@ -2049,6 +2574,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Llama 3.3 70B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Maverick-17B-128E-fp8:
         base_url: https://api.together.xyz/v1
         context: 524
@@ -2060,6 +2588,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Llama 4 Maverick 17B 128E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-4-Scout-17B-16E-fp8:
         base_url: https://api.together.xyz/v1
         context: 128
@@ -2071,6 +2602,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Llama 4 Scout 17B 16E
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       mistral/mistral-small-24B-fp16:
         base_url: https://api.together.xyz/v1
         context: 32
@@ -2082,6 +2616,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Mistral Small 24B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/QWQ-32b-fp16:
         base_url: https://api.together.xyz/v1
         context: 131
@@ -2093,6 +2630,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: QWQ 32B (FP16)
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen2.5-Coder-32B:
         base_url: https://api.together.xyz/v1
         context: 33
@@ -2104,6 +2644,9 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Qwen 2.5 Coder 32B
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   xai:
     api_key_name: API_KEY_XAI
     provider_name: xai
@@ -2119,6 +2662,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Grok 3
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       xai/grok-3-mini:
         base_url: https://api.x.ai/v1
         context: 131
@@ -2130,6 +2676,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Grok 3 Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   xai-fast:
     api_key_name: API_KEY_XAI
     models:
@@ -2144,6 +2693,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Grok 3
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       xai/grok-3-mini:
         base_url: https://api.x.ai/v1
         context: 131
@@ -2155,6 +2707,9 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Grok 3 Mini
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
   dontmindme:
     api_key_name: API_KEY_DONTMINDME
     provider_name: dontmindme
@@ -2170,6 +2725,9 @@ providers:
         max_output: 8
         assistant_ready: true
         display_name: Gemini 2.5 Pro
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-5-sonnet:
         base_url: https://openrouter.ai/api/v1
         context: 200
@@ -2181,6 +2739,9 @@ providers:
         max_output: 8
         assistant_ready: true
         display_name: Claude 3.5 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       anthropic/claude-3-7-sonnet:
         base_url: https://openrouter.ai/api/v1
         context: 200
@@ -2192,6 +2753,9 @@ providers:
         max_output: 8
         assistant_ready: true
         display_name: Claude 3.7 Sonnet
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       openai/gpt-4.1:
         base_url: https://openrouter.ai/api/v1
         context: 1000
@@ -2203,6 +2767,9 @@ providers:
         max_output: 8
         assistant_ready: true
         display_name: GPT-4.1
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       google/gemini-2.5-flash-preview:
         base_url: https://openrouter.ai/api/v1
         context: 1048
@@ -2214,3 +2781,6 @@ providers:
         max_output: 8
         assistant_ready: true
         display_name: Gemini 2.5 Flash
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null

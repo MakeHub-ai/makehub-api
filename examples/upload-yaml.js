@@ -168,9 +168,12 @@ function parseYamlToModels(yamlContent) {
           adapter: adapter,
           window_size: convertContextWindow(modelData.context),
           support_tool_calling: modelData.support_tool_calling || false,
+          support_input_cache: modelData.support_input_cache || false,
+          support_vision: modelData.support_vision || false,
           context_window: convertContextWindow(modelData.context),
           price_per_input_token: convertPrice(modelData.price_per_input_token),
           price_per_output_token: convertPrice(modelData.price_per_output_token),
+          price_per_input_token_cached: modelData.price_cached_token ? convertPrice(modelData.price_cached_token) : null,
           quantisation: modelData.quantisation ? String(modelData.quantisation) : null,
           extra_param: extraParam,
           display_name: modelData.display_name || modelName,
@@ -191,7 +194,7 @@ async function getExistingModels() {
   try {
     const { data, error } = await supabase
       .from('models')
-      .select('model_id, provider, provider_model_id, base_url, api_key_name, adapter, window_size, support_tool_calling, context_window, price_per_input_token, price_per_output_token, quantisation, extra_param');
+      .select('model_id, provider, provider_model_id, base_url, api_key_name, adapter, window_size, support_tool_calling, support_input_cache, support_vision, context_window, price_per_input_token, price_per_output_token, price_per_input_token_cached, quantisation, extra_param');
 
     if (error) throw error;
     return data || [];
@@ -234,6 +237,12 @@ function analyzeChanges(newModels, existingModels) {
       const priceInputDiff = Math.abs(parseFloat(existing.price_per_input_token) - parseFloat(newModel.price_per_input_token));
       const priceOutputDiff = Math.abs(parseFloat(existing.price_per_output_token) - parseFloat(newModel.price_per_output_token));
       
+      // Comparer price_per_input_token_cached avec gestion des null
+      let priceCachedDiff = 0;
+      if (existing.price_per_input_token_cached !== null && newModel.price_per_input_token_cached !== null) {
+        priceCachedDiff = Math.abs(parseFloat(existing.price_per_input_token_cached) - parseFloat(newModel.price_per_input_token_cached));
+      }
+      
       const hasChanges = (
         existing.provider_model_id !== newModel.provider_model_id ||
         existing.base_url !== newModel.base_url ||
@@ -241,9 +250,13 @@ function analyzeChanges(newModels, existingModels) {
         existing.adapter !== newModel.adapter ||
         existing.window_size !== newModel.window_size ||
         existing.support_tool_calling !== newModel.support_tool_calling ||
+        existing.support_input_cache !== newModel.support_input_cache ||
+        existing.support_vision !== newModel.support_vision ||
         existing.context_window !== newModel.context_window ||
         priceInputDiff > 0.000001 || // Tolérance pour les erreurs de floating point
         priceOutputDiff > 0.000001 ||
+        priceCachedDiff > 0.000001 ||
+        existing.price_per_input_token_cached !== newModel.price_per_input_token_cached ||
         existing.quantisation !== newModel.quantisation ||
         JSON.stringify(existing.extra_param) !== JSON.stringify(newModel.extra_param)
       );
@@ -320,6 +333,12 @@ function displayChangesPreview(changes) {
       if (change.existing.support_tool_calling !== change.model.support_tool_calling) {
         console.log(`    Tool Calling: ${change.existing.support_tool_calling} → ${change.model.support_tool_calling}`);
       }
+      if (change.existing.support_input_cache !== change.model.support_input_cache) {
+        console.log(`    Support Input Cache: ${change.existing.support_input_cache} → ${change.model.support_input_cache}`);
+      }
+      if (change.existing.support_vision !== change.model.support_vision) {
+        console.log(`    Support Vision: ${change.existing.support_vision} → ${change.model.support_vision}`);
+      }
       if (change.existing.context_window !== change.model.context_window) {
         console.log(`    Context Window: ${change.existing.context_window || 'NULL'} → ${change.model.context_window || 'NULL'}`);
       }
@@ -374,12 +393,15 @@ async function executeUpserts(changes) {
         provider_model_id: change.model.provider_model_id,
         base_url: change.model.base_url,
         api_key_name: change.model.api_key_name,
-        adapter: change.model.adapter, // ← Ajouter cette ligne
+        adapter: change.model.adapter,
         window_size: change.model.window_size,
         support_tool_calling: change.model.support_tool_calling,
+        support_input_cache: change.model.support_input_cache,
+        support_vision: change.model.support_vision,
         context_window: change.model.context_window,
         price_per_input_token: change.model.price_per_input_token,
         price_per_output_token: change.model.price_per_output_token,
+        price_per_input_token_cached: change.model.price_per_input_token_cached,
         quantisation: change.model.quantisation,
         extra_param: change.model.extra_param,
         display_name: change.model.display_name,
@@ -429,8 +451,8 @@ async function main() {
     console.log('🚀 Démarrage du processus d\'upload YAML vers DB...\n');
 
     // Lire le fichier YAML
-    const yamlPath = await askQuestion('Chemin vers le fichier YAML (ou "providers.yaml" par défaut): ');
-    const filePath = yamlPath.trim() || 'providers.yaml';
+    const yamlPath = await askQuestion('Chemin vers le fichier YAML (ou "providers_clean.yaml" par défaut): ');
+    const filePath = yamlPath.trim() || 'providers_clean.yaml';
     
     if (!fs.existsSync(filePath)) {
       throw new Error(`Le fichier ${filePath} n'existe pas.`);
