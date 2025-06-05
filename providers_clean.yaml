@@ -1,0 +1,2216 @@
+# Fichier YAML nettoyé - Généré automatiquement
+# Contient uniquement les champs nécessaires pour l'upload vers la base de données
+# Fichier original: providers.yaml
+# Date: 2025-06-05T12:46:16.641Z
+# Réduction: 51.6% des champs supprimés
+
+providers:
+  kluster:
+    api_key_name: API_KEY_KLUSTER
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        price_per_input_token: 3
+        price_per_output_token: 5
+        provider_model_id: deepseek-ai/DeepSeek-R1-0528
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek R1 (05/28)
+      mistral/open-mistral-nemo:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        price_per_input_token: 0.02
+        price_per_output_token: 0.07
+        provider_model_id: mistralai/Mistral-Nemo-Instruct-2407
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Open Mistral Nemo
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        price_per_input_token: 0.14
+        price_per_output_token: 2
+        provider_model_id: Qwen/Qwen3-235B-A22B-FP8
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Qwen 3 235B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        price_per_input_token: 0.16
+        price_per_output_token: 0.8
+        provider_model_id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Llama 4 Maverick 17B 128E
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        price_per_input_token: 0.08
+        price_per_output_token: 0.45
+        provider_model_id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Llama 4 Scout 17B 16E
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        price_per_input_token: 0.33
+        price_per_output_token: 1.4
+        provider_model_id: deepseek/DeepSeek-V3-0324-FP8
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek V3 (03/24)
+      google/gemma-3-27B:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        price_per_input_token: 0.2
+        price_per_output_token: 0.2
+        provider_model_id: google/gemma-3-27b-it
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Gemma 3 27B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        price_per_input_token: 1.75
+        price_per_output_token: 5
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek R1
+      meta/Llama-3.3-70B-fp8:
+        base_url: https://api.kluster.ai/v1
+        context: 32
+        price_per_input_token: 0.07
+        price_per_output_token: 0.07
+        provider_model_id: klusterai/Meta-Llama-3.3-70B-Instruct-Turbo
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Llama 3.3 70B
+  vertex:
+    api_key_name: API_KEY_VERTEX
+    provider_name: vertex
+    models:
+      anthropic/claude-4-opus:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        price_per_input_token: 15
+        price_per_output_token: 75
+        provider_model_id: claude-opus-4@20250514
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 4 Opus
+      anthropic/claude-3-5-sonnet:
+        base_url: http://proxy_vertex_claude:17914/v1
+        context: 200
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-3-5-sonnet-v2@20241022
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Claude 3.5 Sonnet
+      anthropic/claude-3-7-sonnet:
+        base_url: http://proxy_vertex_claude:17914/v1
+        context: 200
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-3-7-sonnet@20250219
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 3.7 Sonnet
+      anthropic/claude-4-sonnet:
+        base_url: http://proxy_vertex_claude:17914/v1
+        context: 200
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-sonnet-4@20250514
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 4 Sonnet
+      google/gemini-2.5-pro-preview:
+        base_url: >-
+          https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
+        context: 1048
+        price_per_input_token: 1.25
+        price_per_output_token: 10
+        provider_model_id: google/gemini-2.5-pro-preview-05-06
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Gemini 2.5 Pro
+      google/gemini-2.5-flash-preview:
+        base_url: >-
+          https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
+        context: 1048
+        price_per_input_token: 0.15
+        price_per_output_token: 3.5
+        provider_model_id: google/gemini-2.5-flash-preview-05-20
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Gemini 2.5 Flash
+  anthropic:
+    api_key_name: API_KEY_ANTHROPIC
+    provider_name: anthropic
+    models:
+      anthropic/claude-4-opus:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        price_per_input_token: 15
+        price_per_output_token: 75
+        provider_model_id: claude-opus-4-20250514
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 4 Opus
+      anthropic/claude-4-sonnet:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-sonnet-4-20250514
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 4 Sonnet
+      anthropic/claude-3-5-haiku:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        price_per_input_token: 0.8
+        price_per_output_token: 4
+        provider_model_id: claude-3-5-haiku-latest
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 3.5 Haiku
+      anthropic/claude-3-5-sonnet:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-3-5-sonnet-latest
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Claude 3.5 Sonnet
+      anthropic/claude-3-7-sonnet:
+        base_url: https://api.anthropic.com/v1/
+        context: 200
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: claude-3-7-sonnet-latest
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 3.7 Sonnet
+  azure-eastus:
+    api_key_name: API_KEY_AZUREOPENAI_EASTUS
+    models:
+      openai/gpt-4.1:
+        base_url: null
+        context: 131
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: gpt-4.1
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4.1
+      openai/gpt-4o:
+        base_url: null
+        context: 131
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: null
+        context: 128
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  azure-germanywestcentral:
+    api_key_name: API_KEY_AZUREOPENAI_GERMANYWESTCENTRAL
+    models:
+      openai/gpt-4.1:
+        base_url: null
+        context: 131
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: gpt-4.1
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4.1
+      openai/gpt-4o:
+        base_url: null
+        context: 131
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: null
+        context: 128
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  azure-norwayeast:
+    api_key_name: API_KEY_AZUREOPENAI_NORWAYEAST
+    models:
+      openai/gpt-4o:
+        base_url: null
+        context: 131
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: null
+        context: 128
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  azure-swedencentral:
+    api_key_name: API_KEY_AZUREOPENAI_SWEDENCENTRAL
+    models:
+      xai/grok-3:
+        base_url: null
+        context: 131
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: grok-3
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Grok 3
+      xai/grok-3-mini:
+        base_url: null
+        context: 128
+        price_per_input_token: 0.25
+        price_per_output_token: 1.27
+        provider_model_id: grok-3-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Grok 3 Mini
+      openai/gpt-4o:
+        base_url: null
+        context: 131
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: null
+        context: 128
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o Mini
+      openai/o4-mini:
+        base_url: null
+        context: 150
+        price_per_input_token: 1.1
+        price_per_output_token: 4.4
+        provider_model_id: o4-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: o4 Mini
+      openai/gpt-4.1:
+        base_url: null
+        context: 131
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: gpt-4.1
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4.1
+      openai/gpt-4.1-mini:
+        base_url: null
+        context: 128
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4.1-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4.1 Mini
+      openai/gpt-4.1-nano:
+        base_url: null
+        context: 128
+        price_per_input_token: 0.1
+        price_per_output_token: 0.4
+        provider_model_id: gpt-4.1-nano
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4.1 Nano
+  azure-switzerlandnorth:
+    api_key_name: API_KEY_AZUREOPENAI_SWITERLANDNORTH
+    models:
+      openai/gpt-4.1:
+        base_url: null
+        context: 131
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: gpt-4.1
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4.1
+      openai/gpt-4o:
+        base_url: null
+        context: 131
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: null
+        context: 128
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  azure-uksouth:
+    api_key_name: API_KEY_AZUREOPENAI_UKSOUTH
+    models:
+      openai/gpt-4o:
+        base_url: null
+        context: 131
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: null
+        context: 128
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  azure-francecentral:
+    api_key_name: API_KEY_AZUREOPENAI_FRANCECENTRAL
+    models:
+      openai/gpt-4o:
+        base_url: null
+        context: 131
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: null
+        context: 128
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o Mini
+  bedrock:
+    api_key_name: AWS_ACCESS_KEY_ID
+    models:
+      anthropic/claude-4-opus:
+        base_url: null
+        context: 131
+        price_per_input_token: 15
+        price_per_output_token: 75
+        provider_model_id: arn:aws:bedrock:us-east-2:303258618041:inference-profile/us.anthropic.claude-opus-4-20250514-v1:0
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 4 Opus
+      anthropic/claude-4-sonnet:
+        base_url: null
+        context: 131
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: arn:aws:bedrock:us-east-2:303258618041:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 4 Sonnet
+      anthropic/claude-3-5-haiku:
+        base_url: null
+        context: 200
+        price_per_input_token: 0.8
+        price_per_output_token: 4
+        provider_model_id: arn:aws:bedrock:us-east-2:303258618041:inference-profile/us.anthropic.claude-3-5-haiku-20241022-v1:0
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Claude 3.5 Haiku
+      anthropic/claude-3-5-sonnet:
+        base_url: null
+        context: 200
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: arn:aws:bedrock:us-east-1:3032586180415:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Claude 3.5 Sonnet
+      anthropic/claude-3-7-sonnet:
+        base_url: null
+        context: 200
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: arn:aws:bedrock:us-east-2:303258618041:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Claude 3.7 Sonnet
+  centml:
+    api_key_name: API_KEY_CENTML
+    provider_name: centml
+    models:
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.centml.com/openai/v1
+        context: 131
+        price_per_input_token: 2.99
+        price_per_output_token: 2.99
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek R1
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.centml.com/openai/v1
+        context: 131
+        price_per_input_token: 0.35
+        price_per_output_token: 0.35
+        provider_model_id: meta-llama/Llama-3.3-70B-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.centml.com/openai/v1
+        context: 128
+        price_per_input_token: 0.2
+        price_per_output_token: 0.2
+        provider_model_id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Llama 4 Maverick 17B 128E
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.centml.com/openai/v1
+        context: 16
+        price_per_input_token: 0.1
+        price_per_output_token: 0.1
+        provider_model_id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 4 Scout 17B 16E
+  cerebras:
+    api_key_name: API_KEY_CEREBRAS
+    models:
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.cerebras.ai/v1
+        context: 16
+        price_per_input_token: 0.1
+        price_per_output_token: 0.1
+        provider_model_id: llama3.1-8b
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.cerebras.ai/v1
+        context: 16
+        price_per_input_token: 0.85
+        price_per_output_token: 1.2
+        provider_model_id: llama-3.3-70b
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Scout-17B-16E-fp16:
+        base_url: https://api.cerebras.ai/v1
+        context: 16
+        price_per_input_token: 0.65
+        price_per_output_token: 0.85
+        provider_model_id: llama-4-scout-17b-16e-instruct
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Llama 4 Scout 17B 16E
+  chutesai:
+    api_key_name: API_KEY_CHUTESAI
+    models:
+      mistral/devstral-small-fp8:
+        base_url: https://llm.chutes.ai/v1
+        context: 128
+        price_per_input_token: 0
+        price_per_output_token: 0
+        provider_model_id: chutesai/Devstral-Small-2505
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: DevStral Small (FP8)
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://llm.chutes.ai/v1
+        context: 65
+        price_per_input_token: 0
+        price_per_output_token: 0
+        provider_model_id: deepseek-ai/DeepSeek-V3-0324
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek V3 (03/24)
+      deepseek/deepseek-R1-fp8:
+        base_url: https://llm.chutes.ai/v1
+        context: 15
+        price_per_input_token: 0
+        price_per_output_token: 0
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek R1
+  deepinfra:
+    api_key_name: API_KEY_DEEPINFRA
+    provider_name: deepinfra
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 15
+        price_per_input_token: 0.5
+        price_per_output_token: 2.18
+        provider_model_id: deepseek-ai/DeepSeek-R1-0528
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek R1 (05/28)
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 40
+        price_per_input_token: 0.14
+        price_per_output_token: 0.6
+        provider_model_id: Qwen/Qwen3-235B-A22B
+        quantisation: 16
+        support_tool_calling: true
+        max_output: 40
+        assistant_ready: false
+        display_name: Qwen 3 235B
+      qwen/Qwen3-30B-A3B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 40
+        price_per_input_token: 0.08
+        price_per_output_token: 0.29
+        provider_model_id: Qwen/Qwen3-30B-A3B
+        quantisation: 16
+        support_tool_calling: true
+        max_output: 40
+        assistant_ready: false
+        display_name: Qwen 3 30B
+      qwen/Qwen3-32B:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 40
+        price_per_input_token: 0.1
+        price_per_output_token: 0.3
+        provider_model_id: Qwen/Qwen3-32B
+        quantisation: 16
+        support_tool_calling: true
+        max_output: 40
+        assistant_ready: false
+        display_name: Qwen 3 32B
+      qwen/Qwen3-14B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 40
+        price_per_input_token: 0.07
+        price_per_output_token: 0.24
+        provider_model_id: Qwen/Qwen3-14B
+        quantisation: 16
+        support_tool_calling: true
+        max_output: 40
+        assistant_ready: false
+        display_name: Qwen 3 14B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 15
+        price_per_input_token: 0.5
+        price_per_output_token: 2.18
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 65
+        price_per_input_token: 0.85
+        price_per_output_token: 0.9
+        provider_model_id: deepseek-ai/DeepSeek-V3-0324
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek V3 (03/24)
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 64
+        price_per_input_token: 0.38
+        price_per_output_token: 0.89
+        provider_model_id: deepseek-ai/DeepSeek-V3
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek V3
+      google/gemma-3-27B:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 8
+        price_per_input_token: 0.1
+        price_per_output_token: 0.2
+        provider_model_id: google/gemma-3-27b-it
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Gemma 3 27B
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        price_per_input_token: 0.23
+        price_per_output_token: 0.4
+        provider_model_id: meta-llama/Meta-Llama-3.1-70B-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        price_per_input_token: 0.03
+        price_per_output_token: 0.05
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.1-8B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        price_per_input_token: 0.02
+        price_per_output_token: 0.05
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B Turbo
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        price_per_input_token: 0.23
+        price_per_output_token: 0.4
+        provider_model_id: meta-llama/Llama-3.3-70B-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-3.3-70B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        price_per_input_token: 0.12
+        price_per_output_token: 0.3
+        provider_model_id: meta-llama/Llama-3.3-70B-Instruct-Turbo
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 1024
+        price_per_input_token: 0.16
+        price_per_output_token: 0.6
+        provider_model_id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 4 Maverick 17B 128E
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 16
+        price_per_input_token: 0.1
+        price_per_output_token: 0.3
+        provider_model_id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 4 Scout 17B 16E
+      mistral/mistral-small-24B-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 33
+        price_per_input_token: 0.06
+        price_per_output_token: 0.12
+        provider_model_id: mistralai/Mistral-Small-24B-Instruct-2501
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Mistral Small 24B Turbo
+      mistral/open-mistral-nemo:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 131
+        price_per_input_token: 0.025
+        price_per_output_token: 0.07
+        provider_model_id: mistralai/Mistral-Nemo-Instruct-2407
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Open Mistral Nemo
+      qwen/QWQ-32b-fp8:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 128
+        price_per_input_token: 0.15
+        price_per_output_token: 0.2
+        provider_model_id: Qwen/QwQ-32B
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: QWQ 32B
+      qwen/Qwen2.5-Coder-32B:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 32
+        price_per_input_token: 0.06
+        price_per_output_token: 0.15
+        provider_model_id: Qwen/Qwen2.5-Coder-32B-Instruct
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Qwen 2.5 Coder 32B
+  deepseek:
+    api_key_name: API_KEY_DEEPSEEK
+    provider_name: deepseek
+    models:
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.deepseek.com
+        context: 64
+        price_per_input_token: 0.55
+        price_per_output_token: 2.19
+        provider_model_id: deepseek-reasoner
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.deepseek.com
+        context: 64
+        price_per_input_token: 0.014
+        price_per_output_token: 0.028
+        provider_model_id: deepseek-chat
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek V3
+  fireworks-fast:
+    api_key_name: API_KEY_FIREWORKS
+    provider_name: fireworks
+    models:
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 160
+        price_per_input_token: 3
+        price_per_output_token: 8
+        provider_model_id: accounts/fireworks/models/deepseek-r1
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek R1
+  fireworks-base:
+    api_key_name: API_KEY_FIREWORKS
+    provider_name: fireworks
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 15
+        price_per_input_token: 3
+        price_per_output_token: 3
+        provider_model_id: accounts/fireworks/models/deepseek-r1-0528
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek R1 (05/28)
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: null
+        price_per_input_token: 0.22
+        price_per_output_token: 0.88
+        provider_model_id: accounts/fireworks/models/qwen3-235b-a22b
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Qwen 3 235B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 160
+        price_per_input_token: 0.55
+        price_per_output_token: 2.19
+        provider_model_id: accounts/fireworks/models/deepseek-r1-base
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 160
+        price_per_input_token: 0.9
+        price_per_output_token: 0.9
+        provider_model_id: accounts/fireworks/models/deepseek-v3-0324
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek V3 (03/24)
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 128
+        price_per_input_token: 0.9
+        price_per_output_token: 0.9
+        provider_model_id: accounts/fireworks/models/deepseek-v3
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek V3
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 131
+        price_per_input_token: 0.9
+        price_per_output_token: 0.9
+        provider_model_id: accounts/fireworks/models/llama-v3p1-70b-instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 131
+        price_per_input_token: 0.2
+        price_per_output_token: 0.2
+        provider_model_id: accounts/fireworks/models/llama-v3p1-8b-instruct
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 128
+        price_per_input_token: 0.9
+        price_per_output_token: 0.9
+        provider_model_id: accounts/fireworks/models/llama-v3p3-70b-instruct
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 1005
+        price_per_input_token: 0.22
+        price_per_output_token: 0.88
+        provider_model_id: accounts/fireworks/models/llama4-maverick-instruct-basic
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 4 Maverick 17B 128E
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 128
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: accounts/fireworks/models/llama4-scout-instruct-basic
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 4 Scout 17B 16E
+      qwen/QWQ-32b-fp16:
+        base_url: https://api.fireworks.ai/inference/v1
+        context: 32
+        price_per_input_token: 0.9
+        price_per_output_token: 0.9
+        provider_model_id: accounts/fireworks/models/qwq-32b
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: QWQ 32B (FP16)
+  google:
+    api_key_name: API_KEY_GOOGLE
+    provider_name: google
+    models:
+      google/gemini-2.5-flash-preview:
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        context: 2097
+        price_per_input_token: 0.15
+        price_per_output_token: 3.5
+        provider_model_id: gemini-2.5-flash-preview-05-20
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Gemini 2.5 Flash
+      google/gemini-2.5-pro-preview:
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        context: 2097
+        price_per_input_token: 1.25
+        price_per_output_token: 10
+        provider_model_id: gemini-2.5-pro-preview-05-06
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Gemini 2.5 Pro
+      google/gemini-2.0-flash:
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        context: 1056
+        price_per_input_token: 0.1
+        price_per_output_token: 0.4
+        provider_model_id: gemini-2.0-flash
+        quantisation: null
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Gemini 2.0 Flash
+      google/gemini-2.0-flash-lite-preview:
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        context: 1048
+        price_per_input_token: 0.075
+        price_per_output_token: 0.15
+        provider_model_id: gemini-2.0-flash-lite-preview-02-05
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Gemini 2.0 Flash Lite
+      google/gemini-2.0-flash-thinking:
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        context: 1048
+        price_per_input_token: 0
+        price_per_output_token: 0
+        provider_model_id: gemini-2.0-flash-thinking-exp-01-21
+        quantisation: null
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Gemini 2.0 Flash Thinking
+  groq:
+    api_key_name: API_KEY_GROQ
+    provider_name: groq
+    models:
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.groq.com/openai/v1
+        context: 128
+        price_per_input_token: 0.59
+        price_per_output_token: 0.79
+        provider_model_id: llama-3.3-70b-versatile
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.groq.com/openai/v1
+        context: 131
+        price_per_input_token: 0.11
+        price_per_output_token: 0.34
+        provider_model_id: meta-llama/llama-4-scout-17b-16e-instruct
+        quantisation: 8.2
+        support_tool_calling: false
+        max_output: 8
+        assistant_ready: false
+        display_name: Llama 4 Scout 17B 16E
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.groq.com/openai/v1
+        context: 131
+        price_per_input_token: 0.2
+        price_per_output_token: 0.6
+        provider_model_id: meta-llama/llama-4-maverick-17b-128e-instruct
+        quantisation: 8.2
+        support_tool_calling: false
+        max_output: 8
+        assistant_ready: false
+        display_name: Llama 4 Maverick 17B 128E
+  hyperbolic:
+    api_key_name: API_KEY_HYPERBOLIC
+    provider_name: hyperbolic
+    models:
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 131
+        price_per_input_token: 2
+        price_per_output_token: 2
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 131
+        price_per_input_token: 1.25
+        price_per_output_token: 1.25
+        provider_model_id: deepseek-ai/DeepSeek-V3-0324
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek V3 (03/24)
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 131
+        price_per_input_token: 0.25
+        price_per_output_token: 0.25
+        provider_model_id: deepseek-ai/DeepSeek-V3
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek V3
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 32
+        price_per_input_token: 0.4
+        price_per_output_token: 0.4
+        provider_model_id: meta-llama/Meta-Llama-3.1-70B-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 32
+        price_per_input_token: 0.1
+        price_per_output_token: 0.1
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 131
+        price_per_input_token: 0.4
+        price_per_output_token: 0.4
+        provider_model_id: meta-llama/Llama-3.3-70B-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      qwen/QWQ-32b-fp16:
+        base_url: https://api.hyperbolic.xyz/v1
+        context: 131
+        price_per_input_token: 0.2
+        price_per_output_token: 0.2
+        provider_model_id: Qwen/QWQ-32B
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: QWQ 32B (FP16)
+  mistral:
+    api_key_name: API_KEY_MISTRAL
+    provider_name: mistral
+    models:
+      mistral/devstral-small-fp8:
+        base_url: https://api.mistral.ai/v1
+        context: 256
+        price_per_input_token: 0.1
+        price_per_output_token: 0.3
+        provider_model_id: devstral-small-latest
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: DevStral Small (FP8)
+      mistral/codestral:
+        base_url: https://api.mistral.ai/v1
+        context: 256
+        price_per_input_token: 0.3
+        price_per_output_token: 0.9
+        provider_model_id: codestral-latest
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Mistral Codestral
+      mistral/mistral-small-24B-fp16:
+        base_url: https://api.mistral.ai/v1
+        context: 32
+        price_per_input_token: 1
+        price_per_output_token: 1
+        provider_model_id: mistral-small-latest
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Mistral Small 24B
+      mistral/open-mistral-nemo:
+        base_url: https://api.mistral.ai/v1
+        context: 131
+        price_per_input_token: 0.15
+        price_per_output_token: 0.15
+        provider_model_id: open-mistral-nemo
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Open Mistral Nemo
+  nebius-base:
+    api_key_name: API_KEY_NEBIUS
+    provider_name: nebius
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.8
+        price_per_output_token: 2.4
+        provider_model_id: deepseek-ai/DeepSeek-R1-0528
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek R1 (05/28)
+      qwen/Qwen3-14B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.08
+        price_per_output_token: 0.24
+        provider_model_id: Qwen/Qwen3-14B
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Qwen 3 14B
+      qwen/Qwen3-32B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.1
+        price_per_output_token: 0.3
+        provider_model_id: Qwen/Qwen3-32B
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Qwen 3 32B Turbo
+      qwen/Qwen3-30B-A3B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.1
+        price_per_output_token: 0.3
+        provider_model_id: Qwen/Qwen3-30B-A3B
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Qwen 3 30B
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.2
+        price_per_output_token: 0.6
+        provider_model_id: Qwen/Qwen3-235B-A22B
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Qwen 3 235B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.8
+        price_per_output_token: 2.4
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.5
+        price_per_output_token: 1.5
+        provider_model_id: deepseek-ai/DeepSeek-V3-0324
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek V3 (03/24)
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.5
+        price_per_output_token: 1.5
+        provider_model_id: deepseek-ai/DeepSeek-V3
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek V3
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.13
+        price_per_output_token: 0.4
+        provider_model_id: meta-llama/Meta-Llama-3.1-70B-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.02
+        price_per_output_token: 0.06
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      mistral/open-mistral-nemo:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.04
+        price_per_output_token: 0.12
+        provider_model_id: mistralai/Mistral-Nemo-Instruct-2407
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Open Mistral Nemo
+      qwen/QWQ-32b-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 32
+        price_per_input_token: 0.15
+        price_per_output_token: 0.45
+        provider_model_id: Qwen/QWQ-32B
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: QWQ 32B (FP16)
+  nebius-fast:
+    api_key_name: API_KEY_NEBIUS
+    provider_name: nebius
+    models:
+      qwen/Qwen3-4B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.08
+        price_per_output_token: 0.24
+        provider_model_id: Qwen/Qwen3-4B-fast
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Qwen 3 4B
+      qwen/Qwen3-30B-A3B-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.3
+        price_per_output_token: 0.9
+        provider_model_id: Qwen/Qwen3-30B-A3B-fast
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Qwen 3 30B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 2
+        price_per_output_token: 6
+        provider_model_id: deepseek-ai/DeepSeek-R1-fast
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 2
+        price_per_output_token: 6
+        provider_model_id: deepseek-ai/DeepSeek-V3-0324-fast
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek V3 (03/24)
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.25
+        price_per_output_token: 0.75
+        provider_model_id: meta-llama/Meta-Llama-3.1-70B-Instruct-fast
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.03
+        price_per_output_token: 0.09
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct-fast
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      mistral/open-mistral-nemo:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 128
+        price_per_input_token: 0.08
+        price_per_output_token: 0.24
+        provider_model_id: mistralai/Mistral-Nemo-Instruct-2407-fast
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Open Mistral Nemo
+      qwen/QWQ-32b-fp16:
+        base_url: https://api.studio.nebius.ai/v1/
+        context: 32
+        price_per_input_token: 0.5
+        price_per_output_token: 1.5
+        provider_model_id: Qwen/QWQ-32B-fast
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: QWQ 32B (FP16)
+  novitai:
+    api_key_name: API_KEY_NOVITAI
+    provider_name: novitai
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        price_per_input_token: 0.7
+        price_per_output_token: 2.5
+        provider_model_id: deepseek/deepseek-r1-0528
+        quantisation: 8
+        support_tool_calling: true
+        max_output: 128
+        assistant_ready: false
+        display_name: DeepSeek R1 (05/28)
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        price_per_input_token: 0.17
+        price_per_output_token: 0.85
+        provider_model_id: meta-llama/llama-4-maverick-17b-128e-instruct-fp8
+        quantisation: 8
+        support_tool_calling: true
+        max_output: 128
+        assistant_ready: false
+        display_name: Llama 4 Maverick 17B 128E
+      qwen/Qwen3-14B-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        price_per_input_token: 0.07
+        price_per_output_token: 0.275
+        provider_model_id: qwen/qwen3-14b-fp8
+        quantisation: 8
+        support_tool_calling: true
+        max_output: 128
+        assistant_ready: false
+        display_name: Qwen 3 14B
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        price_per_input_token: 0.2
+        price_per_output_token: 0.8
+        provider_model_id: qwen/qwen3-235b-a22b-fp8
+        quantisation: 8
+        support_tool_calling: true
+        max_output: 128
+        assistant_ready: false
+        display_name: Qwen 3 235B
+      qwen/Qwen3-30B-A3B-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        price_per_input_token: 0.1
+        price_per_output_token: 0.45
+        provider_model_id: qwen/qwen3-30b-a3b-fp8
+        quantisation: 8
+        support_tool_calling: true
+        max_output: 128
+        assistant_ready: false
+        display_name: Qwen 3 30B
+      qwen/Qwen3-32B-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 128
+        price_per_input_token: 0.1
+        price_per_output_token: 0.45
+        provider_model_id: qwen/qwen3-32b-fp8
+        quantisation: 8
+        support_tool_calling: true
+        max_output: 128
+        assistant_ready: false
+        display_name: Qwen 3 32B Turbo
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 64
+        price_per_input_token: 4
+        price_per_output_token: 4
+        provider_model_id: deepseek/deepseek-r1
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.novita.ai/v3/openai
+        context: 64
+        price_per_input_token: 0.89
+        price_per_output_token: 0.89
+        provider_model_id: deepseek/deepseek_v3
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek V3
+      google/gemma-2-9b-fp16:
+        base_url: https://api.novita.ai/v3/openai
+        context: 8
+        price_per_input_token: 0.08
+        price_per_output_token: 0.08
+        provider_model_id: google/gemma-2-9b-it
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Gemma 2 9B
+      meta/Llama-3.1-70B-fp16:
+        base_url: https://api.novita.ai/v3/openai
+        context: 33
+        price_per_input_token: 0.34
+        price_per_output_token: 0.39
+        provider_model_id: meta-llama/llama-3.1-70b-instruct
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 70B
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.novita.ai/v3/openai
+        context: 16
+        price_per_input_token: 0.05
+        price_per_output_token: 0.05
+        provider_model_id: meta-llama/llama-3.1-8b-instruct
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.novita.ai/v3/openai
+        context: 131
+        price_per_input_token: 0.39
+        price_per_output_token: 0.39
+        provider_model_id: meta-llama/llama-3.3-70b-instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      mistral/open-mistral-nemo:
+        base_url: https://api.novita.ai/v3/openai
+        context: 131
+        price_per_input_token: 0.04
+        price_per_output_token: 0.17
+        provider_model_id: mistralai/mistral-nemo
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: Open Mistral Nemo
+  openai:
+    api_key_name: API_KEY_OPENAI
+    provider_name: openai
+    models:
+      openai/o3:
+        base_url: https://api.openai.com/v1
+        context: 128
+        price_per_input_token: 10
+        price_per_output_token: 40
+        provider_model_id: o3-2025-04-16
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: O3
+      openai/o4-mini:
+        base_url: https://api.openai.com/v1
+        context: 128
+        price_per_input_token: 1.1
+        price_per_output_token: 4.4
+        provider_model_id: o4-mini-2025-04-16
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: o4 Mini
+      openai/gpt-4.5:
+        base_url: https://api.openai.com/v1
+        context: 128
+        price_per_input_token: 75
+        price_per_output_token: 150
+        provider_model_id: gpt-4.5-preview
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4.5
+      openai/gpt-4o:
+        base_url: https://api.openai.com/v1
+        context: 128
+        price_per_input_token: 2.5
+        price_per_output_token: 10
+        provider_model_id: gpt-4o
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o
+      openai/gpt-4o-mini:
+        base_url: https://api.openai.com/v1
+        context: 128
+        price_per_input_token: 0.15
+        price_per_output_token: 0.6
+        provider_model_id: gpt-4o-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4o Mini
+      openai/gpt-4.1:
+        base_url: https://api.openai.com/v1
+        context: 1000
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: gpt-4.1-2025-04-14
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4.1
+      openai/gpt-4.1-mini:
+        base_url: https://api.openai.com/v1
+        context: 1000
+        price_per_input_token: 0.4
+        price_per_output_token: 1.6
+        provider_model_id: gpt-4.1-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4.1 Mini
+      openai/gpt-4.1-nano:
+        base_url: https://api.openai.com/v1
+        context: 1000
+        price_per_input_token: 0.1
+        price_per_output_token: 0.4
+        provider_model_id: gpt-4.1-nano
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4.1 Nano
+  parasail:
+    api_key_name: API_KEY_PARASAIL
+    models:
+      deepseek/deepseek-R1-05-28-fp8:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        price_per_input_token: 1.95
+        price_per_output_token: 5
+        provider_model_id: deepseek-r1-0528
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek R1 (05/28)
+      mistral/devstral-small-fp16:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        price_per_input_token: 0.1
+        price_per_output_token: 0.4
+        provider_model_id: mistral-devstral-small
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DevStral (FP16)
+      meta/Llama-4-Scout-17B-16E-fp16:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        price_per_input_token: 0.09
+        price_per_output_token: 0.48
+        provider_model_id: parasail-llama-4-scout-instruct
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Llama 4 Scout 17B 16E
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        price_per_input_token: 1.95
+        price_per_output_token: 5
+        provider_model_id: parasail-deepseek-r1-fp8
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        price_per_input_token: 0.74
+        price_per_output_token: 1.5
+        provider_model_id: parasail-deepseek-v3-0324
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: DeepSeek V3 (03/24)
+      google/gemma-3-27B:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        price_per_input_token: 0.25
+        price_per_output_token: 0.4
+        provider_model_id: parasail-gemma3-27b-it
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Gemma 3 27B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.parasail.io/v1
+        context: 128
+        price_per_input_token: 0.19
+        price_per_output_token: 0.85
+        provider_model_id: llama-4-maverick-instruct-fp8
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Llama 4 Maverick 17B 128E
+  replicate:
+    api_key_name: API_KEY_REPLICATE
+    models:
+      openai/o4-mini:
+        base_url: https://api.replicate.com/v1
+        context: 128
+        price_per_input_token: 1
+        price_per_output_token: 4
+        provider_model_id: openai/o4-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: o4 Mini
+      openai/gpt-4.1:
+        base_url: https://api.replicate.com/v1
+        context: 128
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: openai/gpt-4.1
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: GPT-4.1
+      anthropic/claude-3-7-sonnet:
+        base_url: https://api.replicate.com/v1
+        context: 128
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: anthropic/claude-3.7
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 3.7 Sonnet
+      anthropic/claude-3-5-sonnet:
+        base_url: https://api.replicate.com/v1
+        context: 128
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: anthropic/claude-3.5-sonnet
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 3.5 Sonnet
+  sambanova:
+    api_key_name: API_KEY_SAMBANOVA
+    models:
+      deepseek/deepseek-R1-distill-llama-70b-fp16:
+        base_url: https://api.sambanova.ai/v1
+        context: null
+        price_per_input_token: 0.7
+        price_per_output_token: 1.4
+        provider_model_id: DeepSeek-R1-Distill-Llama-70B
+        quantisation: 16
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek R1 Distill 70B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.sambanova.ai/v1
+        context: null
+        price_per_input_token: 5
+        price_per_output_token: 7
+        provider_model_id: DeepSeek-R1
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-0324-fp8:
+        base_url: https://api.sambanova.ai/v1
+        context: 16
+        price_per_input_token: 1
+        price_per_output_token: 1.5
+        provider_model_id: DeepSeek-V3-0324
+        quantisation: 8
+        support_tool_calling: false
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek V3 (03/24)
+      meta/Llama-3.1-8B-fp16:
+        base_url: https://api.sambanova.ai/v1
+        context: 16
+        price_per_input_token: 0.1
+        price_per_output_token: 0.2
+        provider_model_id: Meta-Llama-3.1-8B-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B
+      meta/Llama-3.3-70B-fp16:
+        base_url: https://api.sambanova.ai/v1
+        context: 16
+        price_per_input_token: 0.6
+        price_per_output_token: 1.2
+        provider_model_id: Meta-Llama-3.3-70B-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.sambanova.ai/v1
+        context: 8
+        price_per_input_token: 0.4
+        price_per_output_token: 0.7
+        provider_model_id: Llama-4-Scout-17B-16E-Instruct
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Llama 4 Scout 17B 16E
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.sambanova.ai/v1
+        context: 8
+        price_per_input_token: 0.63
+        price_per_output_token: 1.8
+        provider_model_id: Llama-4-Maverick-17B-128E-Instruct
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Llama 4 Maverick 17B 128E
+  together:
+    api_key_name: API_KEY_TOGETHER
+    provider_name: together
+    models:
+      qwen/Qwen3-235B-A22B-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 128
+        price_per_input_token: 0.2
+        price_per_output_token: 0.6
+        provider_model_id: Qwen/Qwen3-235B-A22B-fp8-tput
+        quantisation: 8
+        support_tool_calling: true
+        max_output: 128
+        assistant_ready: false
+        display_name: Qwen 3 235B
+      deepseek/deepseek-R1-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 131
+        price_per_input_token: 3
+        price_per_output_token: 7
+        provider_model_id: deepseek-ai/DeepSeek-R1
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek R1
+      deepseek/deepseek-V3-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 131
+        price_per_input_token: 1.25
+        price_per_output_token: 1.25
+        provider_model_id: deepseek-ai/DeepSeek-V3
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: DeepSeek V3
+      meta/Llama-3.1-70B-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 131
+        price_per_input_token: 0.88
+        price_per_output_token: 0.88
+        provider_model_id: meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 70B Turbo
+      meta/Llama-3.1-8B-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 131
+        price_per_input_token: 0.18
+        price_per_output_token: 0.18
+        provider_model_id: meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.1 8B Turbo
+      meta/Llama-3.3-70B-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 128
+        price_per_input_token: 0.88
+        price_per_output_token: 0.88
+        provider_model_id: meta-llama/Llama-3.3-70B-Instruct-Turbo
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Llama 3.3 70B
+      meta/Llama-4-Maverick-17B-128E-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 524
+        price_per_input_token: 0.27
+        price_per_output_token: 0.85
+        provider_model_id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Llama 4 Maverick 17B 128E
+      meta/Llama-4-Scout-17B-16E-fp8:
+        base_url: https://api.together.xyz/v1
+        context: 128
+        price_per_input_token: 0.18
+        price_per_output_token: 0.59
+        provider_model_id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Llama 4 Scout 17B 16E
+      mistral/mistral-small-24B-fp16:
+        base_url: https://api.together.xyz/v1
+        context: 32
+        price_per_input_token: 0.8
+        price_per_output_token: 0.8
+        provider_model_id: mistralai/Mistral-Small-24B-Instruct-2501
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Mistral Small 24B
+      qwen/QWQ-32b-fp16:
+        base_url: https://api.together.xyz/v1
+        context: 131
+        price_per_input_token: 1.2
+        price_per_output_token: 1.2
+        provider_model_id: Qwen/QWQ-32B
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: QWQ 32B (FP16)
+      qwen/Qwen2.5-Coder-32B:
+        base_url: https://api.together.xyz/v1
+        context: 33
+        price_per_input_token: 0.8
+        price_per_output_token: 0.8
+        provider_model_id: Qwen/QWQ-32B-Preview
+        quantisation: 16
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: false
+        display_name: Qwen 2.5 Coder 32B
+  xai:
+    api_key_name: API_KEY_XAI
+    provider_name: xai
+    models:
+      xai/grok-3:
+        base_url: https://api.x.ai/v1
+        context: 131
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: grok-3-beta
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Grok 3
+      xai/grok-3-mini:
+        base_url: https://api.x.ai/v1
+        context: 131
+        price_per_input_token: 0.3
+        price_per_output_token: 0.5
+        provider_model_id: grok-3-mini
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Grok 3 Mini
+  xai-fast:
+    api_key_name: API_KEY_XAI
+    models:
+      xai/grok-3:
+        base_url: https://api.x.ai/v1
+        context: 131
+        price_per_input_token: 5
+        price_per_output_token: 25
+        provider_model_id: grok-3-mini-fast
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Grok 3
+      xai/grok-3-mini:
+        base_url: https://api.x.ai/v1
+        context: 131
+        price_per_input_token: 0.6
+        price_per_output_token: 4
+        provider_model_id: grok-3-mini-fast
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Grok 3 Mini
+  dontmindme:
+    api_key_name: API_KEY_DONTMINDME
+    provider_name: dontmindme
+    models:
+      google/gemini-2.5-pro-preview:
+        base_url: https://openrouter.ai/api/v1
+        context: 1048
+        price_per_input_token: 1.25
+        price_per_output_token: 10
+        provider_model_id: google/gemini-2.5-pro-preview-03-25
+        quantisation: null
+        support_tool_calling: true
+        max_output: 8
+        assistant_ready: true
+        display_name: Gemini 2.5 Pro
+      anthropic/claude-3-5-sonnet:
+        base_url: https://openrouter.ai/api/v1
+        context: 200
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: anthropic/claude-3.5-sonnet
+        quantisation: null
+        support_tool_calling: true
+        max_output: 8
+        assistant_ready: true
+        display_name: Claude 3.5 Sonnet
+      anthropic/claude-3-7-sonnet:
+        base_url: https://openrouter.ai/api/v1
+        context: 200
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: anthropic/claude-3.7-sonnet
+        quantisation: null
+        support_tool_calling: true
+        max_output: 8
+        assistant_ready: true
+        display_name: Claude 3.7 Sonnet
+      openai/gpt-4.1:
+        base_url: https://openrouter.ai/api/v1
+        context: 1000
+        price_per_input_token: 2
+        price_per_output_token: 8
+        provider_model_id: openai/gpt-4.1
+        quantisation: null
+        support_tool_calling: true
+        max_output: 8
+        assistant_ready: true
+        display_name: GPT-4.1
+      google/gemini-2.5-flash-preview:
+        base_url: https://openrouter.ai/api/v1
+        context: 1048
+        price_per_input_token: 1.25
+        price_per_output_token: 10
+        provider_model_id: google/gemini-2.5-flash-preview:thinking
+        quantisation: null
+        support_tool_calling: true
+        max_output: 8
+        assistant_ready: true
+        display_name: Gemini 2.5 Flash

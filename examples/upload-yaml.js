@@ -132,7 +132,6 @@ function determineAdapterAndParams(providerName, modelData, modelId) {
       return {
         adapter: 'openai',
         cleanBaseUrl: cleanBaseUrl,
-        extraParam: {}
       };
     }
   }
@@ -143,13 +142,6 @@ function determineAdapterAndParams(providerName, modelData, modelId) {
   return {
     adapter: 'openai',
     cleanBaseUrl: cleanBaseUrl,
-    extraParam: {
-      // Garder quelques infos utiles depuis le YAML pour référence
-      exclude_param: modelData.exclude_param || null,
-      max_output: modelData.max_output || null,
-      working: modelData.working || null,
-      assistant_ready: modelData.assistant_ready || null
-    }
   };
 }
 
@@ -173,14 +165,16 @@ function parseYamlToModels(yamlContent) {
           provider_model_id: modelData.provider_model_id || modelName,
           base_url: cleanBaseUrl, // Utiliser l'URL nettoyée
           api_key_name: providerData.api_key_name || null,
-          adapter: adapter, // Nouveau champ
+          adapter: adapter,
           window_size: convertContextWindow(modelData.context),
           support_tool_calling: modelData.support_tool_calling || false,
           context_window: convertContextWindow(modelData.context),
           price_per_input_token: convertPrice(modelData.price_per_input_token),
           price_per_output_token: convertPrice(modelData.price_per_output_token),
           quantisation: modelData.quantisation ? String(modelData.quantisation) : null,
-          extra_param: extraParam
+          extra_param: extraParam,
+          display_name: modelData.display_name || modelName,
+          max_output_token: modelData.max_output || null, // Pour les modèles avec max_output
         };
 
 
@@ -388,6 +382,8 @@ async function executeUpserts(changes) {
         price_per_output_token: change.model.price_per_output_token,
         quantisation: change.model.quantisation,
         extra_param: change.model.extra_param,
+        display_name: change.model.display_name,
+        max_output_token: change.model.max_output_token,
         updated_at: new Date().toISOString()
       }));
 
