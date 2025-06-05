@@ -747,17 +747,14 @@ export class RequestHandler {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const status = error instanceof AdapterError ? error.status : 'unknown';
 
-      const message = {
-        title: `LLM Gateway Error - ${combination.provider}`,
-        message: `Provider: ${combination.provider}\nModel: ${combination.modelId}\nError: ${errorMessage}\nStatus: ${status}`,
-        priority: 3,
-        tags: ['error', 'llm-gateway', combination.provider]
-      };
+      const body = `Provider: ${combination.provider}\nModel: ${combination.modelId}\nError: ${errorMessage}\nStatus: ${status}`;
 
-      await axios.post(this.ntfyUrl, message, {
+      await axios.post(this.ntfyUrl, body, {
         timeout: 5000,
         headers: {
-          'Content-Type': 'application/json'
+          'Title': `LLM Gateway Error - ${combination.provider}`,
+          'Priority': 'high',
+          'Tags': `error,llm-gateway,${combination.provider}`
         }
       });
 

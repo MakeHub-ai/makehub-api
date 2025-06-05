@@ -3,7 +3,7 @@
 // Run this script with: node examples/test-fallback.js
 
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
-const API_KEY = 'invalid-api-key-should-trigger-401';
+const API_KEY = process.env.TEST_API_KEY || 'test-api-key-123';
 
 const requestBody = {
   model: "openai/gpt-4o",

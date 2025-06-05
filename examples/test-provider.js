@@ -13,7 +13,7 @@ const requestBody = {
   ],
   provider: ["azure-eastus", "openai"], // Specify a single provider; can also be an array of providers
   stream: true,
-  max_tokens: "salit",
+  max_tokens: 50,
   temperature: 0.7
 };
 
@@ -37,14 +37,17 @@ fetch(`${API_BASE_URL}/v1/chat/completions`, {
     }
     console.error(`\n🔴 Erreur HTTP ${response.status}:`);
     console.error(errorDetails);
-    throw new Error(`Server error: ${response.status}`);
+    return;
   }
-  
+
+  // Gérer le streaming de la réponse
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
-  
-  function readStream() {
-    return reader.read().then(({ done, value }) => {
+
+  async function readStream() {
+    try {
+      const { done, value } = await reader.read();
+      
       if (done) {
         console.log("\nStream finished");
         return;
@@ -72,11 +75,13 @@ fetch(`${API_BASE_URL}/v1/chat/completions`, {
       }
       
       return readStream();
-    });
+    } catch (error) {
+      console.error('\n🔴 Erreur lors de la lecture du stream:', error);
+    }
   }
-  
+
   return readStream();
 })
 .catch(error => {
-  console.error("Error:", error);
+  console.error('🔴 Erreur de requête:', error);
 });
