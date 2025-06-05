@@ -26,6 +26,25 @@ const api = axios.create({
 });
 
 /**
+ * Extrait le message d'erreur de façon intelligente
+ */
+function extractErrorMessage(error) {
+  if (error.response?.data) {
+    // Si c'est un objet JSON avec un message d'erreur
+    if (typeof error.response.data === 'object') {
+      return error.response.data.error?.message || 
+             error.response.data.message || 
+             JSON.stringify(error.response.data);
+    }
+    // Si c'est une string
+    if (typeof error.response.data === 'string') {
+      return error.response.data;
+    }
+  }
+  return error.message || 'Unknown error';
+}
+
+/**
  * Test de santé du service
  */
 async function testHealth() {
@@ -35,7 +54,7 @@ async function testHealth() {
     console.log('✅ Health check passed:', response.data.status);
     console.log('📊 Services status:', response.data.services);
   } catch (error) {
-    console.error('❌ Health check failed:', error.response?.data || error.message);
+    console.error('❌ Health check failed:', extractErrorMessage(error));
   }
 }
 
@@ -48,7 +67,7 @@ async function testModels() {
     const response = await api.get('/v1/chat/models');
     console.log(`✅ Found ${response.data.data.length} models`);
   } catch (error) {
-    console.error('❌ Models test failed:', error.response?.data || error.message);
+    console.error('❌ Models test failed:', extractErrorMessage(error));
   }
 }
 
@@ -59,7 +78,7 @@ async function testSimpleChat() {
   console.log('\n💬 Testing simple chat completion...');
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'anthropic/claude-3-7-sonnet',
+      model: 'openai/gpt-4o',
       messages: [
         { role: 'user', content: 'Say hello in French!' }
       ],
@@ -70,7 +89,7 @@ async function testSimpleChat() {
     console.log('🤖 Response:', response.data.choices[0].message.content);
     console.log('📊 Usage:', response.data.usage);
   } catch (error) {
-    console.error('❌ Simple chat failed:', error.response?.data || error.message);
+    console.error('❌ Simple chat failed:', extractErrorMessage(error));
   }
 }
 
@@ -81,7 +100,7 @@ async function testStreamingChat() {
   console.log('\n🌊 Testing streaming chat completion...');
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'anthropic/claude-3-7-sonnet',
+      model: 'openai/gpt-4o',
       messages: [
         { role: 'user', content: 'Count from 1 to 100 slowly' }
       ],
@@ -162,7 +181,7 @@ async function testStreamingChat() {
 
   } catch (error) {
     // This catch block handles errors during the initial POST request (before streaming starts)
-    console.error('❌ Streaming test setup failed:', error.response?.data || error.message);
+    console.error('❌ Streaming test setup failed:', extractErrorMessage(error));
   }
 }
 
@@ -173,7 +192,7 @@ async function testToolCalling() {
   console.log('\n🔧 Testing tool calling...');
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'anthropic/claude-3-7-sonnet',
+      model: 'openai/gpt-4o',
       messages: [
         { role: 'user', content: 'What\'s 15 * 23? Use the calculator tool.' }
       ],
@@ -210,7 +229,7 @@ async function testToolCalling() {
       console.log('🤖 Response:', message.content);
     }
   } catch (error) {
-    console.error('❌ Tool calling failed:', error.response?.data || error.message);
+    console.error('❌ Tool calling failed:', extractErrorMessage(error));
   }
 }
 
@@ -221,7 +240,7 @@ async function testStreamingToolCalling() {
   console.log('\n🌊🔧 Testing streaming tool calling...');
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'anthropic/claude-3-7-sonnet',
+      model: 'openai/gpt-4o',
       messages: [
         { role: 'user', content: 'What\'s 25 * 17? Then calculate 100 / 4. Use the calculator tool for both.' }
       ],
@@ -263,11 +282,11 @@ async function testStreamingToolCalling() {
       if (errorHandled) return;
       buffer += chunk.toString();
       
-      // Vérifier si c'est une erreur JSON
+      // Vérifier si c'est une erreur JSON complète
       try {
         const jsonData = JSON.parse(buffer);
         if (jsonData.error) {
-          console.error('❌ Streaming tool calling failed with JSON error:', jsonData);
+          console.error('❌ Streaming tool calling failed:', jsonData.error.message || jsonData.error);
           errorHandled = true;
           response.data.destroy();
           return;
@@ -287,10 +306,9 @@ async function testStreamingToolCalling() {
             if (!errorHandled) {
               console.log('\n✅ Streaming tool calling completed');
               if (content) {
-                console.log('📝 Content:', content);
               }
               if (toolCalls.length > 0) {
-                console.log('🔧 Tool calls detected:');
+                console.log('🔧 Final tool calls:');
                 toolCalls.forEach((call, index) => {
                   console.log(`   ${index + 1}. ${call.function.name}(${call.function.arguments})`);
                 });
@@ -337,9 +355,6 @@ async function testStreamingToolCalling() {
                     toolCalls[index].id = toolCall.id;
                   }
                 }
-                
-                // Afficher en temps réel
-                console.log(`\n🔧 Tool call ${index + 1}: ${toolCalls[index].function.name || 'loading...'}${toolCalls[index].function.arguments ? `(${toolCalls[index].function.arguments})` : ''}`);
               });
             }
           } catch (e) {
@@ -366,7 +381,7 @@ async function testStreamingToolCalling() {
     });
 
   } catch (error) {
-    console.error('❌ Streaming tool calling setup failed:', error.response?.data || error.message);
+    console.error('❌ Streaming tool calling setup failed:', extractErrorMessage(error));
   }
 }
 
@@ -377,7 +392,7 @@ async function testCostEstimation() {
   console.log('\n💰 Testing cost estimation...');
   try {
     const response = await api.post('/v1/chat/estimate', {
-      model: 'anthropic/claude-3-7-sonnet',
+      model: 'openai/gpt-4o',
       messages: [
         { role: 'user', content: 'Write a short story about a robot learning to paint.' }
       ],
@@ -396,7 +411,7 @@ async function testCostEstimation() {
       });
     }
   } catch (error) {
-    console.error('❌ Cost estimation failed:', error.response?.data || error.message);
+    console.error('❌ Cost estimation failed:', extractErrorMessage(error));
   }
 }
 
@@ -411,7 +426,7 @@ async function testVision() {
   
   try {
     const response = await api.post('/v1/chat/completions', {
-      model: 'anthropic/claude-3-7-sonnet',
+      model: 'openai/gpt-4o',
       messages: [
         {
           role: 'user',
@@ -432,7 +447,7 @@ async function testVision() {
     console.log('✅ Vision test completed');
     console.log('👁️ Response:', response.data.choices[0].message.content);
   } catch (error) {
-    console.error('❌ Vision test failed:', error.response?.data || error.message);
+    console.error('❌ Vision test failed:', extractErrorMessage(error));
   }
 }
 
@@ -454,7 +469,7 @@ async function testFallback() {
     console.log('🤖 Response:', response.data.choices[0].message.content);
     console.log('📋 Used model:', response.data.model);
   } catch (error) {
-    console.error('❌ Fallback test failed:', error.response?.data || error.message);
+    console.error('❌ Fallback test failed:', extractErrorMessage(error));
   }
 }
 
