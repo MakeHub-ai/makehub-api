@@ -2,10 +2,15 @@
   "name": "llm-gateway",
   "version": "1.0.0",
   "type": "module",
+  "main": "dist/index.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "prestart": "npm run build",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean"
@@ -24,13 +29,13 @@
     "node-cache": "^5.1.2",
     "tiktoken": "^1.0.0",
     "uuid": "^9.0.0",
-    "zod": "^3.22.0"
+    "zod": "^3.22.0",
+    "tsx": "^4.6.0",
+    "typescript": "^5.3.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.0",
     "@types/node": "^20.10.0",
-    "@types/uuid": "^9.0.0",
-    "tsx": "^4.6.0",
-    "typescript": "^5.3.0"
+    "@types/uuid": "^9.0.0"
   }
 }
