@@ -295,7 +295,7 @@ app.notFound((c: Context) => {
 
 // Configuration du serveur avec validation
 const port = parseInt(process.env.PORT || '3000');
-const host = process.env.HOST || 'localhost';
+const host = '0.0.0.0';
 
 if (isNaN(port) || port < 1 || port > 65535) {
   console.error('❌ Invalid port number. Must be between 1 and 65535.');
