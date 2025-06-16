@@ -38,7 +38,6 @@ export async function authenticateUser(c: Context): Promise<AuthData> {
     
     // Détecter si c'est une clé API envoyée via Authorization au lieu d'un JWT
     if (looksLikeApiKey(token)) {
-      console.warn('[AUTH] WARNING: API key sent via Authorization header. Use X-API-Key header instead for better security.');
       return await authenticateWithApiKey(token);
     }
     

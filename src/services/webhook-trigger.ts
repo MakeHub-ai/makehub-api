@@ -266,6 +266,9 @@ export async function triggerWebhookAsync(
   delay: number = 1000, 
   options: Omit<TriggerOptions, 'delay'> = {}
 ): Promise<void> {
+  // Log de la base URL au moment de l'appel
+  console.log(`🔧 Triggering webhook with base URL: ${defaultConfig.baseUrl}`);
+  
   // Validation des paramètres
   if (delay < 0 || delay > 60000) {
     console.warn('Delay should be between 0 and 60000ms, using default 1000ms');
