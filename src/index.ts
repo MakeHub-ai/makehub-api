@@ -46,14 +46,6 @@ interface ServerInfo {
     completion: string;
     models: string;
     estimate: string;
-    webhook: string;
-  };
-  features: {
-    typescript: boolean;
-    streaming: boolean;
-    fallback: boolean;
-    authentication: boolean;
-    webhooks: boolean;
   };
 }
 
@@ -214,15 +206,7 @@ app.get('/', (c: Context) => {
       chat: '/v1/chat/completions',
       completion: '/v1/completion',
       models: '/v1/chat/models',
-      estimate: '/v1/chat/estimate',
-      webhook: '/webhook/calculate-tokens'
-    },
-    features: {
-      typescript: true,
-      streaming: true,
-      fallback: true,
-      authentication: true,
-      webhooks: true
+      estimate: '/v1/chat/estimate'
     }
   };
   
