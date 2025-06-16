@@ -57,7 +57,7 @@ interface TriggerResult {
 // Configuration par défaut
 const defaultConfig: WebhookConfig = {
   secretKey: process.env.WEBHOOK_SECRET_KEY || 'default-webhook-secret-key',
-  baseUrl: `http://localhost:${process.env.PORT || 3000}`, 
+  baseUrl: `http://127.0.0.1:${process.env.PORT || 3000}`, 
   timeout: 60000
 };
 
