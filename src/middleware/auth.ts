@@ -32,9 +32,16 @@ export async function authenticateUser(c: Context): Promise<AuthData> {
     return await authenticateWithApiKey(apiKeyHeader);
   }
   
-  // Méthode 2: Authentification par token Supabase
+  // Méthode 2: Authentification par token Supabase ou clé API via Bearer
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7);
+    
+    // Détecter si c'est une clé API envoyée via Authorization au lieu d'un JWT
+    if (looksLikeApiKey(token)) {
+      console.warn('[AUTH] WARNING: API key sent via Authorization header. Use X-API-Key header instead for better security.');
+      return await authenticateWithApiKey(token);
+    }
+    
     return await authenticateWithSupabaseToken(token);
   }
   
@@ -51,8 +58,9 @@ async function authenticateWithApiKey(apiKey: string): Promise<AuthData> {
     throw new Error('API key must be a non-empty string');
   }
 
-  // Mode test : accepter la clé de test directement
-  if (apiKey === 'test-api-key-123') {
+  // Mode test : accepter la clé de test directement (pour développement uniquement)
+  // TODO: Supprimer cette section en production
+  if (apiKey === 'test-api-key-123' && process.env.NODE_ENV !== 'production') {
     const testUserData: TestAuthData = {
       user: {
         id: '3dfeb923-1e33-4a3a-9473-ee9637446ae4',
@@ -138,6 +146,12 @@ async function authenticateWithSupabaseToken(token: string): Promise<AuthData> {
     throw new Error('Supabase token must be a non-empty string');
   }
 
+  // Vérifier la structure JWT basique avant d'envoyer à Supabase
+  const tokenSegments = token.split('.');
+  if (tokenSegments.length !== 3) {
+    throw new Error(`Invalid JWT structure: expected 3 segments, got ${tokenSegments.length}`);
+  }
+  
   // Vérifier le token avec Supabase Auth
   const { data: authData, error: authError } = await supabaseAuth.auth.getUser(token);
   
@@ -310,13 +324,20 @@ export function createAuthMiddleware(options: AuthMiddlewareOptions = {}) {
       
       let message = 'Authentication failed';
       let status = 401;
+      let hint: string | undefined;
       
       if (error instanceof Error) {
         message = error.message;
         
-        // Mapper certaines erreurs spécifiques
+        // Mapper certaines erreurs spécifiques avec des conseils
         if (message.includes('Insufficient funds')) {
           status = 402;
+        } else if (message.includes('Invalid JWT structure')) {
+          status = 401;
+          hint = 'The token appears to be an API key instead of a JWT. Use X-API-Key header or ensure you\'re sending a valid Supabase JWT token.';
+        } else if (message.includes('Invalid API key')) {
+          status = 401;
+          hint = 'Verify your API key is correct and active. API keys should be sent via X-API-Key header.';
         } else if (message.includes('Invalid') || message.includes('not found')) {
           status = 401;
         } else if (message.includes('Database') || message.includes('fetch')) {
@@ -324,13 +345,19 @@ export function createAuthMiddleware(options: AuthMiddlewareOptions = {}) {
         }
       }
       
-      return c.json({
+      const errorResponse: any = {
         error: {
           message,
           type: status === 402 ? 'insufficient_funds_error' : 'authentication_error',
           timestamp: new Date().toISOString()
         }
-      }, status as any);
+      };
+      
+      if (hint) {
+        errorResponse.error.hint = hint;
+      }
+      
+      return c.json(errorResponse, status as any);
     }
   };
 }
@@ -427,6 +454,28 @@ export function isValidApiKeyFormat(apiKey: string): boolean {
   }
   
   return true;
+}
+
+/**
+ * Vérifie si un token ressemble à une clé API plutôt qu'à un JWT
+ * @param token - Token à analyser
+ * @returns true si c'est probablement une clé API
+ */
+function looksLikeApiKey(token: string): boolean {
+  if (!token || typeof token !== 'string') {
+    return false;
+  }
+  
+  // Les clés API commencent généralement par des préfixes spécifiques
+  const apiKeyPrefixes = ['sk_', 'ak_', 'api_', 'key_'];
+  const hasApiKeyPrefix = apiKeyPrefixes.some(prefix => token.startsWith(prefix));
+  
+  // Un JWT a toujours 3 segments séparés par des points
+  const segments = token.split('.');
+  const hasJwtStructure = segments.length === 3;
+  
+  // Si ça a un préfixe de clé API ou pas la structure JWT, c'est probablement une clé API
+  return hasApiKeyPrefix || !hasJwtStructure;
 }
 
 /**
