@@ -14,7 +14,7 @@
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "start:prod": "npm run build --omit=dev && npm start"
+    "start:prod": "npm ci --omit=dev && npm run build && npm start"
   },
   "dependencies": {
     "@anthropic-ai/vertex-sdk": "^0.11.4",
