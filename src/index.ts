@@ -265,9 +265,15 @@ app.get('/version', (c: Context) => {
   return c.json(version);
 });
 
+app.get('/favicon.ico', (c: Context) => {
+  // Retourne un favicon vide pour éviter les erreurs 404
+  return c.newResponse('', 204);
+});
+
+
 // Monter les routes avec préfixes
 app.route('/v1/chat', chatRoutes);
-app.route('/v1', chatRoutes); // Pour /v1/completion endpoint legacy
+app.route('/v1', chatRoutes);
 app.route('/webhook', webhookRoutes);
 
 // Route 404 personnalisée
