@@ -142,6 +142,7 @@ async function executeWebhookAxios(
   
   try {
     const url = buildWebhookUrl(config.baseUrl);
+    console.log(`🔗 Sending webhook request to: ${url}`);
     
     const response = await axios.post<WebhookResponse>(url, {}, {
       headers: {
@@ -200,6 +201,7 @@ async function executeWebhookFetch(
   
   try {
     const url = buildWebhookUrl(config.baseUrl);
+    console.log(`🔗 Sending webhook request to: ${url}`);
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), options.timeout || config.timeout);
     
