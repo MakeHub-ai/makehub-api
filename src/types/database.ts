@@ -16,6 +16,7 @@ export interface Model {
   adapter: string;
   extra_param: Record<string, any> | null;
   tokenizer_name: string;
+  pricing_method: string;
   created_at: string;
   is_fallback?: boolean;
 }

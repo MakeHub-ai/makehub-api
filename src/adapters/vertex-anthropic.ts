@@ -74,10 +74,13 @@ export class VertexAnthropicAdapter extends BaseAdapter {
   }
 
   buildHeaders(request: StandardRequest): Record<string, string> {
-    return {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'User-Agent': 'LLM-Gateway-Vertex/1.0'
+      'User-Agent': 'LLM-Gateway-Vertex/1.0',
+      'anthropic-beta': 'prompt-caching-2024-07-31'
     };
+
+    return headers;
   }
 
   getEndpoint(modelIdentifier: string): string {
@@ -152,11 +155,25 @@ export class VertexAnthropicAdapter extends BaseAdapter {
 
       let contentArray: any[];
       if (typeof message.content === 'string') {
-        contentArray = [{ type: 'text', text: message.content }];
+        const textBlock: any = { type: 'text', text: message.content };
+        
+        // Ajouter le cache_control si présent sur le message
+        if ((message as any).cache_control) {
+          textBlock.cache_control = (message as any).cache_control;
+        }
+        
+        contentArray = [textBlock];
       } else if (Array.isArray(message.content)) {
         contentArray = message.content.map((item: any) => {
           if (item.type === 'text') {
-            return { type: 'text', text: item.text };
+            const textBlock: any = { type: 'text', text: item.text };
+            
+            // Ajouter le cache_control si présent sur l'item
+            if (item.cache_control) {
+              textBlock.cache_control = item.cache_control;
+            }
+            
+            return textBlock;
           } else if (item.type === 'image_url' && item.image_url?.url) {
             const urlData = item.image_url.url;
             let mediaType = 'image/jpeg';
@@ -169,7 +186,8 @@ export class VertexAnthropicAdapter extends BaseAdapter {
                 base64Data = parts[1].slice(7);
               }
             }
-            return {
+            
+            const imageBlock: any = {
               type: 'image',
               source: {
                 type: 'base64',
@@ -177,6 +195,13 @@ export class VertexAnthropicAdapter extends BaseAdapter {
                 data: base64Data,
               },
             };
+            
+            // Ajouter le cache_control si présent sur l'item
+            if (item.cache_control) {
+              imageBlock.cache_control = item.cache_control;
+            }
+            
+            return imageBlock;
           }
           return null;
         }).filter(Boolean) as any[];
@@ -255,6 +280,9 @@ export class VertexAnthropicAdapter extends BaseAdapter {
         prompt_tokens: response.usage?.input_tokens,
         completion_tokens: response.usage?.output_tokens,
         total_tokens: (response.usage?.input_tokens || 0) + (response.usage?.output_tokens || 0),
+        cached_tokens: response.usage?.cache_creation_input_tokens || response.usage?.cache_read_input_tokens || null,
+        input_tokens: response.usage?.input_tokens,
+        output_tokens: response.usage?.output_tokens
       }
     };
     return completion;
@@ -411,7 +439,8 @@ export class VertexAnthropicAdapter extends BaseAdapter {
           usage: event.usage ? {
             completion_tokens: event.usage.output_tokens,
             prompt_tokens: undefined,
-            total_tokens: undefined
+            total_tokens: undefined,
+            cached_tokens: event.usage.cache_creation_input_tokens || event.usage.cache_read_input_tokens || undefined
           } : undefined
         };
       }

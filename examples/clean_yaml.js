@@ -31,6 +31,7 @@ const ESSENTIAL_MODEL_FIELDS = [
   'max_output', // pour certains providers
   'assistant_ready', // pour filtrer les modèles prêts pour Cline
   'display_name', // pour affichage dans l'interface
+  'pricing_method', // nouvelle entrée pour la méthode de pricing
 ];
 
 // Champs essentiels à conserver pour chaque provider
@@ -41,9 +42,73 @@ const ESSENTIAL_PROVIDER_FIELDS = [
 ];
 
 /**
- * Nettoie un objet modèle en gardant uniquement les champs essentiels
+ * Détermine la méthode de pricing automatiquement
+ * @param {string} providerName - Nom du provider
+ * @param {string} modelKey - Clé du modèle (ex: "openai/gpt-4o")
+ * @param {object} modelData - Données du modèle
+ * @returns {string} - Méthode de pricing
  */
-function cleanModelData(modelData) {
+function determinePricingMethod(providerName, modelKey, modelData) {
+  const modelKeyLower = modelKey.toLowerCase();
+  const providerNameLower = providerName.toLowerCase();
+  const modelIdLower = (modelData.provider_model_id || '').toLowerCase();
+  
+  // OpenAI et Azure OpenAI
+  if (providerNameLower === 'openai' || providerNameLower.startsWith('azure-')) {
+    // La plupart des modèles OpenAI utilisent 50% pour le cache
+    // Certains modèles premium pourraient utiliser 75%, mais 50% est le standard
+    return 'openai_cache_50';
+  }
+  
+  // Anthropic Claude (provider direct ou via autres services)
+  if (providerNameLower === 'anthropic' || 
+      (providerNameLower === 'vertex' && modelKeyLower.includes('claude')) ||
+      (providerNameLower === 'bedrock' && modelKeyLower.includes('claude')) ||
+      (providerNameLower === 'replicate' && modelKeyLower.includes('claude'))) {
+    return 'anthropic_cache';
+  }
+  
+  // DeepSeek (détection par nom de modèle)
+  if (modelKeyLower.includes('deepseek') || modelIdLower.includes('deepseek')) {
+    return 'deepseek_cache';
+  }
+  
+  // Google Gemini
+  if (modelKeyLower.includes('gemini') || modelIdLower.includes('gemini')) {
+    // Gemini 2.5 utilise implicit caching
+    if (modelKeyLower.includes('gemini-2.5') || modelIdLower.includes('gemini-2.5')) {
+      return 'google_implicit';
+    }
+    // Autres versions Gemini utilisent explicit caching
+    return 'google_explicit';
+  }
+  
+  // Google via provider google
+  if (providerNameLower === 'google') {
+    if (modelKeyLower.includes('2.5') || modelIdLower.includes('2.5')) {
+      return 'google_implicit';
+    }
+    return 'google_explicit';
+  }
+  
+  // Par défaut, pas de cache
+  return 'standard';
+}
+
+/**
+ * Met à jour le support de cache basé sur la méthode de pricing
+ * @param {string} pricingMethod - Méthode de pricing
+ * @returns {boolean} - True si le modèle supporte le cache
+ */
+function determineCacheSupport(pricingMethod) {
+  return pricingMethod !== 'standard';
+}
+
+/**
+ * Nettoie un objet modèle en gardant uniquement les champs essentiels
+ * et ajoute la méthode de pricing automatiquement
+ */
+function cleanModelData(modelData, providerName, modelKey) {
   const cleaned = {};
   
   ESSENTIAL_MODEL_FIELDS.forEach(field => {
@@ -52,11 +117,14 @@ function cleanModelData(modelData) {
     }
   });
   
-  // Ajouter les valeurs par défaut pour les nouveaux champs s'ils ne sont pas présents
-  if (!cleaned.hasOwnProperty('support_input_cache')) {
-    cleaned.support_input_cache = false;
-  }
+  // Déterminer et ajouter la méthode de pricing automatiquement
+  const pricingMethod = determinePricingMethod(providerName, modelKey, modelData);
+  cleaned.pricing_method = pricingMethod;
   
+  // Mettre à jour le support de cache basé sur la méthode de pricing
+  cleaned.support_input_cache = determineCacheSupport(pricingMethod);
+  
+  // Ajouter les valeurs par défaut pour les nouveaux champs s'ils ne sont pas présents
   if (!cleaned.hasOwnProperty('support_vision')) {
     cleaned.support_vision = false;
   }
@@ -71,7 +139,7 @@ function cleanModelData(modelData) {
 /**
  * Nettoie un objet provider en gardant uniquement les champs essentiels
  */
-function cleanProviderData(providerData) {
+function cleanProviderData(providerData, providerName) {
   const cleaned = {};
   
   // Copier les champs essentiels du provider
@@ -85,7 +153,7 @@ function cleanProviderData(providerData) {
   if (providerData.models) {
     cleaned.models = {};
     Object.entries(providerData.models).forEach(([modelName, modelData]) => {
-      cleaned.models[modelName] = cleanModelData(modelData);
+      cleaned.models[modelName] = cleanModelData(modelData, providerName, modelName);
     });
   }
   
@@ -102,11 +170,46 @@ function cleanYamlData(yamlData) {
   
   if (yamlData.providers) {
     Object.entries(yamlData.providers).forEach(([providerName, providerData]) => {
-      cleaned.providers[providerName] = cleanProviderData(providerData);
+      cleaned.providers[providerName] = cleanProviderData(providerData, providerName);
     });
   }
   
   return cleaned;
+}
+
+/**
+ * Analyse les méthodes de pricing ajoutées
+ */
+function analyzePricingMethods(cleanedData) {
+  const pricingStats = {
+    'standard': 0,
+    'anthropic_cache': 0,
+    'openai_cache_50': 0,
+    'openai_cache_75': 0,
+    'deepseek_cache': 0,
+    'google_implicit': 0,
+    'google_explicit': 0
+  };
+  
+  const providerStats = {};
+  
+  Object.entries(cleanedData.providers || {}).forEach(([providerName, providerData]) => {
+    providerStats[providerName] = {
+      total: 0,
+      methods: {}
+    };
+    
+    if (providerData.models) {
+      Object.values(providerData.models).forEach(modelData => {
+        const method = modelData.pricing_method || 'standard';
+        pricingStats[method]++;
+        providerStats[providerName].total++;
+        providerStats[providerName].methods[method] = (providerStats[providerName].methods[method] || 0) + 1;
+      });
+    }
+  });
+  
+  return { pricingStats, providerStats };
 }
 
 /**
@@ -172,12 +275,12 @@ function analyzeChanges(originalData, cleanedData) {
 /**
  * Affiche un aperçu des changements
  */
-function displayCleaningPreview(originalData, cleanedData, stats) {
+function displayCleaningPreview(originalData, cleanedData, stats, pricingAnalysis) {
   console.log('\n' + '='.repeat(80));
-  console.log('APERÇU DU NETTOYAGE YAML');
+  console.log('APERÇU DU NETTOYAGE YAML AVEC PRICING AUTOMATIQUE');
   console.log('='.repeat(80));
   
-  console.log(`\n📊 STATISTIQUES:`);
+  console.log(`\n📊 STATISTIQUES GÉNÉRALES:`);
   console.log(`  • Providers: ${stats.providers.kept}/${stats.providers.total} conservés`);
   console.log(`  • Modèles: ${stats.models.kept}/${stats.models.total} conservés`);
   console.log(`  • Champs: ${stats.fields.cleaned}/${stats.fields.original} conservés (${stats.fields.removed} supprimés)`);
@@ -185,6 +288,24 @@ function displayCleaningPreview(originalData, cleanedData, stats) {
   // Calculer le pourcentage de réduction
   const sizeReduction = ((stats.fields.removed / stats.fields.original) * 100).toFixed(1);
   console.log(`  • Réduction: ${sizeReduction}% des champs supprimés`);
+  
+  console.log(`\n💰 MÉTHODES DE PRICING AJOUTÉES:`);
+  Object.entries(pricingAnalysis.pricingStats).forEach(([method, count]) => {
+    if (count > 0) {
+      const percentage = ((count / stats.models.kept) * 100).toFixed(1);
+      console.log(`  • ${method}: ${count} modèles (${percentage}%)`);
+    }
+  });
+  
+  console.log(`\n🏢 RÉPARTITION PAR PROVIDER:`);
+  Object.entries(pricingAnalysis.providerStats).forEach(([provider, data]) => {
+    if (data.total > 0) {
+      console.log(`  • ${provider}: ${data.total} modèles`);
+      Object.entries(data.methods).forEach(([method, count]) => {
+        console.log(`    - ${method}: ${count}`);
+      });
+    }
+  });
   
   console.log(`\n✅ CHAMPS CONSERVÉS PAR MODÈLE:`);
   console.log(`  • base_url - URL de base de l'API`);
@@ -195,24 +316,20 @@ function displayCleaningPreview(originalData, cleanedData, stats) {
   console.log(`  • provider_model_id - ID du modèle chez le provider`);
   console.log(`  • quantisation - Type de quantisation`);
   console.log(`  • support_tool_calling - Support des outils`);
-  console.log(`  • support_input_cache - Support du cache d'entrée`);
+  console.log(`  • support_input_cache - Support du cache d'entrée (AUTO)`);
   console.log(`  • support_vision - Support de la vision`);
-  console.log(`  • target_url - URL cible pour les proxies`);
-  console.log(`  • exclude_param - Paramètres à exclure`);
   console.log(`  • max_output - Limite de sortie`);
-  console.log(`  • working - Statut de fonctionnement`);
   console.log(`  • assistant_ready - Prêt pour assistant`);
+  console.log(`  • display_name - Nom d'affichage`);
+  console.log(`  • pricing_method - Méthode de pricing (NOUVEAU AUTO)`);
   
-  console.log(`\n🗑️ CHAMPS SUPPRIMÉS (exemples):`);
-  console.log(`  • last_test_timestamp - Timestamp du dernier test`);
-  console.log(`  • latency_median - Latence médiane`);
-  console.log(`  • throughput_median - Débit médian`);
-  console.log(`  • throughput_p25/p5 - Percentiles de débit`);
-  console.log(`  • error_in_function_calling - Erreurs de fonction`);
-  console.log(`  • failed_reason - Raison d'échec`);
-  console.log(`  • token_ratio - Ratio de tokens`);
-  console.log(`  • rtt_from_makehub - Round-trip time`);
-  console.log(`  • Et autres métriques de performance...`);
+  console.log(`\n🤖 LOGIQUE DE DÉTECTION AUTOMATIQUE:`);
+  console.log(`  • OpenAI/Azure → openai_cache_50`);
+  console.log(`  • Anthropic/Claude → anthropic_cache`);
+  console.log(`  • DeepSeek → deepseek_cache`);
+  console.log(`  • Gemini 2.5 → google_implicit`);
+  console.log(`  • Autres Gemini → google_explicit`);
+  console.log(`  • Autres → standard`);
   
   console.log('\n' + '='.repeat(80));
 }
@@ -222,7 +339,7 @@ function displayCleaningPreview(originalData, cleanedData, stats) {
  */
 async function main() {
   try {
-    console.log('🧹 Démarrage du nettoyage du fichier YAML...\n');
+    console.log('🧹 Démarrage du nettoyage du fichier YAML avec pricing automatique...\n');
     
     // Demander le fichier d'entrée
     const inputPath = await askQuestion('Fichier YAML d\'entrée (ou "providers.yaml" par défaut): ');
@@ -242,14 +359,17 @@ async function main() {
     console.log('🔍 Analyse du fichier YAML...');
     const originalData = yaml.load(yamlContent);
     
-    console.log('🧹 Nettoyage des données...');
+    console.log('🧹 Nettoyage des données et ajout des méthodes de pricing...');
     const cleanedData = cleanYamlData(originalData);
     
     console.log('📊 Analyse des changements...');
     const stats = analyzeChanges(originalData, cleanedData);
     
+    console.log('💰 Analyse des méthodes de pricing...');
+    const pricingAnalysis = analyzePricingMethods(cleanedData);
+    
     // Afficher l'aperçu
-    displayCleaningPreview(originalData, cleanedData, stats);
+    displayCleaningPreview(originalData, cleanedData, stats, pricingAnalysis);
     
     // Demander confirmation
     const confirmation = await askQuestion('\n❓ Voulez-vous sauvegarder le fichier nettoyé? (oui/non): ');
@@ -268,8 +388,9 @@ async function main() {
       const cleanedYaml = yaml.dump(cleanedData, yamlOptions);
       
       // Ajouter un header explicatif
-      const header = `# Fichier YAML nettoyé - Généré automatiquement
+      const header = `# Fichier YAML nettoyé avec pricing automatique - Généré automatiquement
 # Contient uniquement les champs nécessaires pour l'upload vers la base de données
+# pricing_method et support_input_cache ajoutés automatiquement selon le provider/modèle
 # Fichier original: ${inputFile}
 # Date: ${new Date().toISOString()}
 # Réduction: ${((stats.fields.removed / stats.fields.original) * 100).toFixed(1)}% des champs supprimés
@@ -282,6 +403,7 @@ async function main() {
       console.log(`  • Fichier sauvegardé: ${outputFile}`);
       console.log(`  • Taille réduite de ${((stats.fields.removed / stats.fields.original) * 100).toFixed(1)}%`);
       console.log(`  • ${stats.models.kept} modèles conservés sur ${stats.providers.kept} providers`);
+      console.log(`  • ${Object.values(pricingAnalysis.pricingStats).reduce((a, b) => a + b, 0)} méthodes de pricing ajoutées`);
       
       // Calculer la taille des fichiers
       const originalSize = fs.statSync(inputFile).size;
@@ -310,5 +432,8 @@ export {
   cleanYamlData,
   cleanModelData,
   cleanProviderData,
-  analyzeChanges
+  analyzeChanges,
+  determinePricingMethod,
+  determineCacheSupport,
+  analyzePricingMethods
 };

@@ -85,6 +85,8 @@ interface BedrockAnthropicResponse {
   usage: {
     input_tokens: number;
     output_tokens: number;
+    cache_creation_input_tokens?: number;
+    cache_read_input_tokens?: number;
   };
 }
 
@@ -422,7 +424,10 @@ export class BedrockAdapter extends BaseAdapter {
       usage: {
         prompt_tokens: response.usage.input_tokens,
         completion_tokens: response.usage.output_tokens,
-        total_tokens: response.usage.input_tokens + response.usage.output_tokens
+        total_tokens: response.usage.input_tokens + response.usage.output_tokens,
+        cached_tokens: response.usage.cache_creation_input_tokens || response.usage.cache_read_input_tokens || undefined,
+        input_tokens: response.usage.input_tokens,
+        output_tokens: response.usage.output_tokens
       }
     };
 

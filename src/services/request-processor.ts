@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { supabase } from '../config/database.js';
 import { get_encoding, type Tiktoken } from 'tiktoken';
+import axios from 'axios';
 import type { 
   RequestWithContentAndModel,
   RequestStatus,
@@ -9,6 +10,43 @@ import type {
 
 // Charger les variables d'environnement
 dotenv.config();
+
+/**
+ * Constantes de pricing pour les différentes méthodes de cache
+ * Basées sur les spécifications OpenRouter
+ */
+const PRICING_MULTIPLIERS = {
+  // Anthropic Claude
+  ANTHROPIC_CACHE_READ: 0.1,    // 10% du prix normal
+  ANTHROPIC_CACHE_WRITE: 1.25,  // 125% du prix normal
+  
+  // OpenAI
+  OPENAI_CACHE_READ_50: 0.5,    // 50% du prix normal
+  OPENAI_CACHE_READ_75: 0.75,   // 75% du prix normal
+  OPENAI_CACHE_WRITE: 0,        // Gratuit
+  
+  // DeepSeek
+  DEEPSEEK_CACHE_READ: 0.1,     // 10% du prix normal
+  DEEPSEEK_CACHE_WRITE: 1.0,    // 100% du prix normal (même prix)
+  
+  // Google Gemini
+  GOOGLE_CACHE_READ: 0.1,      // 10% du prix normal
+  GOOGLE_CACHE_WRITE: 0.1,     // 100% du prix normal (même prix)
+  GOOGLE_CACHE_WRITE_STORAGE: 5/60, // 5 minutes de stockage sur 60 minutes
+} as const;
+
+/**
+ * Types de méthodes de pricing supportées
+ */
+type PricingMethod = 
+  | 'standard'
+  | 'anthropic_cache'
+  | 'openai_cache_50'
+  | 'openai_cache_75'
+  | 'deepseek_cache'
+  | 'google_cache'
+  | 'google_implicit'
+  | 'google_explicit';
 
 /**
  * Interface pour les statistiques de traitement
@@ -46,7 +84,126 @@ interface CostCalculationResult {
 const encoderCache = new Map<string, Tiktoken>();
 
 /**
- * Calculate token costs based on provider and model from models table
+ * Envoie une notification d'erreur à ntfy (asynchrone)
+ * @param error - L'erreur qui s'est produite
+ * @param context - Contexte de l'erreur (request_id, provider, etc.)
+ */
+async function notifyError(error: unknown, context: { 
+  requestId?: string; 
+  provider?: string; 
+  model?: string; 
+  pricingMethod?: string;
+  operation?: string;
+}): Promise<void> {
+  const ntfyUrl = process.env.NTFY_ERROR_URL;
+  if (!ntfyUrl) {
+    return;
+  }
+
+  try {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const operation = context.operation || 'Request Processing';
+    
+    const body = `Operation: ${operation}\nRequest ID: ${context.requestId || 'unknown'}\nProvider: ${context.provider || 'unknown'}\nModel: ${context.model || 'unknown'}\nPricing Method: ${context.pricingMethod || 'unknown'}\nError: ${errorMessage}`;
+
+    await axios.post(`${ntfyUrl}/errors`, body, {
+      timeout: 5000,
+      headers: {
+        'Title': `Request Processor Error - ${context.provider || 'Unknown'}`,
+        'Priority': 'high',
+        'Tags': `error,request-processor,${context.provider || 'unknown'}`
+      }
+    });
+
+  } catch (notifyError) {
+    console.error('Failed to send error notification:', notifyError instanceof Error ? notifyError.message : 'Unknown error');
+  }
+}
+
+/**
+ * Calculate token costs with cache support based on pricing method
+ * @param inputTokens - Nombre de tokens d'entrée
+ * @param outputTokens - Nombre de tokens de sortie
+ * @param cachedTokens - Nombre de tokens en cache (0 si pas de cache)
+ * @param pricingMethod - Méthode de pricing à utiliser
+ * @param inputPrice - Prix par token d'entrée (par 1000)
+ * @param outputPrice - Prix par token de sortie (par 1000)
+ * @returns Montant calculé
+ */
+function calculateTokenCostWithMethod(
+  inputTokens: number,
+  outputTokens: number,
+  cachedTokens: number,
+  pricingMethod: PricingMethod,
+  inputPrice: number,
+  outputPrice: number
+): number {
+  if (inputTokens < 0 || outputTokens < 0 || cachedTokens < 0) {
+    throw new Error('Token counts must be non-negative');
+  }
+
+  if (cachedTokens > inputTokens) {
+    throw new Error('Cached tokens cannot exceed input tokens');
+  }
+
+  // Calculate output cost (always the same)
+  const outputCost = (outputTokens * outputPrice) / 1000;
+
+  // Calculate input cost based on pricing method
+  let inputCost: number;
+
+  switch (pricingMethod) {
+    case 'standard':
+      // Standard pricing: no cache consideration
+      inputCost = (inputTokens * inputPrice) / 1000;
+      break;
+
+    case 'anthropic_cache':
+      // Anthropic: cached tokens at 10%, non-cached at 100%
+      const anthropicCachedCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.ANTHROPIC_CACHE_READ) / 1000;
+      const anthropicNonCachedCost = ((inputTokens - cachedTokens) * inputPrice) / 1000;
+      inputCost = anthropicCachedCost + anthropicNonCachedCost;
+      break;
+
+    case 'openai_cache_50':
+      // OpenAI: cached tokens at 50%, non-cached at 100%
+      const openai50CachedCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.OPENAI_CACHE_READ_50) / 1000;
+      const openai50NonCachedCost = ((inputTokens - cachedTokens) * inputPrice) / 1000;
+      inputCost = openai50CachedCost + openai50NonCachedCost;
+      break;
+
+    case 'openai_cache_75':
+      // OpenAI: cached tokens at 75%, non-cached at 100%
+      const openai75CachedCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.OPENAI_CACHE_READ_75) / 1000;
+      const openai75NonCachedCost = ((inputTokens - cachedTokens) * inputPrice) / 1000;
+      inputCost = openai75CachedCost + openai75NonCachedCost;
+      break;
+
+    case 'deepseek_cache':
+      // DeepSeek: cached tokens at 10%, non-cached at 100%
+      const deepseekCachedCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.DEEPSEEK_CACHE_READ) / 1000;
+      const deepseekNonCachedCost = ((inputTokens - cachedTokens) * inputPrice) / 1000;
+      inputCost = deepseekCachedCost + deepseekNonCachedCost;
+      break;
+
+    case 'google_cache':
+    case 'google_implicit':
+    case 'google_explicit':
+      // Google: cached tokens at 25%, non-cached at 100%
+      const googleCachedCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.GOOGLE_CACHE_READ) / 1000;
+      const googleNonCachedCost = ((inputTokens - cachedTokens) * inputPrice) / 1000;
+      inputCost = googleCachedCost + googleNonCachedCost;
+      break;
+
+    default:
+      throw new Error(`Unknown pricing method: ${pricingMethod}`);
+  }
+
+  return inputCost + outputCost;
+}
+
+/**
+ * Calculate token costs based on provider and model from models table (legacy function)
  * @param inputTokens - Nombre de tokens d'entrée
  * @param outputTokens - Nombre de tokens de sortie
  * @param provider - Nom du provider
@@ -71,7 +228,7 @@ async function calculateTokenCost(
     // Get pricing from models table
     const { data, error } = await supabase
       .from('models')
-      .select('price_per_input_token, price_per_output_token')
+      .select('price_per_input_token, price_per_output_token, pricing_method')
       .eq('provider', provider)
       .eq('model_id', model_id)
       .single();
@@ -82,10 +239,15 @@ async function calculateTokenCost(
       throw new Error(`No pricing data found for ${provider} model ${model_id}`);
     }
 
-    const inputCost = (inputTokens * data.price_per_input_token) / 1000;
-    const outputCost = (outputTokens * data.price_per_output_token) / 1000;
-    
-    return inputCost + outputCost;
+    // Use new method with cache support (0 cached tokens for legacy compatibility)
+    return calculateTokenCostWithMethod(
+      inputTokens,
+      outputTokens,
+      0, // No cached tokens for legacy calls
+      (data.pricing_method || 'standard') as PricingMethod,
+      data.price_per_input_token,
+      data.price_per_output_token
+    );
   } catch (error) {
     console.error(`Error calculating token cost for ${provider} model ${model_id}:`, error);
     throw new Error(`Failed to calculate token cost - pricing data unavailable: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -179,7 +341,7 @@ function calculateRequestTokens(
 }
 
 /**
- * Calcule le coût pour une requête donnée
+ * Calcule le coût pour une requête donnée avec support du cache et fallback
  * @param request - Données de la requête
  * @param inputTokens - Nombre de tokens d'entrée
  * @param outputTokens - Nombre de tokens de sortie
@@ -190,24 +352,93 @@ async function calculateRequestCost(
   inputTokens: number,
   outputTokens: number
 ): Promise<CostCalculationResult> {
+  // Si cached_tokens est NULL, forcer la méthode standard
+  const cachedTokens = request.cached_tokens;
+  const pricingMethod = (cachedTokens === null) 
+    ? 'standard' 
+    : (request.models?.pricing_method || 'standard') as PricingMethod;
+
+  // Utiliser 0 pour les calculs quand on force la méthode standard
+  const effectiveCachedTokens = (cachedTokens === null) ? 0 : cachedTokens;
+  
   try {
-    const amount = await calculateTokenCost(
-      inputTokens, 
-      outputTokens, 
-      request.provider,
-      request.model
+    // Vérifier qu'on a les informations de pricing du modèle
+    if (!request.models || !request.models.pricing_method) {
+      throw new Error('Missing model pricing information');
+    }
+    
+    // Essayer d'utiliser la méthode de calcul avec cache
+    const amount = calculateTokenCostWithMethod(
+      inputTokens,
+      outputTokens,
+      effectiveCachedTokens,
+      pricingMethod,
+      request.models.price_per_input_token,
+      request.models.price_per_output_token
     );
+    
+    // Log pour debug
+    if (cachedTokens === null) {
+      console.log(`🔄 Forcing standard pricing for ${request.request_id}: cached_tokens is NULL (no prompt caching)`);
+    } else if (cachedTokens > 0) {
+      console.log(`💰 Cache pricing for ${request.request_id}: ${inputTokens} input, ${outputTokens} output, ${cachedTokens} cached, method: ${pricingMethod}, cost: $${amount.toFixed(6)}`);
+    }
     
     return {
       amount,
       success: true
     };
   } catch (error) {
-    return {
-      amount: 0,
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    };
+    // Log l'erreur et notifier via ntfy
+    console.error(`Error in pricing method ${pricingMethod} for request ${request.request_id}:`, error);
+    
+    // Notification asynchrone vers ntfy
+    notifyError(error, {
+      requestId: request.request_id,
+      provider: request.provider,
+      model: request.model,
+      pricingMethod: pricingMethod,
+      operation: 'Cost Calculation'
+    }).catch(console.error);
+    
+    try {
+      // Fallback : utiliser la méthode standard (sans cache)
+      console.log(`⚠️ Falling back to standard pricing for request ${request.request_id}`);
+      
+      const fallbackAmount = calculateTokenCostWithMethod(
+        inputTokens,
+        outputTokens,
+        0, // Pas de cache en fallback
+        'standard',
+        request.models.price_per_input_token,
+        request.models.price_per_output_token
+      );
+      
+      console.log(`✅ Fallback pricing successful for ${request.request_id}: $${fallbackAmount.toFixed(6)} (standard method)`);
+      
+      return {
+        amount: fallbackAmount,
+        success: true
+      };
+    } catch (fallbackError) {
+      // Si même le fallback échoue, on retourne une erreur
+      console.error(`Fallback pricing failed for request ${request.request_id}:`, fallbackError);
+      
+      // Notification pour l'échec du fallback
+      notifyError(fallbackError, {
+        requestId: request.request_id,
+        provider: request.provider,
+        model: request.model,
+        pricingMethod: 'standard',
+        operation: 'Fallback Cost Calculation'
+      }).catch(console.error);
+      
+      return {
+        amount: 0,
+        success: false,
+        error: `Pricing failed with fallback: ${fallbackError instanceof Error ? fallbackError.message : 'Unknown error'}`
+      };
+    }
   }
 }
 
@@ -242,9 +473,10 @@ async function processReadyRequests(
     const { data: requests, error } = await supabase
       .from('requests')
       .select(`
-        *,
+        request_id, user_id, transaction_id, api_key_name, provider, model, created_at, 
+        input_tokens, output_tokens, status, streaming, error_message, cached_tokens,
         requests_content(request_json, response_json),
-        models!inner(tokenizer_name)
+        models!inner(tokenizer_name, pricing_method, price_per_input_token, price_per_output_token)
       `)
       .eq('status', 'ready_to_compute')
       .is('error_message', null)
@@ -261,7 +493,7 @@ async function processReadyRequests(
       return stats;
     }
     
-    const typedRequests = requests as RequestWithContentAndModel[];
+    const typedRequests = requests as unknown as RequestWithContentAndModel[];
     
     for (const request of typedRequests) {
       // Vérifier si on a dépassé la limite de temps
@@ -334,12 +566,19 @@ async function processIndividualRequest(
     finalOutputTokens = tokenResult.outputTokens;
     
     // Update request with calculated tokens
+    const updateData: any = {
+      input_tokens: finalInputTokens,
+      output_tokens: finalOutputTokens
+    };
+    
+    // Préserver la valeur originale de cached_tokens (NULL ou nombre)
+    if (request.cached_tokens !== undefined) {
+      updateData.cached_tokens = request.cached_tokens;
+    }
+    
     const { error: updateError } = await supabase
       .from('requests')
-      .update({
-        input_tokens: finalInputTokens,
-        output_tokens: finalOutputTokens
-      })
+      .update(updateData)
       .eq('request_id', request.request_id);
       
     if (updateError) {
@@ -605,5 +844,10 @@ export {
   getProcessorStats,
   freeAllEncoders,
   calculateTokens,
-  calculateTokenCost
+  calculateTokenCost,
+  calculateTokenCostWithMethod,
+  PRICING_MULTIPLIERS
 };
+
+// Export types for external use
+export type { PricingMethod };

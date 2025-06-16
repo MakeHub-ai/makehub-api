@@ -177,6 +177,7 @@ function parseYamlToModels(yamlContent) {
           extra_param: extraParam,
           display_name: modelData.display_name || modelName,
           max_output_token: modelData.max_output || null, // Pour les modèles avec max_output
+          pricing_method: modelData.pricing_method || null, // Méthode de pricing depuis clean_yaml.js
         };
 
 
@@ -193,7 +194,7 @@ async function getExistingModels() {
   try {
     const { data, error } = await supabase
       .from('models')
-      .select('model_id, provider, provider_model_id, base_url, api_key_name, adapter, window_size, support_tool_calling, support_input_cache, support_vision, context_window, price_per_input_token, price_per_output_token, price_per_input_token_cached, quantisation, extra_param');
+      .select('model_id, provider, provider_model_id, base_url, api_key_name, adapter, window_size, support_tool_calling, support_input_cache, support_vision, context_window, price_per_input_token, price_per_output_token, price_per_input_token_cached, quantisation, extra_param, pricing_method');
 
     if (error) throw error;
     return data || [];
@@ -257,6 +258,7 @@ function analyzeChanges(newModels, existingModels) {
         priceCachedDiff > 0.000001 ||
         existing.price_per_input_token_cached !== newModel.price_per_input_token_cached ||
         existing.quantisation !== newModel.quantisation ||
+        existing.pricing_method !== newModel.pricing_method ||
         JSON.stringify(existing.extra_param) !== JSON.stringify(newModel.extra_param)
       );
 
@@ -350,6 +352,9 @@ function displayChangesPreview(changes) {
       if (change.existing.quantisation !== change.model.quantisation) {
         console.log(`    Quantisation: ${change.existing.quantisation || 'NULL'} → ${change.model.quantisation || 'NULL'}`);
       }
+      if (change.existing.pricing_method !== change.model.pricing_method) {
+        console.log(`    Pricing Method: ${change.existing.pricing_method || 'NULL'} → ${change.model.pricing_method || 'NULL'}`);
+      }
       if (JSON.stringify(change.existing.extra_param) !== JSON.stringify(change.model.extra_param)) {
         console.log(`    Extra Param: Mis à jour`);
       }
@@ -405,6 +410,7 @@ async function executeUpserts(changes) {
         extra_param: change.model.extra_param,
         display_name: change.model.display_name,
         max_output_token: change.model.max_output_token,
+        pricing_method: change.model.pricing_method,
         updated_at: new Date().toISOString()
       }));
 

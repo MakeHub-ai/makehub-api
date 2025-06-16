@@ -600,11 +600,13 @@ export async function filterProviders(
  * Estime le coût d'une requête
  * @param request - Requête standardisée
  * @param model - Modèle sélectionné ou combination
+ * @param cachedTokens - Nombre de tokens déjà en cache (optionnel)
  * @returns Coût estimé en USD
  */
 export function estimateRequestCost(
   request: StandardRequest, 
-  model: Model | ProviderCombination
+  model: Model | ProviderCombination,
+  cachedTokens?: number
 ): number {
   const messages = request.messages || [];
   let estimatedInputTokens = 0;
@@ -638,7 +640,21 @@ export function estimateRequestCost(
     outputPricing = model.price_per_output_token;
   }
   
-  const inputCost = (estimatedInputTokens * inputPricing) / 1000;
+  // Calculer les tokens facturés en tenant compte du cache
+  let billableInputTokens = estimatedInputTokens;
+  
+  if (cachedTokens && cachedTokens > 0) {
+    // Les tokens cachés sont généralement facturés à 10% du prix normal (Anthropic)
+    const cachedTokensCost = (cachedTokens * inputPricing * 0.1) / 1000;
+    const nonCachedTokens = Math.max(0, estimatedInputTokens - cachedTokens);
+    const nonCachedTokensCost = (nonCachedTokens * inputPricing) / 1000;
+    const outputCost = (estimatedOutputTokens * outputPricing) / 1000;
+    
+    return parseFloat((cachedTokensCost + nonCachedTokensCost + outputCost).toFixed(6));
+  }
+  
+  // Calcul standard sans cache
+  const inputCost = (billableInputTokens * inputPricing) / 1000;
   const outputCost = (estimatedOutputTokens * outputPricing) / 1000;
   
   return parseFloat((inputCost + outputCost).toFixed(6));

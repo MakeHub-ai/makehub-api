@@ -774,8 +774,8 @@ export class RequestHandler {
   /**
    * Estime le coût d'une requête avant exécution
    */
-  estimateRequestCost(request: StandardRequest, combination: ProviderCombination): number {
-    return estimateRequestCost(request, combination);
+  estimateRequestCost(request: StandardRequest, combination: ProviderCombination, cachedTokens?: number): number {
+    return estimateRequestCost(request, combination, cachedTokens);
   }
 }
 
