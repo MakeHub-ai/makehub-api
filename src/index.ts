@@ -272,8 +272,6 @@ app.notFound((c: Context) => {
         '/v1/completion',
         '/v1/chat/models',
         '/v1/chat/estimate',
-        '/webhook/calculate-tokens',
-        '/webhook/status'
       ]
     }
   };
