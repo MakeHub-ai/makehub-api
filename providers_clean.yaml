@@ -927,6 +927,36 @@ providers:
     api_key_name: API_KEY_DEEPINFRA
     provider_name: deepinfra
     models:
+      anthropic/claude-4-sonnet:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 200
+        price_per_input_token: 3.3
+        price_per_output_token: 16.5
+        provider_model_id: anthropic/claude-4-sonnet
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 4 Sonnet
+        pricing_method: anthropic_cache
+        support_input_cache: true
+        support_vision: false
+        price_cached_token: null
+      claude/claude-4-opus:
+        base_url: https://api.deepinfra.com/v1/openai
+        context: 200
+        price_per_input_token: 16.5
+        price_per_output_token: 82.5
+        provider_model_id: anthropic/claude-4-opus
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Claude 4 Opus
+        pricing_method: anthropic_cache
+        support_input_cache: true
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-05-28-fp8:
         base_url: https://api.deepinfra.com/v1/openai
         context: 15
