@@ -9,6 +9,7 @@ import type {
   AdapterConfig,
   Model
 } from '../types/index.js';
+import { logger } from 'hono/logger';
 
 /**
  * Adapter pour Azure OpenAI
@@ -51,6 +52,10 @@ export class AzureOpenAIAdapter extends BaseAdapter {
         if (apiKey) {
           this.azureApiKey = apiKey;
         }
+        else {
+          console.warn(`Azure API key environment variable ${apiKeyEnv} is not set`);
+          throw this.createError(`Azure API key environment variable ${apiKeyEnv} is not set`, 500, 'CONFIGURATION_ERROR');
+        }
       }
       
       if (endpointEnv) {
@@ -58,12 +63,19 @@ export class AzureOpenAIAdapter extends BaseAdapter {
         if (endpoint) {
           this.azureEndpoint = endpoint;
         }
+        else {
+          console.warn(`Azure endpoint environment variable ${endpointEnv} is not set`);
+          throw this.createError(`Azure endpoint environment variable ${endpointEnv} is not set`, 500, 'CONFIGURATION_ERROR');
+        }
       }
       
       if (apiVersionEnv) {
         const apiVersion = process.env[apiVersionEnv];
         if (apiVersion) {
           this.apiVersion = apiVersion;
+        }
+        else {
+          console.warn(`Azure API version environment variable ${apiVersionEnv} is not set, using default ${this.apiVersion}`);
         }
       }
     }

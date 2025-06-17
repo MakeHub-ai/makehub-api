@@ -320,7 +320,7 @@ providers:
         support_vision: false
         price_cached_token: null
   azure-eastus:
-    api_key_name: API_KEY_AZUREOPENAI_EASTUS
+    api_key_name: AZURE_OPENAI_API_KEY_EASTUS
     models:
       openai/gpt-4.1:
         base_url: null
@@ -368,7 +368,7 @@ providers:
         support_vision: false
         price_cached_token: null
   azure-germanywestcentral:
-    api_key_name: API_KEY_AZUREOPENAI_GERMANYWESTCENTRAL
+    api_key_name: AZURE_OPENAI_API_KEY_GERMANYWESTCENTRAL
     models:
       openai/gpt-4.1:
         base_url: null
@@ -416,7 +416,7 @@ providers:
         support_vision: false
         price_cached_token: null
   azure-norwayeast:
-    api_key_name: API_KEY_AZUREOPENAI_NORWAYEAST
+    api_key_name: AZURE_OPENAI_API_KEY_NORWAYEAST
     models:
       openai/gpt-4o:
         base_url: null
@@ -449,7 +449,7 @@ providers:
         support_vision: false
         price_cached_token: null
   azure-swedencentral:
-    api_key_name: API_KEY_AZUREOPENAI_SWEDENCENTRAL
+    api_key_name: AZURE_OPENAI_API_KEY_SWEDENCENTRAL
     models:
       xai/grok-3:
         base_url: null
@@ -572,7 +572,7 @@ providers:
         support_vision: false
         price_cached_token: null
   azure-switzerlandnorth:
-    api_key_name: API_KEY_AZUREOPENAI_SWITERLANDNORTH
+    api_key_name: AZURE_OPENAI_API_KEY_SWITZERLANDNORTH
     models:
       openai/gpt-4.1:
         base_url: null
@@ -620,7 +620,7 @@ providers:
         support_vision: false
         price_cached_token: null
   azure-uksouth:
-    api_key_name: API_KEY_AZUREOPENAI_UKSOUTH
+    api_key_name: AZURE_OPENAI_API_KEY_UKSOUTH
     models:
       openai/gpt-4o:
         base_url: null
@@ -653,7 +653,7 @@ providers:
         support_vision: false
         price_cached_token: null
   azure-francecentral:
-    api_key_name: API_KEY_AZUREOPENAI_FRANCECENTRAL
+    api_key_name: AZURE_OPENAI_API_KEY_FRANCECENTRAL
     models:
       openai/gpt-4o:
         base_url: null
@@ -2517,69 +2517,6 @@ providers:
         display_name: Llama 4 Maverick 17B 128E
         pricing_method: standard
         support_input_cache: false
-        support_vision: false
-        price_cached_token: null
-  replicate:
-    api_key_name: API_KEY_REPLICATE
-    models:
-      openai/o4-mini:
-        base_url: https://api.replicate.com/v1
-        context: 128
-        price_per_input_token: 1
-        price_per_output_token: 4
-        provider_model_id: openai/o4-mini
-        quantisation: null
-        support_tool_calling: true
-        max_output: null
-        assistant_ready: true
-        display_name: o4 Mini
-        pricing_method: standard
-        support_input_cache: false
-        support_vision: false
-        price_cached_token: null
-      openai/gpt-4.1:
-        base_url: https://api.replicate.com/v1
-        context: 128
-        price_per_input_token: 2
-        price_per_output_token: 8
-        provider_model_id: openai/gpt-4.1
-        quantisation: null
-        support_tool_calling: true
-        max_output: null
-        assistant_ready: true
-        display_name: GPT-4.1
-        pricing_method: standard
-        support_input_cache: false
-        support_vision: false
-        price_cached_token: null
-      anthropic/claude-3-7-sonnet:
-        base_url: https://api.replicate.com/v1
-        context: 128
-        price_per_input_token: 3
-        price_per_output_token: 15
-        provider_model_id: anthropic/claude-3.7
-        quantisation: null
-        support_tool_calling: true
-        max_output: null
-        assistant_ready: true
-        display_name: Claude 3.7 Sonnet
-        pricing_method: anthropic_cache
-        support_input_cache: true
-        support_vision: false
-        price_cached_token: null
-      anthropic/claude-3-5-sonnet:
-        base_url: https://api.replicate.com/v1
-        context: 128
-        price_per_input_token: 3
-        price_per_output_token: 15
-        provider_model_id: anthropic/claude-3.5-sonnet
-        quantisation: null
-        support_tool_calling: true
-        max_output: null
-        assistant_ready: true
-        display_name: Claude 3.5 Sonnet
-        pricing_method: anthropic_cache
-        support_input_cache: true
         support_vision: false
         price_cached_token: null
   sambanova:

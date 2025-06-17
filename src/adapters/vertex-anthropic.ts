@@ -1,6 +1,7 @@
 // vertex-anthropic-native.ts
 import { BaseAdapter, AdapterError } from './base.js';
 import { AnthropicVertex } from '@anthropic-ai/vertex-sdk'; // SDK natif Anthropic pour Vertex
+import { GoogleAuth } from 'google-auth-library';
 import { Readable } from 'stream';
 import type { AxiosResponse } from 'axios';
 import type {
@@ -37,8 +38,8 @@ export class VertexAnthropicAdapter extends BaseAdapter {
     this.modelInfo = model;
 
     if (model?.extra_param) {
-      this.projectId = model.extra_param.project_id || process.env.VERTEX_PROJECT_ID || '';
-      this.region = model.extra_param.region || process.env.VERTEX_REGION || 'us-central1';
+      this.projectId = model.extra_param.project_id || process.env.VERTEX_PROJECT_ID || process.env.GOOGLE_CLOUD_PROJECT || '';
+      this.region = model.extra_param.region || process.env.VERTEX_REGION || process.env.GOOGLE_CLOUD_REGION || 'us-central1';
     }
 
     console.log('Configuring VertexAnthropicAdapter:', {
@@ -46,18 +47,53 @@ export class VertexAnthropicAdapter extends BaseAdapter {
       region: this.region
     });
 
-    this.setupNativeClient();
+    // Setup client asynchronously - errors will be caught during actual requests
+    this.setupNativeClient().catch(error => {
+      console.error('Failed to setup Vertex client during configuration:', error);
+    });
   }
 
-  private setupNativeClient(): void {
+  private async setupNativeClient(): Promise<void> {
     try {
       if (this.projectId && this.region) {
-        // Utilisation du SDK natif Anthropic pour Vertex
-        this.client = new AnthropicVertex({
+        let authOptions: any = {
           projectId: this.projectId,
           region: this.region,
-          // L'authentification est gérée automatiquement par Google Cloud SDK
-        });
+        };
+
+        // Vérifier si les variables d'environnement pour l'authentification sont disponibles
+        const hasEnvCredentials = process.env.GOOGLE_CLOUD_CLIENT_EMAIL && 
+                                  process.env.GOOGLE_CLOUD_PRIVATE_KEY && 
+                                  process.env.GOOGLE_CLOUD_PROJECT;
+
+        if (hasEnvCredentials) {
+          console.log('Using Google Cloud credentials from environment variables');
+          
+          // Créer les credentials à partir des variables d'environnement
+          const credentials = {
+            client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
+            private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+            project_id: process.env.GOOGLE_CLOUD_PROJECT,
+            client_id: process.env.GOOGLE_CLOUD_CLIENT_ID,
+            type: 'service_account'
+          };
+
+          // Créer l'objet GoogleAuth avec les credentials
+          const auth = new GoogleAuth({
+            credentials,
+            scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+            projectId: this.projectId
+          });
+
+          // Passer l'auth au client AnthropicVertex
+          authOptions.googleAuth = auth;
+        } else {
+          console.log('Using Google Cloud credentials from file or default authentication');
+          // Fallback vers l'authentification par fichier ou par défaut
+        }
+
+        // Utilisation du SDK natif Anthropic pour Vertex
+        this.client = new AnthropicVertex(authOptions);
       }
     } catch (error) {
       console.error('Failed to setup Anthropic Vertex client:', error);
