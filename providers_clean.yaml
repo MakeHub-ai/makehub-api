@@ -142,7 +142,7 @@ providers:
     provider_name: vertex
     models:
       anthropic/claude-4-opus:
-        base_url: https://api.anthropic.com/v1/
+        base_url: https://api.anthropic.com/v1
         context: 200
         price_per_input_token: 15
         price_per_output_token: 75
@@ -236,7 +236,7 @@ providers:
     provider_name: anthropic
     models:
       anthropic/claude-4-opus:
-        base_url: https://api.anthropic.com/v1/
+        base_url: https://api.anthropic.com/v1
         context: 200
         price_per_input_token: 15
         price_per_output_token: 75
@@ -251,7 +251,7 @@ providers:
         support_vision: false
         price_cached_token: null
       anthropic/claude-4-sonnet:
-        base_url: https://api.anthropic.com/v1/
+        base_url: https://api.anthropic.com/v1
         context: 200
         price_per_input_token: 3
         price_per_output_token: 15
@@ -266,7 +266,7 @@ providers:
         support_vision: false
         price_cached_token: null
       anthropic/claude-3-5-haiku:
-        base_url: https://api.anthropic.com/v1/
+        base_url: https://api.anthropic.com/v1
         context: 200
         price_per_input_token: 0.8
         price_per_output_token: 4
@@ -281,7 +281,7 @@ providers:
         support_vision: false
         price_cached_token: null
       anthropic/claude-3-5-sonnet:
-        base_url: https://api.anthropic.com/v1/
+        base_url: https://api.anthropic.com/v1
         context: 200
         price_per_input_token: 3
         price_per_output_token: 15
@@ -296,7 +296,7 @@ providers:
         support_vision: false
         price_cached_token: null
       anthropic/claude-3-7-sonnet:
-        base_url: https://api.anthropic.com/v1/
+        base_url: https://api.anthropic.com/v1
         context: 200
         price_per_input_token: 3
         price_per_output_token: 15

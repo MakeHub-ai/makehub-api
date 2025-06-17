@@ -31,6 +31,11 @@ export class OpenAIAdapter extends BaseAdapter {
       'User-Agent': 'LLM-Gateway/1.0'
     };
 
+    // Ajouter l'en-tête pour le prompt caching d'Anthropic
+    if (this.baseURL && this.baseURL.includes('anthropic.com')) {
+      headers['anthropic-beta'] = 'prompt-caching-2024-07-31';
+    }
+
     return this.validateHeaders(headers);
   }
 
