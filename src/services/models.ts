@@ -478,6 +478,44 @@ export async function filterProviders(
     return true;
   });
   
+  // 2.5. Filtrer par providers spécifiés dans la requête (si applicable)
+  const requestProviders = request.provider;
+  if (requestProviders) {
+    const providerList = Array.isArray(requestProviders) ? requestProviders : [requestProviders];
+    
+    // Filtrer uniquement les modèles des providers spécifiés
+    const beforeFilterCount = availableModels.length;
+    availableModels = availableModels.filter(model => 
+      providerList.includes(model.provider)
+    );
+    
+    if (availableModels.length === 0) {
+      console.log(`\n❌ ERROR: None of the specified providers support the model "${requestedModel}"`);
+      console.log(`   - Requested providers: ${providerList.join(', ')}`);
+      
+      // Afficher quels providers supportent effectivement ce modèle
+      const allSupportingProviders = [...exactMatches, ...providerMatches]
+        .filter(model => {
+          const modelMatch = model.model_id === requestedModel || model.provider_model_id === requestedModel;
+          if (!modelMatch) return false;
+          
+          // Vérifier la compatibilité
+          if (tools && tools.length > 0 && !model.support_tool_calling) return false;
+          if (hasImages && !model.support_vision) return false;
+          if (model.context_window && totalTokens > model.context_window) return false;
+          
+          return true;
+        })
+        .map(m => m.provider);
+      
+      if (allSupportingProviders.length > 0) {
+        console.log(`   - Available providers for this model: ${allSupportingProviders.join(', ')}`);
+      }
+      
+      throw new Error(`None of the specified providers [${providerList.join(', ')}] support model "${requestedModel}". Available providers: [${allSupportingProviders.join(', ')}]`);
+    }
+  }
+
   if (availableModels.length === 0) {
     console.log(`\n❌ DEBUG: No providers found. Possible reasons:`);
     

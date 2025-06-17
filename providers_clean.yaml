@@ -1785,7 +1785,7 @@ providers:
     provider_name: nebius
     models:
       deepseek/deepseek-R1-05-28-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.8
         price_per_output_token: 2.4
@@ -1800,7 +1800,7 @@ providers:
         support_vision: false
         price_cached_token: null
       qwen/Qwen3-14B-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.08
         price_per_output_token: 0.24
@@ -1815,7 +1815,7 @@ providers:
         support_vision: false
         price_cached_token: null
       qwen/Qwen3-32B-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.1
         price_per_output_token: 0.3
@@ -1830,7 +1830,7 @@ providers:
         support_vision: false
         price_cached_token: null
       qwen/Qwen3-30B-A3B-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.1
         price_per_output_token: 0.3
@@ -1845,7 +1845,7 @@ providers:
         support_vision: false
         price_cached_token: null
       qwen/Qwen3-235B-A22B-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.2
         price_per_output_token: 0.6
@@ -1860,7 +1860,7 @@ providers:
         support_vision: false
         price_cached_token: null
       deepseek/deepseek-R1-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.8
         price_per_output_token: 2.4
@@ -1875,7 +1875,7 @@ providers:
         support_vision: false
         price_cached_token: null
       deepseek/deepseek-V3-0324-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.5
         price_per_output_token: 1.5
@@ -1883,14 +1883,14 @@ providers:
         quantisation: 8
         support_tool_calling: false
         max_output: null
-        assistant_ready: false
+        assistant_ready: false 
         display_name: DeepSeek V3 (03/24)
         pricing_method: deepseek_cache
         support_input_cache: true
         support_vision: false
         price_cached_token: null
       deepseek/deepseek-V3-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.5
         price_per_output_token: 1.5
@@ -1905,7 +1905,7 @@ providers:
         support_vision: false
         price_cached_token: null
       meta/Llama-3.1-70B-fp16:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.13
         price_per_output_token: 0.4
@@ -1920,7 +1920,7 @@ providers:
         support_vision: false
         price_cached_token: null
       meta/Llama-3.1-8B-fp16:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.02
         price_per_output_token: 0.06
@@ -1935,7 +1935,7 @@ providers:
         support_vision: false
         price_cached_token: null
       mistral/open-mistral-nemo:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.04
         price_per_output_token: 0.12
@@ -1950,7 +1950,7 @@ providers:
         support_vision: false
         price_cached_token: null
       qwen/QWQ-32b-fp16:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 32
         price_per_input_token: 0.15
         price_per_output_token: 0.45
@@ -1969,7 +1969,7 @@ providers:
     provider_name: nebius
     models:
       qwen/Qwen3-4B-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.08
         price_per_output_token: 0.24
@@ -1984,7 +1984,7 @@ providers:
         support_vision: false
         price_cached_token: null
       qwen/Qwen3-30B-A3B-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.3
         price_per_output_token: 0.9
@@ -1999,7 +1999,7 @@ providers:
         support_vision: false
         price_cached_token: null
       deepseek/deepseek-R1-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 2
         price_per_output_token: 6
@@ -2014,7 +2014,7 @@ providers:
         support_vision: false
         price_cached_token: null
       deepseek/deepseek-V3-0324-fp8:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 2
         price_per_output_token: 6
@@ -2029,7 +2029,7 @@ providers:
         support_vision: false
         price_cached_token: null
       meta/Llama-3.1-70B-fp16:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.25
         price_per_output_token: 0.75
@@ -2044,7 +2044,7 @@ providers:
         support_vision: false
         price_cached_token: null
       meta/Llama-3.1-8B-fp16:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.03
         price_per_output_token: 0.09
@@ -2059,7 +2059,7 @@ providers:
         support_vision: false
         price_cached_token: null
       mistral/open-mistral-nemo:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 128
         price_per_input_token: 0.08
         price_per_output_token: 0.24
@@ -2074,7 +2074,7 @@ providers:
         support_vision: false
         price_cached_token: null
       qwen/QWQ-32b-fp16:
-        base_url: https://api.studio.nebius.ai/v1/
+        base_url: https://api.studio.nebius.ai/v1
         context: 32
         price_per_input_token: 0.5
         price_per_output_token: 1.5

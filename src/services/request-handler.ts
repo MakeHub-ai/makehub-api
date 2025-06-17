@@ -159,8 +159,8 @@ export class RequestHandler {
       let adapter: BaseAdapter | undefined;
       
       try {
-        console.log(`Trying provider ${combination.provider} with model ${combination.modelId} (attempt ${i + 1}/${providerCombinations.length})`);
-        
+        console.log(`Trying provider ${combination.provider} with model ${combination.modelId} and model_id_provider ${combination.providerModelId} (attempt ${i + 1}/${providerCombinations.length})`);
+
         // Créer l'adapter avec la configuration appropriée
         const adapterConfig = {
           apiKey: process.env[combination.ApiKeyName],
@@ -207,7 +207,34 @@ export class RequestHandler {
           throw error;
         }
         // Sinon, c'est une erreur technique, on notifie et on continue
-        console.error(`Provider ${combination.provider} failed:`, error instanceof Error ? error.message : 'Unknown error');
+        const errorDetails = {
+          provider: combination.provider,
+          modelId: combination.modelId,
+          providerModelId: combination.providerModelId,
+          baseUrl: combination.baseUrl,
+          adapter: combination.adapter,
+          attemptNumber: i + 1,
+          totalAttempts: providerCombinations.length,
+          requestId: requestId,
+          streaming: false,
+          error: {
+            name: error instanceof Error ? error.constructor.name : 'UnknownError',
+            message: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+            status: error && typeof error === 'object' && 'status' in error ? error.status : undefined,
+            code: error && typeof error === 'object' && 'code' in error ? error.code : undefined
+          },
+          requestSummary: {
+            model: request.model,
+            messageCount: request.messages?.length || 0,
+            hasSystemMessage: request.messages?.some(m => m.role === 'system') || false,
+            temperature: request.temperature,
+            maxTokens: request.max_tokens,
+            topP: request.top_p
+          }
+        };
+        
+        console.error(`Provider ${combination.provider} failed (attempt ${i + 1}/${providerCombinations.length}):`, JSON.stringify(errorDetails, null, 2));
         
         // Envoyer notification d'erreur (asynchrone)
         this.notifyError(error, combination, request).catch(console.error);
@@ -240,8 +267,8 @@ export class RequestHandler {
         let adapter: BaseAdapter | undefined;
         
         try {
-          console.log(`Trying provider ${combination.provider} with model ${combination.modelId} (streaming attempt ${i + 1}/${providerCombinations.length})`);
-          
+          console.log(`Trying provider ${combination.provider} with model ${combination.modelId} and model_id_provider ${combination.providerModelId}  with base_url ${combination.baseUrl} (streaming attempt ${i + 1}/${providerCombinations.length})`);
+
           // Créer l'adapter avec la configuration appropriée
           const adapterConfig = {
             apiKey: process.env[combination.ApiKeyName],
@@ -291,7 +318,34 @@ export class RequestHandler {
           }
           
           // Sinon, c'est une erreur technique, on notifie et on continue
-          console.error(`Streaming provider ${combination.provider} failed:`, error instanceof Error ? error.message : 'Unknown error');
+          const errorDetails = {
+            provider: combination.provider,
+            modelId: combination.modelId,
+            providerModelId: combination.providerModelId,
+            baseUrl: combination.baseUrl,
+            adapter: combination.adapter,
+            attemptNumber: i + 1,
+            totalAttempts: providerCombinations.length,
+            requestId: requestId,
+            streaming: true,
+            error: {
+              name: error instanceof Error ? error.constructor.name : 'UnknownError',
+              message: error instanceof Error ? error.message : String(error),
+              stack: error instanceof Error ? error.stack : undefined,
+              status: error && typeof error === 'object' && 'status' in error ? error.status : undefined,
+              code: error && typeof error === 'object' && 'code' in error ? error.code : undefined
+            },
+            requestSummary: {
+              model: request.model,
+              messageCount: request.messages?.length || 0,
+              hasSystemMessage: request.messages?.some(m => m.role === 'system') || false,
+              temperature: request.temperature,
+              maxTokens: request.max_tokens,
+              topP: request.top_p
+            }
+          };
+          
+          console.error(`Streaming provider ${combination.provider} failed (attempt ${i + 1}/${providerCombinations.length}):`, JSON.stringify(errorDetails, null, 2));
           
           // Envoyer notification d'erreur (asynchrone)
           self.notifyError(error, combination, request).catch(console.error);

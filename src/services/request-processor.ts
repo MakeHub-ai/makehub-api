@@ -379,7 +379,7 @@ async function calculateRequestCost(
     
     // Log pour debug
     if (cachedTokens === null) {
-      console.log(`🔄 Forcing standard pricing for ${request.request_id}: cached_tokens is NULL (no prompt caching)`);
+      console.log(`🔄 Forcing standard pricing for ${request.request_id}`);
     } else if (cachedTokens > 0) {
       console.log(`💰 Cache pricing for ${request.request_id}: ${inputTokens} input, ${outputTokens} output, ${cachedTokens} cached, method: ${pricingMethod}, cost: $${amount.toFixed(6)}`);
     }
