@@ -2419,7 +2419,7 @@ providers:
         context: 128
         price_per_input_token: 1.95
         price_per_output_token: 5
-        provider_model_id: deepseek-r1-0528
+        provider_model_id: parasail-deepseek-r1-0528
         quantisation: null
         support_tool_calling: true
         max_output: null
@@ -2509,7 +2509,7 @@ providers:
         context: 128
         price_per_input_token: 0.19
         price_per_output_token: 0.85
-        provider_model_id: llama-4-maverick-instruct-fp8
+        provider_model_id: parasail-llama-4-maverick-instruct-fp8
         quantisation: null
         support_tool_calling: true
         max_output: null
