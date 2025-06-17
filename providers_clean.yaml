@@ -942,7 +942,7 @@ providers:
         support_input_cache: true
         support_vision: false
         price_cached_token: null
-      claude/claude-4-opus:
+      anthropic/claude-4-opus:
         base_url: https://api.deepinfra.com/v1/openai
         context: 200
         price_per_input_token: 16.5
