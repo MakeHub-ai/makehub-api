@@ -255,7 +255,16 @@ async function getUserCachingHistoryBatch(
       .limit(5 * providers.length); // 5 par provider
 
     const cachingMap = new Map<string, boolean>();
-    
+
+    if (data && data.length > 0) {
+      console.log(`📊 Caching history found for user ${userId}, model ${modelId}: ${data.length} entries`)
+      for (const provider of providers) {
+        console.log(`   - Provider: ${provider}`);
+      }
+    } else {
+      console.log(`📊 No caching history found for user ${userId}, model ${modelId}`);
+    }
+
     // Initialiser toutes les clés à false
     providers.forEach(provider => {
       cachingMap.set(`${provider}:${modelId}`, false);
@@ -571,8 +580,55 @@ export async function filterProviders(
   const providers = availableModels.map(m => m.provider);
   const allMetrics = await getProviderMetricsBatch(requestedModel, providers, metricsWindowSize);
 
-  // 4. Récupérer l'historique de caching en batch (requête optimisée)
-  const cachingMap = await getUserCachingHistoryBatch(userId, requestedModel, providers);
+  // 4. Vérifier si AU MOINS UN des providers disponibles supporte le prompt caching
+  const hasCacheSupportedModels = availableModels.some(model => model.support_input_cache);
+
+  let cachingMap = new Map<string, boolean>();
+
+  if (hasCacheSupportedModels) {
+    console.log(`🔍 Found ${availableModels.filter(m => m.support_input_cache).length} models with cache support, checking history...`);
+    
+    // Récupérer l'historique de caching seulement si certains modèles supportent le cache
+    cachingMap = await getUserCachingHistoryBatch(userId, requestedModel, providers);
+    
+    // Vérifier si l'utilisateur a un historique de cache
+    const hasAnyHistoricalCache = Array.from(cachingMap.values()).some(Boolean);
+    
+    if (!hasAnyHistoricalCache) {
+      console.log(`📊 No caching history found, applying intrinsic cache support...`);
+      
+      // Pour les modèles qui supportent le cache mais n'ont pas d'historique,
+      // les marquer comme ayant le potentiel de cache
+      availableModels.forEach(model => {
+        const key = `${model.provider}:${model.model_id}`;
+        
+        if (model.support_input_cache) {
+          cachingMap.set(key, true);
+          console.log(`🚀 ${model.provider} supports input caching for ${model.model_id} (intrinsic support)`);
+        }
+      });
+    } else {
+      console.log(`✅ Found existing caching history for user ${userId}`);
+      
+      // Compléter avec le support intrinsèque pour les modèles sans historique mais avec support
+      availableModels.forEach(model => {
+        const key = `${model.provider}:${model.model_id}`;
+        
+        if (model.support_input_cache && !cachingMap.get(key)) {
+          cachingMap.set(key, true);
+          console.log(`🚀 ${model.provider} supports input caching for ${model.model_id} (intrinsic support, no history)`);
+        }
+      });
+    }
+  } else {
+    // Aucun modèle ne supporte le cache → pas besoin de vérifier l'historique
+    console.log(`📊 No models support input caching for ${requestedModel}, skipping cache history check`);
+    
+    // Initialiser avec false pour tous
+    providers.forEach(provider => {
+      cachingMap.set(`${provider}:${requestedModel}`, false);
+    });
+  }
 
   // 5. Calculer les min/max pour normalisation (entre providers du même modèle)
   const prices = availableModels.map(m => m.price_per_input_token + m.price_per_output_token);

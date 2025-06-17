@@ -1,3 +1,10 @@
+# Fichier YAML nettoyé avec pricing automatique - Généré automatiquement
+# Contient uniquement les champs nécessaires pour l'upload vers la base de données
+# pricing_method et support_input_cache ajoutés automatiquement selon le provider/modèle
+# Fichier original: providers.yaml
+# Date: 2025-06-16T09:49:17.976Z
+# Réduction: 34.9% des champs supprimés
+
 providers:
   kluster:
     api_key_name: API_KEY_KLUSTER
@@ -325,7 +332,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4.1
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4o:
@@ -340,7 +347,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4o-mini:
@@ -355,7 +362,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o Mini
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
   azure-germanywestcentral:
@@ -373,7 +380,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4.1
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4o:
@@ -388,7 +395,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4o-mini:
@@ -403,7 +410,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o Mini
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
   azure-norwayeast:
@@ -421,7 +428,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4o-mini:
@@ -436,7 +443,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o Mini
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
   azure-swedencentral:
@@ -484,7 +491,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4o-mini:
@@ -499,7 +506,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o Mini
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/o4-mini:
@@ -514,7 +521,7 @@ providers:
         assistant_ready: false
         display_name: o4 Mini
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4.1:
@@ -529,7 +536,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4.1
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4.1-mini:
@@ -544,7 +551,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4.1 Mini
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4.1-nano:
@@ -559,7 +566,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4.1 Nano
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
   azure-switzerlandnorth:
@@ -577,7 +584,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4.1
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4o:
@@ -592,7 +599,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4o-mini:
@@ -607,7 +614,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o Mini
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
   azure-uksouth:
@@ -625,7 +632,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4o-mini:
@@ -640,7 +647,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o Mini
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
   azure-francecentral:
@@ -658,7 +665,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
       openai/gpt-4o-mini:
@@ -673,7 +680,7 @@ providers:
         assistant_ready: true
         display_name: GPT-4o Mini
         pricing_method: openai_cache_50
-        support_input_cache: true
+        support_input_cache: false
         support_vision: false
         price_cached_token: null
   bedrock:

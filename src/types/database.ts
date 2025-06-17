@@ -8,8 +8,10 @@ export interface Model {
   provider_model_id: string;
   support_tool_calling: boolean;
   support_vision: boolean;
+  support_input_cache: boolean | null;
   price_per_input_token: number;
   price_per_output_token: number;
+  price_per_input_token_cached: number | null;
   context_window: number | null;
   base_url: string;
   api_key_name: string;
