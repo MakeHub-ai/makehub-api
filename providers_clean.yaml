@@ -201,12 +201,27 @@ providers:
         support_input_cache: true
         support_vision: false
         price_cached_token: null
-      google/gemini-2.5-pro-preview:
+      google/gemini-2.5-flash-light-preview:
+        base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
+        context: 1000
+        price_per_input_token: 0.1
+        price_per_output_token: 0.4
+        provider_model_id: google/gemini-2.5-flash-lite-preview-06-17
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Gemini 2.5 Flash Light Preview
+        pricing_method: google_implicit
+        support_input_cache: true
+        support_vision: false
+        price_cached_token: null
+      google/gemini-2.5-pro:
         base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
         context: 1048
         price_per_input_token: 1.25
         price_per_output_token: 10
-        provider_model_id: google/gemini-2.5-pro-preview-05-06
+        provider_model_id: google/gemini-2.5-pro
         quantisation: null
         support_tool_calling: true
         max_output: null
@@ -216,12 +231,12 @@ providers:
         support_input_cache: true
         support_vision: false
         price_cached_token: null
-      google/gemini-2.5-flash-preview:
+      google/gemini-2.5-flash:
         base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
         context: 1048
         price_per_input_token: 0.15
         price_per_output_token: 3.5
-        provider_model_id: google/gemini-2.5-flash-preview-05-20
+        provider_model_id: google/gemini-2.5-flash
         quantisation: null
         support_tool_calling: true
         max_output: null
@@ -1474,12 +1489,27 @@ providers:
     api_key_name: API_KEY_GOOGLE
     provider_name: google
     models:
-      google/gemini-2.5-flash-preview:
+      google/gemini-2.5-flash-lite-preview:
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        context: 1000
+        price_per_input_token: 0.1
+        price_per_output_token: 0.4
+        provider_model_id: gemini-2.5-flash-lite-preview-06-17
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Gemini 2.5 Flash Lite Preview
+        pricing_method: google_explicit
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
+      google/gemini-2.5-flash:
         base_url: https://generativelanguage.googleapis.com/v1beta/openai/
         context: 2097
-        price_per_input_token: 0.15
-        price_per_output_token: 3.5
-        provider_model_id: gemini-2.5-flash-preview-05-20
+        price_per_input_token: 0.3
+        price_per_output_token: 2.5
+        provider_model_id: gemini-2.5-flash
         quantisation: null
         support_tool_calling: true
         max_output: null
@@ -1489,12 +1519,12 @@ providers:
         support_input_cache: true
         support_vision: false
         price_cached_token: null
-      google/gemini-2.5-pro-preview:
+      google/gemini-2.5-pro:
         base_url: https://generativelanguage.googleapis.com/v1beta/openai/
         context: 2097
         price_per_input_token: 1.25
         price_per_output_token: 10
-        provider_model_id: gemini-2.5-pro-preview-05-06
+        provider_model_id: gemini-2.5-pro
         quantisation: null
         support_tool_calling: true
         max_output: null
@@ -2858,12 +2888,12 @@ providers:
     api_key_name: API_KEY_DONTMINDME
     provider_name: dontmindme
     models:
-      google/gemini-2.5-pro-preview:
+      google/gemini-2.5-pro:
         base_url: https://openrouter.ai/api/v1
         context: 1048
         price_per_input_token: 1.25
         price_per_output_token: 10
-        provider_model_id: google/gemini-2.5-pro-preview-03-25
+        provider_model_id: google/gemini-2.5-pro
         quantisation: null
         support_tool_calling: true
         max_output: 8
@@ -2918,12 +2948,12 @@ providers:
         support_input_cache: false
         support_vision: false
         price_cached_token: null
-      google/gemini-2.5-flash-preview:
+      google/gemini-2.5-flash:
         base_url: https://openrouter.ai/api/v1
         context: 1048
         price_per_input_token: 1.25
         price_per_output_token: 10
-        provider_model_id: google/gemini-2.5-flash-preview:thinking
+        provider_model_id: google/gemini-2.5-flash:thinking
         quantisation: null
         support_tool_calling: true
         max_output: 8
