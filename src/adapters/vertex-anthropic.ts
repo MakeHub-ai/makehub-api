@@ -130,8 +130,16 @@ export class VertexAnthropicAdapter extends BaseAdapter {
     let systemMessage = '';
     const conversationMessages = messages.filter(msg => {
       if (msg.role === 'system') {
-        systemMessage += (typeof msg.content === 'string' ? msg.content :
-          Array.isArray(msg.content) ? msg.content.find(c => c.type === 'text')?.text || '' : '');
+        if (typeof msg.content === 'string') {
+          systemMessage += msg.content;
+        } else if (Array.isArray(msg.content)) {
+          // Extraire le texte des content blocks système
+          const textContent = msg.content
+            .filter(item => item.type === 'text')
+            .map(item => item.text)
+            .join('');
+          systemMessage += textContent;
+        }
         return false;
       }
       return true;
@@ -142,8 +150,17 @@ export class VertexAnthropicAdapter extends BaseAdapter {
       max_tokens: standardRequest.max_tokens || 4096,
     };
 
-    if (systemMessage) {
-      vertexRequest.system = systemMessage;
+    // Ajouter le message système s'il existe avec cache automatique
+    if (systemMessage.trim()) {
+      if (this.shouldAutoCache(systemMessage)) {
+        vertexRequest.system = [{
+          type: 'text',
+          text: systemMessage.trim(),
+          cache_control: { type: 'ephemeral' }
+        }];
+      } else {
+        vertexRequest.system = systemMessage.trim();
+      }
     }
 
     if (standardRequest.temperature !== undefined) {
@@ -193,9 +210,11 @@ export class VertexAnthropicAdapter extends BaseAdapter {
       if (typeof message.content === 'string') {
         const textBlock: any = { type: 'text', text: message.content };
         
-        // Ajouter le cache_control si présent sur le message
+        // Préserver cache_control du message ou ajouter cache automatique
         if ((message as any).cache_control) {
           textBlock.cache_control = (message as any).cache_control;
+        } else if (this.shouldAutoCache(message.content)) {
+          textBlock.cache_control = { type: 'ephemeral' };
         }
         
         contentArray = [textBlock];
@@ -204,9 +223,11 @@ export class VertexAnthropicAdapter extends BaseAdapter {
           if (item.type === 'text') {
             const textBlock: any = { type: 'text', text: item.text };
             
-            // Ajouter le cache_control si présent sur l'item
+            // Préserver cache_control de l'item ou ajouter cache automatique
             if (item.cache_control) {
               textBlock.cache_control = item.cache_control;
+            } else if (this.shouldAutoCache(item.text!)) {
+              textBlock.cache_control = { type: 'ephemeral' };
             }
             
             return textBlock;
@@ -263,23 +284,48 @@ export class VertexAnthropicAdapter extends BaseAdapter {
     return convertedMessages;
   }
 
+  /**
+   * Détermine si un texte doit être automatiquement mis en cache
+   * Seuil : 1024 tokens ≈ 4096 caractères (1 token ≈ 4 caractères)
+   */
+  private shouldAutoCache(text: string): boolean {
+    const MIN_CACHE_CHARACTERS = 4096; // 1024 tokens * 4 chars/token
+    return text.length >= MIN_CACHE_CHARACTERS;
+  }
+
   private convertToolsToVertexFormat(tools: StandardRequest['tools']): any[] {
     if (!tools) return [];
-    return tools.map(tool => {
+    return tools.map((tool, index) => {
       if (tool.type !== 'function') {
         throw this.createError("Vertex/Anthropic adapter only supports 'function' tools.", 400, 'VALIDATION_ERROR');
       }
-      return {
+
+      const vertexTool: any = {
         name: tool.function.name,
         description: tool.function.description,
         input_schema: tool.function.parameters
       };
+
+      // Préserver cache_control existant
+      if ((tool as any).cache_control) {
+        vertexTool.cache_control = (tool as any).cache_control;
+      } else if (index === tools.length - 1) {
+        // Cache automatique sur le dernier outil (cache tous les outils d'un coup)
+        vertexTool.cache_control = { type: 'ephemeral' };
+      }
+
+      return vertexTool;
     });
   }
 
   transformResponse(response: any): ChatCompletion {
     let textContent = '';
     const toolCalls: ToolCall[] = [];
+
+    // Si il y a usage dans la réponse, on affiche la réponse brut dans les logs
+    if (response.usage) {
+      console.log('Vertex Anthropic response usage:', response.usage);
+    }
 
     if (response.content && Array.isArray(response.content)) {
       response.content.forEach((item: any) => {
@@ -316,7 +362,7 @@ export class VertexAnthropicAdapter extends BaseAdapter {
         prompt_tokens: response.usage?.input_tokens,
         completion_tokens: response.usage?.output_tokens,
         total_tokens: (response.usage?.input_tokens || 0) + (response.usage?.output_tokens || 0),
-        cached_tokens: response.usage?.cache_creation_input_tokens || response.usage?.cache_read_input_tokens || null,
+        cached_tokens: response.usage?.cache_read_input_tokens || null,
         input_tokens: response.usage?.input_tokens,
         output_tokens: response.usage?.output_tokens
       }

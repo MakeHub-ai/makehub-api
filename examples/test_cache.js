@@ -125,14 +125,14 @@ Now , please provide a detailed response that adheres to the following guideline
 `;
 
 const requestBody = {
-  model: "openai/gpt-4o",
+  model: "anthropic/claude-4-sonnet",
   messages: [
     { role: "user", content: longPrompt }
   ],
   stream: false, // Disable streaming to get complete response with usage info
   max_tokens: 100,
   temperature: 0.7,
-  provider: "azure-eastus",
+  provider: "vertex",
 };
 
 async function makeRequest(requestNumber) {
