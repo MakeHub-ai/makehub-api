@@ -118,7 +118,7 @@ const requestBody = {
   stream: false, // Disable streaming to get complete response with usage info
   max_tokens: 100,
   temperature: 0.7,
-  provider: "bedrock",
+  provider: "anthropic",
 };
 
 async function makeRequest(requestNumber) {

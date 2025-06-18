@@ -163,7 +163,7 @@ function calculateTokenCostWithMethod(
     case 'anthropic_cache':
       // Anthropic: cached tokens at 10%, non-cached at 100%
       const anthropicCachedCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.ANTHROPIC_CACHE_READ) / 1000;
-      const anthropicNonCachedCost = ((inputTokens - cachedTokens) * inputPrice) / 1000;
+      const anthropicNonCachedCost = (inputTokens * inputPrice) / 1000;
       inputCost = anthropicCachedCost + anthropicNonCachedCost;
       break;
 

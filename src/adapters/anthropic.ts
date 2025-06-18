@@ -22,7 +22,13 @@ interface AnthropicRequest {
   messages: AnthropicMessage[];
   max_tokens: number;
   stream?: boolean;
-  system?: string;
+  system?: string | Array<{
+    type: 'text';
+    text: string;
+    cache_control?: {
+      type: 'ephemeral';
+    };
+  }>;
   temperature?: number;
   top_p?: number;
   stop_sequences?: string[];
@@ -145,9 +151,18 @@ export class AnthropicAdapter extends BaseAdapter {
       stream: standardRequest.stream || false
     };
 
-    // Ajouter le message système s'il existe
+    // Ajouter le message système s'il existe avec cache automatique
     if (systemMessage.trim()) {
-      anthropicRequest.system = systemMessage.trim();
+      if (this.shouldAutoCache(systemMessage)) {
+        anthropicRequest.system = [{
+          type: 'text',
+          text: systemMessage.trim(),
+          cache_control: { type: 'ephemeral' }
+        }];
+        console.log(`🎯 Auto-cache activé pour message système (${systemMessage.length} caractères)`);
+      } else {
+        anthropicRequest.system = systemMessage.trim();
+      }
     }
 
     // Ajouter les paramètres optionnels
@@ -223,9 +238,12 @@ export class AnthropicAdapter extends BaseAdapter {
       if (typeof message.content === 'string') {
         const textBlock: AnthropicContent = { type: 'text', text: message.content };
         
-        // Préserver cache_control du message
+        // Préserver cache_control du message ou ajouter cache automatique
         if ((message as any).cache_control) {
           textBlock.cache_control = (message as any).cache_control;
+        } else if (this.shouldAutoCache(message.content)) {
+          textBlock.cache_control = { type: 'ephemeral' };
+          console.log(`🎯 Auto-cache activé pour message ${message.role} (${message.content.length} caractères)`);
         }
         
         content = [textBlock];
@@ -234,9 +252,12 @@ export class AnthropicAdapter extends BaseAdapter {
           if (item.type === 'text') {
             const textBlock: AnthropicContent = { type: 'text', text: item.text! };
             
-            // Préserver cache_control de l'item
+            // Préserver cache_control de l'item ou ajouter cache automatique
             if ((item as any).cache_control) {
               textBlock.cache_control = (item as any).cache_control;
+            } else if (this.shouldAutoCache(item.text!)) {
+              textBlock.cache_control = { type: 'ephemeral' };
+              console.log(`🎯 Auto-cache activé pour bloc texte ${message.role} (${item.text!.length} caractères)`);
             }
             
             return textBlock;
@@ -300,8 +321,17 @@ export class AnthropicAdapter extends BaseAdapter {
     return imageBlock;
   }
 
+  /**
+   * Détermine si un texte doit être automatiquement mis en cache
+   * Seuil : 1024 tokens ≈ 4096 caractères (1 token ≈ 4 caractères)
+   */
+  private shouldAutoCache(text: string): boolean {
+    const MIN_CACHE_CHARACTERS = 4096; // 1024 tokens * 4 chars/token
+    return text.length >= MIN_CACHE_CHARACTERS;
+  }
+
   private convertToolsToAnthropicFormat(tools: Tool[]): AnthropicTool[] {
-    return tools.map(tool => {
+    return tools.map((tool, index) => {
       if (tool.type !== 'function') {
         throw this.createError("Anthropic adapter only supports 'function' tools.", 400, 'VALIDATION_ERROR');
       }
@@ -312,9 +342,13 @@ export class AnthropicAdapter extends BaseAdapter {
         input_schema: tool.function.parameters
       };
 
-      // Préserver cache_control
+      // Préserver cache_control existant
       if ((tool as any).cache_control) {
         anthropicTool.cache_control = (tool as any).cache_control;
+      } else if (index === tools.length - 1) {
+        // Cache automatique sur le dernier outil (cache tous les outils d'un coup)
+        anthropicTool.cache_control = { type: 'ephemeral' };
+        console.log(`🎯 Auto-cache activé pour tous les outils (${tools.length} outils)`);
       }
 
       return anthropicTool;
@@ -372,7 +406,7 @@ export class AnthropicAdapter extends BaseAdapter {
         prompt_tokens: data.usage.input_tokens,
         completion_tokens: data.usage.output_tokens,
         total_tokens: data.usage.input_tokens + data.usage.output_tokens,
-        cached_tokens: data.usage.cache_creation_input_tokens || data.usage.cache_read_input_tokens || undefined
+        cached_tokens: data.usage.cache_read_input_tokens || undefined
       }
     };
 
