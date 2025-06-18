@@ -146,6 +146,10 @@ export class AzureOpenAIAdapter extends BaseAdapter {
   transformResponse(response: AxiosResponse<OpenAIResponse>): ChatCompletion {
     // Azure OpenAI retourne le même format qu'OpenAI
     const data = response.data;
+
+    if (data.usage) {
+      console.log('Azure response usage:', data.usage);
+    }
     
     // Validation de base de la réponse
     if (!data.id || !data.choices || !Array.isArray(data.choices)) {
@@ -170,7 +174,7 @@ export class AzureOpenAIAdapter extends BaseAdapter {
         prompt_tokens: data.usage.prompt_tokens,
         completion_tokens: data.usage.completion_tokens,
         total_tokens: data.usage.total_tokens,
-        cached_tokens: data.usage.cached_tokens
+        cached_tokens: data.usage.prompt_tokens_details?.cached_tokens
       } : undefined,
       system_fingerprint: (data as any).system_fingerprint
     };
@@ -223,7 +227,7 @@ export class AzureOpenAIAdapter extends BaseAdapter {
           prompt_tokens: data.usage.prompt_tokens,
           completion_tokens: data.usage.completion_tokens,
           total_tokens: data.usage.total_tokens,
-          cached_tokens: data.usage.cached_tokens
+          cached_tokens: data.usage.prompt_tokens_details?.cached_tokens
         } : undefined,
         system_fingerprint: (data as any).system_fingerprint
       };

@@ -101,6 +101,20 @@ Please provide a thorough analysis of the following topics:
 - Cloud platforms: AWS, Google Cloud, Azure for ML deployment
 - MLOps tools for model lifecycle management
 
+11. MACHINE LEARNING IN PRACTICE:
+- End-to-end machine learning pipeline: from data collection to model deployment
+- Version control for datasets and models
+- Continuous integration and continuous deployment (CI/CD) for ML
+- Monitoring and maintaining machine learning models in production
+- Case studies of successful machine learning projects
+- Challenges faced in real-world machine learning applications
+- Best practices for collaboration in machine learning teams
+- Future skills and knowledge areas for machine learning practitioners
+- Discuss the importance of interdisciplinary knowledge in machine learning
+- Provide examples of how machine learning intersects with other fields like biology, economics, and social sciences
+- Highlight the role of community and open-source contributions in advancing machine learning research
+
+
 Please provide a comprehensive response that demonstrates deep understanding of these machine learning concepts, including specific examples, mathematical intuition where appropriate, and practical insights from real-world applications. Focus on making the content educational and accessible while maintaining technical accuracy.
 
 Now, given this extensive context about machine learning, please explain the concept of machine learning in exactly 3 sentences, but make sure your explanation demonstrates the depth of knowledge covered in the topics above.
@@ -111,14 +125,14 @@ Now , please provide a detailed response that adheres to the following guideline
 `;
 
 const requestBody = {
-  model: "anthropic/claude-4-sonnet",
+  model: "openai/gpt-4o",
   messages: [
     { role: "user", content: longPrompt }
   ],
   stream: false, // Disable streaming to get complete response with usage info
   max_tokens: 100,
   temperature: 0.7,
-  provider: "anthropic",
+  provider: "azure-eastus",
 };
 
 async function makeRequest(requestNumber) {
@@ -235,7 +249,7 @@ async function testAnthropicDirectAPI() {
   }
 
   const anthropicRequestBody = {
-    model: "anthropic/claude-4-sonnet",
+    model: "openai/gpt-4o",
     messages: [
       {
         role: "user",

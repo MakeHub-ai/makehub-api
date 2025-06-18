@@ -170,21 +170,21 @@ function calculateTokenCostWithMethod(
     case 'openai_cache_50':
       // OpenAI: cached tokens at 50%, non-cached at 100%
       const openai50CachedCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.OPENAI_CACHE_READ_50) / 1000;
-      const openai50NonCachedCost = ((inputTokens - cachedTokens) * inputPrice) / 1000;
+      const openai50NonCachedCost = (inputTokens  * inputPrice) / 1000;
       inputCost = openai50CachedCost + openai50NonCachedCost;
       break;
 
     case 'openai_cache_75':
       // OpenAI: cached tokens at 75%, non-cached at 100%
       const openai75CachedCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.OPENAI_CACHE_READ_75) / 1000;
-      const openai75NonCachedCost = ((inputTokens - cachedTokens) * inputPrice) / 1000;
+      const openai75NonCachedCost = (inputTokens  * inputPrice) / 1000;
       inputCost = openai75CachedCost + openai75NonCachedCost;
       break;
 
     case 'deepseek_cache':
       // DeepSeek: cached tokens at 10%, non-cached at 100%
       const deepseekCachedCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.DEEPSEEK_CACHE_READ) / 1000;
-      const deepseekNonCachedCost = ((inputTokens - cachedTokens) * inputPrice) / 1000;
+      const deepseekNonCachedCost = (inputTokens  * inputPrice) / 1000;
       inputCost = deepseekCachedCost + deepseekNonCachedCost;
       break;
 
@@ -216,7 +216,7 @@ function calculateTokenCostWithMethod(
     case 'google_explicit':
       // Google: cached tokens at 25%, non-cached at 100%
       const googleCachedCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.GOOGLE_CACHE_READ) / 1000;
-      const googleNonCachedCost = ((inputTokens - cachedTokens) * inputPrice) / 1000;
+      const googleNonCachedCost = (inputTokens  * inputPrice) / 1000;
       inputCost = googleCachedCost + googleNonCachedCost;
       break;
 
