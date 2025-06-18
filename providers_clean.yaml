@@ -690,8 +690,8 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 4 Opus
-        pricing_method: anthropic_cache
-        support_input_cache: false
+        pricing_method: bedrock_cache
+        support_input_cache: true
         support_vision: false
         price_cached_token: null
       anthropic/claude-4-sonnet:
@@ -705,8 +705,8 @@ providers:
         max_output: null
         assistant_ready: true
         display_name: Claude 4 Sonnet
-        pricing_method: anthropic_cache
-        support_input_cache: false
+        pricing_method: bedrock_cache
+        support_input_cache: true
         support_vision: false
         price_cached_token: null
       anthropic/claude-3-5-haiku:
@@ -720,8 +720,8 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Claude 3.5 Haiku
-        pricing_method: anthropic_cache
-        support_input_cache: false
+        pricing_method: bedrock_cache
+        support_input_cache: true
         support_vision: false
         price_cached_token: null
       anthropic/claude-3-5-sonnet:
@@ -735,8 +735,8 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Claude 3.5 Sonnet
-        pricing_method: anthropic_cache
-        support_input_cache: false
+        pricing_method: bedrock_cache
+        support_input_cache: true
         support_vision: false
         price_cached_token: null
       anthropic/claude-3-7-sonnet:
@@ -750,8 +750,8 @@ providers:
         max_output: null
         assistant_ready: false
         display_name: Claude 3.7 Sonnet
-        pricing_method: anthropic_cache
-        support_input_cache: false
+        pricing_method: bedrock_cache
+        support_input_cache: true
         support_vision: false
         price_cached_token: null
   centml:

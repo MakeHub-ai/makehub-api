@@ -336,7 +336,7 @@ export function createAuthMiddleware(options: AuthMiddlewareOptions = {}) {
           hint = 'The token appears to be an API key instead of a JWT. Use X-API-Key header or ensure you\'re sending a valid Supabase JWT token.';
         } else if (message.includes('Invalid API key')) {
           status = 401;
-          hint = 'Verify your API key is correct and active. API keys should be sent via X-API-Key header.';
+          hint = 'Verify your API key is correct and active. API keys should be sent via X-API-Key or Authorization header.';
         } else if (message.includes('Invalid') || message.includes('not found')) {
           status = 401;
         } else if (message.includes('Database') || message.includes('fetch')) {

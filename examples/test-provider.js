@@ -3,11 +3,11 @@
 // Run this script with: node examples/test-provider.js
 
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
-const API_KEY = process.env.TEST_API_KEY || 'test-api-key-123';
+const API_KEY = process.env.API_KEY_MAKEHUB || 'test-api-key-123';
 
 
 const requestBody = {
-  model: "openai/gpt-4o",
+  model: "anthropic/claude-3-5-haiku",
   messages: [
     { role: "user", content: "Hello, who are you?" }
   ],

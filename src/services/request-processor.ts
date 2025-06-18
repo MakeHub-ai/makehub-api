@@ -19,6 +19,11 @@ const PRICING_MULTIPLIERS = {
   // Anthropic Claude
   ANTHROPIC_CACHE_READ: 0.1,    // 10% du prix normal
   ANTHROPIC_CACHE_WRITE: 1.25,  // 125% du prix normal
+
+  // BEDROCK
+  BEDROCK_CACHE_WRITE: 1.25,      // Cache création : 125% (100% + 25% premium)
+  BEDROCK_CACHE_READ: 0.1,        // Cache lecture : 10%
+
   
   // OpenAI
   OPENAI_CACHE_READ_50: 0.5,    // 50% du prix normal
@@ -46,7 +51,8 @@ type PricingMethod =
   | 'deepseek_cache'
   | 'google_cache'
   | 'google_implicit'
-  | 'google_explicit';
+  | 'google_explicit'
+  | 'bedrock_cache';
 
 /**
  * Interface pour les statistiques de traitement
@@ -142,10 +148,6 @@ function calculateTokenCostWithMethod(
     throw new Error('Token counts must be non-negative');
   }
 
-  if (cachedTokens > inputTokens) {
-    throw new Error('Cached tokens cannot exceed input tokens');
-  }
-
   // Calculate output cost (always the same)
   const outputCost = (outputTokens * outputPrice) / 1000;
 
@@ -184,6 +186,29 @@ function calculateTokenCostWithMethod(
       const deepseekCachedCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.DEEPSEEK_CACHE_READ) / 1000;
       const deepseekNonCachedCost = ((inputTokens - cachedTokens) * inputPrice) / 1000;
       inputCost = deepseekCachedCost + deepseekNonCachedCost;
+      break;
+
+    case 'bedrock_cache':
+      // ✅ NOUVEAU : AWS Bedrock pricing avec cache creation et cache read
+      // Cache creation tokens : 125% du prix standard (100% + 25% premium)
+      //const bedrockCacheCreationCost = (cacheCreationTokens * inputPrice * PRICING_MULTIPLIERS.BEDROCK_CACHE_WRITE) / 1000;
+      
+      // Cache read tokens : 10% du prix standard
+      const bedrockCacheReadCost = (cachedTokens * inputPrice * PRICING_MULTIPLIERS.BEDROCK_CACHE_READ) / 1000;
+      
+      // Tokens non-cachés : 100% du prix standard
+      const bedrockNonCachedCost = (inputTokens * inputPrice) / 1000;
+      
+      inputCost = bedrockCacheReadCost + bedrockNonCachedCost;
+      
+      // Debug log pour Bedrock
+      /**
+      console.log(`💰 Bedrock pricing breakdown:
+        - Cache creation: ${cacheCreationTokens} tokens × ${inputPrice} × 1.25 = $${bedrockCacheCreationCost.toFixed(6)}
+        - Cache read: ${cachedTokens} tokens × ${inputPrice} × 0.1 = $${bedrockCacheReadCost.toFixed(6)}
+        - Non-cached: ${bedrockNonCachedTokens} tokens × ${inputPrice} = $${bedrockNonCachedCost.toFixed(6)}
+        - Total input: $${inputCost.toFixed(6)}`);
+         */
       break;
 
     case 'google_cache':

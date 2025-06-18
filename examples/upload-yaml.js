@@ -103,6 +103,21 @@ function determineAdapterAndParams(providerName, modelData, modelId) {
         aws_access_key_env: `AWS_ACCESS_KEY_ID_BEDROCK_${region.toUpperCase().replace(/[-]/g, '_')}`,
         aws_secret_key_env: `AWS_SECRET_ACCESS_KEY_BEDROCK_${region.toUpperCase().replace(/[-]/g, '_')}`,
         aws_region_env: `AWS_REGION_BEDROCK_${region.toUpperCase().replace(/[-]/g, '_')}`
+      },
+    };
+  }
+
+  if (providerName === 'anthropic') {
+    // Anthropic utilise utilise l'dapter anthropic
+    const cleanBaseUrl = getCleanBaseUrl(modelData.base_url, modelData.target_url
+    );
+    return {
+      adapter: 'anthropic',
+      cleanBaseUrl: cleanBaseUrl, // Le proxy ou null
+      extraParam: {
+        api_key_env: 'ANTHROPIC_API_KEY',
+        base_url_env: 'ANTHROPIC_BASE_URL',
+        base_url: cleanBaseUrl || 'https://api.anthropic.com', // URL par défaut si pas de proxy
       }
     };
   }
@@ -258,8 +273,7 @@ function analyzeChanges(newModels, existingModels) {
         priceCachedDiff > 0.000001 ||
         existing.price_per_input_token_cached !== newModel.price_per_input_token_cached ||
         existing.quantisation !== newModel.quantisation ||
-        existing.pricing_method !== newModel.pricing_method ||
-        JSON.stringify(existing.extra_param) !== JSON.stringify(newModel.extra_param)
+        existing.pricing_method !== newModel.pricing_method
       );
 
       if (hasChanges) {

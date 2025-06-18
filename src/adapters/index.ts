@@ -3,6 +3,7 @@ import { BedrockAdapter } from './bedrock.js';
 import { BaseAdapter, AdapterError } from './base.js';
 import { AzureOpenAIAdapter } from './azure-openai.js';
 import { VertexAnthropicAdapter } from './vertex-anthropic.js';
+import { AnthropicAdapter } from './anthropic.js';
 import type { AdapterType, AdapterConfig, AdapterInterface } from '../types/index.js';
 
 /**
@@ -13,7 +14,8 @@ export const adapters: Record<AdapterType, new (config?: AdapterConfig) => BaseA
   openai: OpenAIAdapter,
   bedrock: BedrockAdapter,
   'azure-openai': AzureOpenAIAdapter,
-  'vertex-anthropic': VertexAnthropicAdapter
+  'vertex-anthropic': VertexAnthropicAdapter,
+  anthropic: AnthropicAdapter
 };
 
 
@@ -86,6 +88,7 @@ export function getAdapterInfo(adapterType: string): {
     bedrock: 'AWS Bedrock adapter for Claude and other Bedrock models',
     'azure-openai': 'Azure OpenAI adapter with proper authentication and endpoints',
     'vertex-anthropic': 'Google Vertex AI adapter for Anthropic models',
+    anthropic: 'Direct Anthropic Claude API adapter'
   };
 
 
@@ -228,6 +231,7 @@ export async function testAdapterConnection(adapter: BaseAdapter): Promise<{
 export { OpenAIAdapter };
 export { BedrockAdapter };
 export { AzureOpenAIAdapter };
+export { AnthropicAdapter };
 export { BaseAdapter, AdapterError } from './base.js';
 
 // Types réexportés
