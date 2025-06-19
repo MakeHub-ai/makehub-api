@@ -181,6 +181,7 @@ export interface ModelsList {
  * Extended model info for v1/models endpoint
  */
 export interface ExtendedModelInfo {
+  id: string;
   model_id: string;
   organisation: string;
   price_per_input_token: number | null;

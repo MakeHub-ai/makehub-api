@@ -925,6 +925,7 @@ export async function getExtendedModels(): Promise<ExtendedModelInfo[]> {
     const providersAvailable = models.map(m => m.provider);
     
     extendedModels.push({
+      id: modelId,
       model_id: modelId,
       organisation: organisation,
       price_per_input_token: avgInputPrice ? parseFloat(avgInputPrice.toFixed(8)) : null,
