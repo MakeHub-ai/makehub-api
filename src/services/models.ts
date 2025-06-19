@@ -7,6 +7,7 @@ import type {
   UserPreferences,
   ModelPerformanceMetrics,
   ModelVectorScore,
+  ExtendedModelInfo,
 } from '../types/index.js';
 
 /**
@@ -595,7 +596,6 @@ export async function filterProviders(
     const hasAnyHistoricalCache = Array.from(cachingMap.values()).some(Boolean);
     
     if (!hasAnyHistoricalCache) {
-      console.log(`📊 No caching history found, applying intrinsic cache support...`);
       
       // Pour les modèles qui supportent le cache mais n'ont pas d'historique,
       // les marquer comme ayant le potentiel de cache
@@ -616,7 +616,6 @@ export async function filterProviders(
         
         if (model.support_input_cache && !cachingMap.get(key)) {
           cachingMap.set(key, true);
-          console.log(`🚀 ${model.provider} supports input caching for ${model.model_id} (intrinsic support, no history)`);
         }
       });
     }
@@ -855,4 +854,96 @@ export async function searchModels(query: {
     
     return true;
   });
+}
+
+/**
+ * Helper function to get the quantisation priority for sorting
+ * @param quantisation - Quantisation string
+ * @returns Priority number (higher = better)
+ */
+function getQuantisationPriority(quantisation: string | null): number {
+  if (!quantisation) return 0;
+  
+  const q = quantisation.toLowerCase();
+  if (q.includes('fp32')) return 5;
+  if (q.includes('fp16')) return 4;
+  if (q.includes('fp8')) return 3;
+  if (q.includes('int8')) return 2;
+  if (q.includes('int4')) return 1;
+  return 0;
+}
+
+/**
+ * Récupère tous les modèles avec la structure étendue et fusion par model_id
+ * @returns Liste des modèles avec informations fusionnées
+ */
+export async function getExtendedModels(): Promise<ExtendedModelInfo[]> {
+  const allModels = await getAllModels();
+  
+  // Grouper les modèles par model_id
+  const modelGroups = new Map<string, Model[]>();
+  
+  allModels.forEach(model => {
+    const key = model.model_id;
+    if (!modelGroups.has(key)) {
+      modelGroups.set(key, []);
+    }
+    modelGroups.get(key)!.push(model);
+  });
+  
+  // Transformer chaque groupe en ExtendedModelInfo
+  const extendedModels: ExtendedModelInfo[] = [];
+  
+  modelGroups.forEach((models, modelId) => {
+    // Extraire l'organisation (partie avant "/")
+    const organisation = modelId.includes('/') ? modelId.split('/')[0] : 'unknown';
+    
+    // Calculer les moyennes de prix et diviser par 1000
+    const avgInputPrice = models.reduce((sum, m) => sum + m.price_per_input_token, 0) / models.length / 1000;
+    const avgOutputPrice = models.reduce((sum, m) => sum + m.price_per_output_token, 0) / models.length / 1000;
+    
+    // Trouver la quantisation maximale
+    const maxQuantisation = models.reduce((best, current) => {
+      const currentPriority = getQuantisationPriority(current.quantisation);
+      const bestPriority = getQuantisationPriority(best);
+      return currentPriority > bestPriority ? current.quantisation : best;
+    }, null as string | null);
+    
+    // Trouver le contexte maximum
+    const maxContext = Math.max(...models.map(m => m.context_window || 0));
+    
+    // OR logique pour assistant_ready
+    const assistantReady = models.some(m => m.support_tool_calling);
+    
+    // Prendre le premier display_name non-null trouvé, sinon utiliser model_id
+    const displayName = models.find(m => m.display_name)?.display_name || modelId;
+    
+    // Prendre le premier provider comme provider_name
+    const providerName = models[0].provider;
+    
+    // Liste des providers disponibles
+    const providersAvailable = models.map(m => m.provider);
+    
+    extendedModels.push({
+      model_id: modelId,
+      organisation: organisation,
+      price_per_input_token: avgInputPrice ? parseFloat(avgInputPrice.toFixed(8)) : null,
+      price_per_output_token: avgOutputPrice ? parseFloat(avgOutputPrice.toFixed(8)) : null,
+      price_per_input_token_cached: avgInputPrice ? parseFloat((avgInputPrice * 0.1).toFixed(8)) : null,
+      quantisation: maxQuantisation,
+      context: maxContext > 0 ? Math.round(maxContext) : null,
+      assistant_ready: assistantReady,
+      support_input_cache: models.some(m => m.support_input_cache),
+      support_vision: models.some(m => m.support_vision),
+      display_name: displayName,
+      providers_available: providersAvailable
+    });
+  });
+  
+  // Trier par model_id pour un ordre cohérent
+  extendedModels.sort((a, b) => a.model_id.localeCompare(b.model_id));
+
+  console.log('all models:', extendedModels);
+  
+  return extendedModels;
 }

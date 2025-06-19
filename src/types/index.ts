@@ -37,6 +37,8 @@ export type {
   CompletionChoice,
   ModelInfo,
   ModelsList,
+  ExtendedModelInfo,
+  ExtendedModelsList,
   CostEstimate,
   ApiError,
   ProviderCombination,

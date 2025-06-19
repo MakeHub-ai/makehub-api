@@ -12,6 +12,7 @@ import type {
   ChatCompletion,
   ChatCompletionChunk,
   ModelsList,
+  ExtendedModelsList,
   CostEstimate,
   ApiError
 } from '../types/index.js';
@@ -446,33 +447,22 @@ chat.post('/completion', async (c: Context<{ Variables: HonoVariables }>) => {
 
 /**
  * GET /chat/models
- * Liste les modèles disponibles
+ * Liste les modèles disponibles avec informations étendues
  */
 chat.get('/models', async (c: Context<{ Variables: HonoVariables }>) => {
   try {
-    const { getAllModels } = await import('../services/models.js');
-    const models = await getAllModels();
+    const { getExtendedModels } = await import('../services/models.js');
+    const extendedModels = await getExtendedModels();
     
-    // Transformer au format OpenAI
-    const openaiModels: ModelsList['data'] = models.map(model => ({
-      id: model.model_id,
-      object: 'model',
-      created: Math.floor(new Date(model.created_at).getTime() / 1000),
-      owned_by: model.provider,
-      permission: [],
-      root: model.model_id,
-      parent: null
-    }));
-    
-    const response: ModelsList = {
+    const response: ExtendedModelsList = {
       object: 'list',
-      data: openaiModels
+      data: extendedModels
     };
     
     return c.json(response);
     
   } catch (error) {
-    console.error('Models list error:', error);
+    console.error('Extended models list error:', error);
     const errorResponse: ApiError = {
       error: {
         message: 'Failed to fetch models',

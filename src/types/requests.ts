@@ -178,6 +178,29 @@ export interface ModelsList {
 }
 
 /**
+ * Extended model info for v1/models endpoint
+ */
+export interface ExtendedModelInfo {
+  model_id: string;
+  organisation: string;
+  price_per_input_token: number | null;
+  price_per_output_token: number | null;
+  price_per_input_token_cached: number | null;
+  quantisation: string | null;
+  context: number | null;
+  assistant_ready: boolean;
+  support_input_cache: boolean | null;
+  support_vision: boolean | null;
+  display_name: string;
+  providers_available: string[];
+}
+
+export interface ExtendedModelsList {
+  object: 'list';
+  data: ExtendedModelInfo[];
+}
+
+/**
  * Types pour l'estimation de coût
  */
 export interface CostEstimate {

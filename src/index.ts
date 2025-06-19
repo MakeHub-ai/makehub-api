@@ -205,7 +205,7 @@ app.get('/', (c: Context) => {
     endpoints: {
       chat: '/v1/chat/completions',
       completion: '/v1/completion',
-      models: '/v1/chat/models',
+      models: '/v1/models',
       estimate: '/v1/chat/estimate'
     }
   };
@@ -270,7 +270,7 @@ app.notFound((c: Context) => {
       available_endpoints: [
         '/v1/chat/completions',
         '/v1/completion',
-        '/v1/chat/models',
+        '/v1/models',
         '/v1/chat/estimate',
       ]
     }

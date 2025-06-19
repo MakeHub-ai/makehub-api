@@ -20,6 +20,10 @@ export interface Model {
   tokenizer_name: string;
   pricing_method: string;
   created_at: string;
+  updated_at: string;
+  quantisation: string | null;
+  display_name: string | null;
+  max_output_token: number | null;
   is_fallback?: boolean;
 }
 

@@ -101,21 +101,44 @@ async function testHealth() {
   }
 }
 
+async function simpleListModels() {
+  console.log('📋 Testing simple models list...')
+  try {
+    const response = await api.get('/v1/models') 
+    
+    const models = response.data.data;
+
+    if (models && Array.isArray(models)) {
+      console.log(`✅ Found ${models.length} models`)
+      console.log('📊 Models list:')
+      console.log(
+        `${models.map(model => `- ${model.model_id} (providers: ${model.providers_available.join(', ')})`).join('\n')}\n`
+      );
+    } else {
+      console.error('❌ No models found or invalid format in the response.');
+    }
+  } catch (error) {
+      console.error('❌ Simple models list failed:', extractErrorMessage(error));
+  }
+}
+
 /**
  * Test de la liste des modèles
  */
 async function testModels() {
   console.log('\n📋 Testing models endpoint...');
   try {
-    const response = await api.get('/v1/chat/models');
-    console.log(`✅ Found ${response.data.data.length} models`);
-    
+    const response = await api.get('/v1/models');
+    const models = response.data.data;
+    console.log(`✅ Found ${models.length} models`);
+    console.log('📊 Models list:')
+    console.log(`${models.map(model => `- ${model.model_id} (providers: ${model.providers_available.join(', ')})`).join('\n')}\n`);
+
     // Afficher les modèles qui supportent tool calling
-    const toolCallingModels = response.data.data.filter(model => model.support_tool_calling);
+    const toolCallingModels = models.filter(model => model.assistant_ready);
     console.log(`🔧 Models supporting tool calling (${toolCallingModels.length}):`);
     toolCallingModels.slice(0, 5).forEach(model => {
-      const working = model.working ? '✅' : '❌';
-      console.log(`   ${working} ${model.id} (${model.provider}) - streaming: ${model.support_tool_calling_streaming ? '✅' : '❌'}`);
+      console.log(`   - ${model.model_id}`);
     });
     
     if (toolCallingModels.length > 5) {
@@ -533,14 +556,13 @@ async function testFallback() {
  */
 async function findWorkingToolCallingModel() {
   try {
-    const response = await api.get('/v1/chat/models');
-    const workingToolModels = response.data.data.filter(model => 
-      model.support_tool_calling && model.working
-    );
+    const response = await api.get('/v1/models');
+    const models = response.data.data;
+    const workingToolModels = models.filter(model => model.assistant_ready);
     
     if (workingToolModels.length > 0) {
-      console.log(`🔧 Found working tool calling model: ${workingToolModels[0].id}`);
-      return workingToolModels[0].id;
+      console.log(`🔧 Found working tool calling model: ${workingToolModels[0].model_id}`);
+      return workingToolModels[0].model_id;
     }
     
     console.log('⚠️ No working tool calling models found, using fallback');
@@ -558,14 +580,14 @@ async function runAllTests() {
   console.log('🚀 Starting LLM API Gateway tests...\n');
   
   //await testHealth();
-  //await testModels();
+  await simpleListModels();
   //await testSimpleChat();
   //await testStreamingChat();
   
   // Trouver un modèle qui supporte le tool calling
-  const toolCallingModel = await findWorkingToolCallingModel();
+  //const toolCallingModel = await findWorkingToolCallingModel();
   
-  await testToolCalling(toolCallingModel);
+  //await testToolCalling(toolCallingModel);
   //await testStreamingToolCalling(toolCallingModel);
   //await testCostEstimation();
   //await testVision();
