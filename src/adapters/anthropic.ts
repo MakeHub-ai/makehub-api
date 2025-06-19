@@ -68,6 +68,17 @@ interface AnthropicTool {
   };
 }
 
+/**
+ * Interface pour les candidats au cache
+ */
+interface CacheTarget {
+  type: 'system' | 'user' | 'assistant' | 'tools';
+  messageIndex?: number;
+  blockIndex?: number;
+  text: string;
+  size: number;
+}
+
 interface AnthropicResponse {
   id: string;
   type: 'message';
@@ -125,9 +136,27 @@ export class AnthropicAdapter extends BaseAdapter {
       throw this.createError('Model ID is required', 400, 'VALIDATION_ERROR');
     }
 
-    // Séparer les messages système des autres messages
+    // Collecter tous les candidats au cache AVANT la transformation
+    const cacheTargets: CacheTarget[] = [];
+
+    // 🆕 ANALYSER LES TOOLS EN PREMIER (priorité Anthropic)
+    let toolsContent = '';
+    if (standardRequest.tools && standardRequest.tools.length > 0) {
+      // Calculer la taille totale des tools
+      toolsContent = JSON.stringify(standardRequest.tools);
+      
+      // Ajouter aux candidats cache
+      cacheTargets.push({
+        type: 'tools',
+        text: toolsContent,
+        size: toolsContent.length
+      });
+    }
+
+    // Analyser le système et séparer les messages système des autres messages
     let systemMessage = '';
-    const conversationMessages = messages.filter(msg => {
+    let systemCacheControl: any = null;
+    const conversationMessages = messages.filter((msg, msgIndex) => {
       if (msg.role === 'system') {
         if (typeof msg.content === 'string') {
           systemMessage += msg.content;
@@ -138,22 +167,75 @@ export class AnthropicAdapter extends BaseAdapter {
             .map(item => item.text)
             .join('');
           systemMessage += textContent;
+          
+          // Récupérer le cache_control du premier bloc texte qui en a un
+          const cachedTextBlock = msg.content.find(item => item.type === 'text' && (item as any).cache_control);
+          if (cachedTextBlock) {
+            systemCacheControl = (cachedTextBlock as any).cache_control;
+          }
         }
+        
+        // Vérifier si le message système a cache_control au niveau du message
+        if ((msg as any).cache_control) {
+          systemCacheControl = (msg as any).cache_control;
+        }
+        
         return false;
+      } else {
+        // Analyser les messages de conversation pour les candidats au cache
+        if (typeof msg.content === 'string') {
+          cacheTargets.push({
+            type: msg.role as 'user' | 'assistant',
+            messageIndex: msgIndex,
+            blockIndex: 0,
+            text: msg.content,
+            size: msg.content.length
+          });
+        } else if (Array.isArray(msg.content)) {
+          msg.content.forEach((item, blockIndex) => {
+            if (item.type === 'text' && item.text) {
+              cacheTargets.push({
+                type: msg.role as 'user' | 'assistant',
+                messageIndex: msgIndex,
+                blockIndex,
+                text: item.text,
+                size: item.text.length
+              });
+            }
+          });
+        }
+        return true;
       }
-      return true;
     });
+
+    // Ajouter le système aux candidats
+    if (systemMessage && !systemCacheControl) {
+      cacheTargets.push({
+        type: 'system',
+        text: systemMessage,
+        size: systemMessage.length
+      });
+    }
+
+    // Déterminer quels blocs cacher (max 4) - INCLUANT tools
+    const blocksToCache = this.applyCacheWithAnthropicLimits(cacheTargets, 4);
 
     const anthropicRequest: AnthropicRequest = {
       model: modelId,
-      messages: this.convertMessagesToAnthropicFormat(conversationMessages),
+      messages: this.convertMessagesToAnthropicFormatWithLimitedCache(conversationMessages, blocksToCache),
       max_tokens: standardRequest.max_tokens || 4096, // max_tokens est obligatoire pour Anthropic
       stream: standardRequest.stream || false
     };
 
-    // Ajouter le message système s'il existe avec cache automatique
+    // Gérer le système avec cache limité
     if (systemMessage.trim()) {
-      if (this.shouldAutoCache(systemMessage)) {
+      if (systemCacheControl) {
+        anthropicRequest.system = [{
+          type: 'text',
+          text: systemMessage.trim(),
+          cache_control: systemCacheControl
+        }];
+      } else if (blocksToCache.has('system')) {
         anthropicRequest.system = [{
           type: 'text',
           text: systemMessage.trim(),
@@ -180,9 +262,14 @@ export class AnthropicAdapter extends BaseAdapter {
         : [standardRequest.stop];
     }
 
-    // Convertir les tools
+    // 🆕 GÉRER LES TOOLS AVEC CACHE
     if (standardRequest.tools && standardRequest.tools.length > 0) {
-      anthropicRequest.tools = this.convertToolsToAnthropicFormat(standardRequest.tools);
+      const anthropicTools = this.convertToolsToAnthropicFormatWithCache(standardRequest.tools, blocksToCache.has('tools'));
+      anthropicRequest.tools = anthropicTools;
+      
+      if (blocksToCache.has('tools')) {
+        console.log(`🎯 Auto-cache activé pour tools (${toolsContent.length} caractères)`);
+      }
     }
 
     // Convertir tool_choice
@@ -330,6 +417,145 @@ export class AnthropicAdapter extends BaseAdapter {
     return text.length >= MIN_CACHE_CHARACTERS;
   }
 
+  /**
+   * Applique le cache en respectant la limite de 4 blocs pour Anthropic
+   * Priorise les plus gros blocs pour maximiser l'efficacité
+   * Respecte l'ordre de priorité Anthropic: tools → system → messages
+   */
+  private applyCacheWithAnthropicLimits(cacheTargets: CacheTarget[], maxBlocks: number = 4): Set<string> {
+    // Filtrer les candidats éligibles (seuil minimum de taille)
+    const eligibleTargets = cacheTargets.filter(target => this.shouldAutoCache(target.text));
+    
+    // Trier selon l'ordre de priorité Anthropic: tools → system → messages
+    const priorityOrder = { 'tools': 0, 'system': 1, 'user': 2, 'assistant': 3 };
+    const sortedTargets = eligibleTargets
+      .sort((a, b) => {
+        // D'abord par priorité de type
+        const priorityDiff = priorityOrder[a.type] - priorityOrder[b.type];
+        if (priorityDiff !== 0) return priorityDiff;
+        // Ensuite par taille décroissante à priorité égale
+        return b.size - a.size;
+      })
+      .slice(0, maxBlocks); // Limiter au nombre maximum
+
+    // Créer un Set des identifiants à cacher
+    const cacheKeys = new Set<string>();
+    sortedTargets.forEach(target => {
+      if (target.type === 'system') {
+        cacheKeys.add('system');
+      } else if (target.type === 'tools') {
+        cacheKeys.add('tools');
+      } else {
+        cacheKeys.add(`${target.type}-${target.messageIndex}-${target.blockIndex || 0}`);
+      }
+    });
+
+    console.log(`🎯 Auto-cache Anthropic: ${sortedTargets.length}/${cacheTargets.length} blocs sélectionnés (limite: ${maxBlocks})`);
+    sortedTargets.forEach(target => {
+      console.log(`   - ${target.type} (${target.size} caractères)`);
+    });
+
+    return cacheKeys;
+  }
+
+  /**
+   * Version modifiée qui respecte la liste des blocs à cacher
+   */
+  private convertMessagesToAnthropicFormatWithLimitedCache(
+    messages: ChatMessage[], 
+    blocksToCache: Set<string>
+  ): AnthropicMessage[] {
+    const anthropicMessages: AnthropicMessage[] = [];
+    
+    for (let msgIndex = 0; msgIndex < messages.length; msgIndex++) {
+      const message = messages[msgIndex];
+      
+      if (message.role === 'system') continue; // Déjà traité
+
+      if (message.role === 'tool') {
+        // Message tool → content tool_result dans le message user précédent ou nouveau message user
+        const toolResultContent: AnthropicContent = {
+          type: 'tool_result',
+          tool_use_id: message.tool_call_id!,
+          content: typeof message.content === 'string' 
+            ? [{ type: 'text', text: message.content }]
+            : [{ type: 'text', text: JSON.stringify(message.content) }]
+        };
+
+        // Ajouter à un nouveau message user ou au dernier message user
+        const lastMessage = anthropicMessages[anthropicMessages.length - 1];
+        if (lastMessage && lastMessage.role === 'user') {
+          lastMessage.content.push(toolResultContent);
+        } else {
+          anthropicMessages.push({
+            role: 'user',
+            content: [toolResultContent]
+          });
+        }
+        continue;
+      }
+
+      // Convertir le contenu
+      let content: AnthropicContent[] = [];
+
+      if (typeof message.content === 'string') {
+        const textBlock: AnthropicContent = { type: 'text', text: message.content };
+        const cacheKey = `${message.role}-${msgIndex}-0`;
+        
+        // Préserver cache_control du message ou appliquer cache intelligent
+        if ((message as any).cache_control) {
+          textBlock.cache_control = (message as any).cache_control;
+        } else if (blocksToCache.has(cacheKey)) {
+          textBlock.cache_control = { type: 'ephemeral' };
+          console.log(`🎯 Auto-cache activé pour ${message.role} (${message.content.length} caractères)`);
+        }
+        
+        content = [textBlock];
+      } else if (Array.isArray(message.content)) {
+        content = message.content.map((item: ChatMessageContent, blockIndex: number) => {
+          if (item.type === 'text') {
+            const textBlock: AnthropicContent = { type: 'text', text: item.text! };
+            const cacheKey = `${message.role}-${msgIndex}-${blockIndex}`;
+            
+            // Préserver cache_control de l'item ou appliquer cache intelligent
+            if ((item as any).cache_control) {
+              textBlock.cache_control = (item as any).cache_control;
+            } else if (blocksToCache.has(cacheKey)) {
+              textBlock.cache_control = { type: 'ephemeral' };
+              console.log(`🎯 Auto-cache activé pour bloc ${message.role} (${item.text!.length} caractères)`);
+            }
+            
+            return textBlock;
+          } else if (item.type === 'image_url' && item.image_url?.url) {
+            return this.convertImageToAnthropicFormat(item.image_url.url, (item as any).cache_control);
+          }
+          return null;
+        }).filter(Boolean) as AnthropicContent[];
+      }
+
+      // Ajouter les tool calls pour les messages assistant
+      if (message.role === 'assistant' && message.tool_calls) {
+        message.tool_calls.forEach((toolCall: ToolCall) => {
+          content.push({
+            type: 'tool_use',
+            id: toolCall.id,
+            name: toolCall.function.name,
+            input: JSON.parse(toolCall.function.arguments)
+          });
+        });
+      }
+
+      if (content.length > 0) {
+        anthropicMessages.push({
+          role: message.role as 'user' | 'assistant',
+          content
+        });
+      }
+    }
+
+    return anthropicMessages;
+  }
+
   private convertToolsToAnthropicFormat(tools: Tool[]): AnthropicTool[] {
     return tools.map((tool, index) => {
       if (tool.type !== 'function') {
@@ -349,6 +575,33 @@ export class AnthropicAdapter extends BaseAdapter {
         // Cache automatique sur le dernier outil (cache tous les outils d'un coup)
         anthropicTool.cache_control = { type: 'ephemeral' };
         console.log(`🎯 Auto-cache activé pour tous les outils (${tools.length} outils)`);
+      }
+
+      return anthropicTool;
+    });
+  }
+
+  /**
+   * Version avec cache intelligent basé sur la sélection
+   */
+  private convertToolsToAnthropicFormatWithCache(tools: Tool[], shouldCache: boolean): AnthropicTool[] {
+    return tools.map((tool, index) => {
+      if (tool.type !== 'function') {
+        throw this.createError("Anthropic adapter only supports 'function' tools.", 400, 'VALIDATION_ERROR');
+      }
+
+      const anthropicTool: AnthropicTool = {
+        name: tool.function.name,
+        description: tool.function.description,
+        input_schema: tool.function.parameters
+      };
+
+      // Préserver cache_control existant
+      if ((tool as any).cache_control) {
+        anthropicTool.cache_control = (tool as any).cache_control;
+      } else if (shouldCache && index === tools.length - 1) {
+        // Appliquer cache_control au dernier tool (selon format Anthropic)
+        anthropicTool.cache_control = { type: 'ephemeral' };
       }
 
       return anthropicTool;
@@ -514,8 +767,23 @@ export class AnthropicAdapter extends BaseAdapter {
         }
       }
 
-      // Message delta - finish_reason et usage final
+      // Message delta - finish_reason et usage final complet
       if (event.type === 'message_delta' && event.delta) {
+        // Construire l'usage complet au format OpenAI
+        let finalUsage: any = undefined;
+        if (event.usage) {
+          const inputTokens = event.usage.input_tokens || 0;
+          const outputTokens = event.usage.output_tokens || 0;
+          const cachedTokens = event.usage.cache_read_input_tokens || 0;
+          
+          finalUsage = {
+            prompt_tokens: inputTokens,
+            completion_tokens: outputTokens,
+            total_tokens: inputTokens + outputTokens,
+            cached_tokens: cachedTokens > 0 ? cachedTokens : undefined
+          };
+        }
+
         return {
           id: event.message?.id || `anthropic-${Date.now()}`,
           object: 'chat.completion.chunk',
@@ -526,10 +794,7 @@ export class AnthropicAdapter extends BaseAdapter {
             delta: {},
             finish_reason: this.mapFinishReason(event.delta.stop_reason)
           }],
-          usage: event.usage ? {
-            completion_tokens: event.usage.output_tokens,
-            cached_tokens: event.usage.cache_creation_input_tokens || event.usage.cache_read_input_tokens
-          } : undefined
+          usage: finalUsage
         };
       }
 

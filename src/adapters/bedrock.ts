@@ -25,6 +25,10 @@ interface BedrockTool {
     properties: Record<string, any>;
     required?: string[];
   };
+  cache_control?: {
+    type: 'ephemeral';
+    ttl?: '5m' | '1h';
+  };
 }
 
 /**
@@ -101,6 +105,17 @@ interface BedrockAnthropicResponse {
     cache_creation_input_tokens?: number;
     cache_read_input_tokens?: number;
   };
+}
+
+/**
+ * Interface pour les candidats au cache
+ */
+interface CacheTarget {
+  type: 'system' | 'user' | 'assistant' | 'tools';
+  messageIndex?: number;
+  blockIndex?: number;
+  text: string;
+  size: number;
 }
 
 /**
@@ -264,6 +279,182 @@ export class BedrockAdapter extends BaseAdapter {
   }
 
   /**
+   * Applique le cache en respectant la limite de 4 blocs pour Bedrock
+   * Priorise les plus gros blocs pour maximiser l'efficacité
+   * Respecte l'ordre de priorité Anthropic: tools → system → messages
+   */
+  private applyCacheWithBedrockLimits(cacheTargets: CacheTarget[], maxBlocks: number = 4): Set<string> {
+    // Filtrer les candidats éligibles (seuil minimum de taille)
+    const eligibleTargets = cacheTargets.filter(target => this.shouldAutoCache(target.text));
+    
+    // Trier selon l'ordre de priorité Anthropic: tools → system → messages
+    const priorityOrder = { 'tools': 0, 'system': 1, 'user': 2, 'assistant': 3 };
+    const sortedTargets = eligibleTargets
+      .sort((a, b) => {
+        // D'abord par priorité de type
+        const priorityDiff = priorityOrder[a.type] - priorityOrder[b.type];
+        if (priorityDiff !== 0) return priorityDiff;
+        // Ensuite par taille décroissante à priorité égale
+        return b.size - a.size;
+      })
+      .slice(0, maxBlocks); // Limiter au nombre maximum
+
+    // Créer un Set des identifiants à cacher
+    const cacheKeys = new Set<string>();
+    sortedTargets.forEach(target => {
+      if (target.type === 'system') {
+        cacheKeys.add('system');
+      } else if (target.type === 'tools') {
+        cacheKeys.add('tools');
+      } else {
+        cacheKeys.add(`${target.type}-${target.messageIndex}-${target.blockIndex || 0}`);
+      }
+    });
+
+    console.log(`🎯 Auto-cache Bedrock: ${sortedTargets.length}/${cacheTargets.length} blocs sélectionnés (limite: ${maxBlocks})`);
+    sortedTargets.forEach(target => {
+      console.log(`   - ${target.type} (${target.size} caractères)`);
+    });
+
+    return cacheKeys;
+  }
+
+  /**
+   * Version modifiée qui respecte la liste des blocs à cacher
+   */
+  private convertMessagesToBedrockFormatWithLimitedCache(
+    messages: any[], 
+    blocksToCache: Set<string>
+  ): BedrockAnthropicRequest['messages'] {
+    const convertedMessages: BedrockAnthropicRequest['messages'] = [];
+    
+    for (let msgIndex = 0; msgIndex < messages.length; msgIndex++) {
+      const message = messages[msgIndex];
+      
+      if (message.role === 'system') {
+        continue; // Géré séparément
+      }
+
+      if (message.role === 'tool') {
+        // Convertir le message tool en format Bedrock tool_result
+        const lastMessage = convertedMessages[convertedMessages.length - 1];
+        if (lastMessage && lastMessage.role === 'user') {
+          // Ajouter le tool_result au dernier message user
+          if (typeof lastMessage.content === 'string') {
+            lastMessage.content = [{ type: 'text', text: lastMessage.content }];
+          }
+          (lastMessage.content as any[]).push({
+            type: 'tool_result',
+            tool_use_id: message.tool_call_id,
+            content: message.content
+          });
+        } else {
+          // Créer un nouveau message user avec le tool_result
+          convertedMessages.push({
+            role: 'user',
+            content: [{
+              type: 'tool_result',
+              tool_use_id: message.tool_call_id,
+              content: message.content
+            }]
+          });
+        }
+        continue;
+      }
+
+      if (message.role === 'user' || message.role === 'assistant') {
+        let content: string | Array<any>;
+        
+        const messageCacheControl = (message as any).cache_control;
+        
+        if (typeof message.content === 'string') {
+          const cacheKey = `${message.role}-${msgIndex}-0`;
+          if (messageCacheControl) {
+            content = [{
+              type: 'text',
+              text: message.content,
+              cache_control: messageCacheControl
+            }];
+          } else if (blocksToCache.has(cacheKey)) {
+            content = [{
+              type: 'text',
+              text: message.content,
+              cache_control: { type: 'ephemeral' }
+            }];
+            console.log(`🎯 Auto-cache activé pour ${message.role} (${message.content.length} caractères)`);
+          } else {
+            content = message.content;
+          }
+        } else if (Array.isArray(message.content)) {
+          content = message.content.map((item: any, blockIndex: number) => {
+            if (item.type === 'text') {
+              const textBlock: any = { type: 'text', text: item.text };
+              const cacheKey = `${message.role}-${msgIndex}-${blockIndex}`;
+              
+              if (item.cache_control) {
+                textBlock.cache_control = item.cache_control;
+              } else if (blocksToCache.has(cacheKey)) {
+                textBlock.cache_control = { type: 'ephemeral' };
+                console.log(`🎯 Auto-cache activé pour bloc ${message.role} (${item.text.length} caractères)`);
+              }
+              return textBlock;
+            } else if (item.type === 'image_url') {
+              // Convertir l'image URL en format Bedrock avec cache control
+              const imageBlock: any = {
+                type: 'image',
+                source: {
+                  type: 'base64',
+                  media_type: 'image/jpeg',
+                  data: item.image_url?.url || ''
+                }
+              };
+              // Préserver cache_control de l'image
+              if (item.cache_control) {
+                imageBlock.cache_control = item.cache_control;
+              }
+              return imageBlock;
+            }
+            return item;
+          });
+          
+          // Si on a du cache control au niveau du message et pas encore d'array, ajouter au dernier text block
+          if (messageCacheControl && Array.isArray(content) && content.length > 0) {
+            const lastTextBlock = content.filter((item: any) => item.type === 'text').pop();
+            if (lastTextBlock && !lastTextBlock.cache_control) {
+              lastTextBlock.cache_control = messageCacheControl;
+            }
+          }
+        } else {
+          content = '';
+        }
+
+        // Ajouter les tool calls si présents (pour les messages assistant)
+        if (message.role === 'assistant' && message.tool_calls) {
+          if (typeof content === 'string') {
+            content = content ? [{ type: 'text', text: content }] : [];
+          }
+          
+          message.tool_calls.forEach((toolCall: ToolCall) => {
+            (content as any[]).push({
+              type: 'tool_use',
+              id: toolCall.id,
+              name: toolCall.function.name,
+              input: JSON.parse(toolCall.function.arguments)
+            });
+          });
+        }
+        
+        convertedMessages.push({
+          role: message.role,
+          content
+        });
+      }
+    }
+    
+    return convertedMessages;
+  }
+
+  /**
    * Convertit les tool calls Bedrock vers le format OpenAI
    */
   private convertBedrockToolCallsToOpenAI(content: BedrockAnthropicResponse['content']): ToolCall[] {
@@ -419,49 +610,101 @@ export class BedrockAdapter extends BaseAdapter {
   }
 
   /**
-   * Ancienne méthode maintenue pour compatibilité
+   * Ancienne méthode maintenue pour compatibilité - maintenant avec limites
    */
   private convertMessagesToBedrockFormat(messages: any[]): BedrockAnthropicRequest['messages'] {
-    return this.convertMessagesToBedrockFormatWithCache(messages);
+    // Utiliser la nouvelle logique avec cache limité mais sans candidats pré-analysés
+    const emptyCache = new Set<string>();
+    return this.convertMessagesToBedrockFormatWithLimitedCache(messages, emptyCache);
   }
 
   transformRequest(standardRequest: StandardRequest): BedrockAnthropicRequest {
     const messages = standardRequest.messages || [];
     
-    // Séparer les messages système des autres et gérer le cache_control
+    // Collecter tous les candidats au cache AVANT la transformation
+    const cacheTargets: CacheTarget[] = [];
+
+    // 🆕 ANALYSER LES TOOLS EN PREMIER (priorité Anthropic)
+    let toolsContent = '';
+    if (standardRequest.tools && standardRequest.tools.length > 0) {
+      // Calculer la taille totale des tools
+      toolsContent = JSON.stringify(standardRequest.tools);
+      
+      // Ajouter aux candidats cache
+      cacheTargets.push({
+        type: 'tools',
+        text: toolsContent,
+        size: toolsContent.length
+      });
+    }
+
+    // Analyser le système
     let systemMessage = '';
     let systemCacheControl: any = null;
-    const conversationMessages = messages.filter(msg => {
+    
+    messages.forEach((msg, msgIndex) => {
       if (msg.role === 'system') {
         if (typeof msg.content === 'string') {
           systemMessage += msg.content;
         } else if (Array.isArray(msg.content)) {
-          // Extraire le texte des content blocks système
           const textContent = msg.content
             .filter(item => item.type === 'text')
             .map(item => item.text)
             .join('');
           systemMessage += textContent;
           
-          // Récupérer le cache_control du premier bloc texte qui en a un
           const cachedTextBlock = msg.content.find(item => item.type === 'text' && (item as any).cache_control);
           if (cachedTextBlock) {
             systemCacheControl = (cachedTextBlock as any).cache_control;
           }
         }
         
-        // Vérifier si le message système a cache_control au niveau du message
         if ((msg as any).cache_control) {
           systemCacheControl = (msg as any).cache_control;
         }
-        
-        return false;
+      } else {
+        // Analyser les messages de conversation pour les candidats au cache
+        if (typeof msg.content === 'string') {
+          cacheTargets.push({
+            type: msg.role as 'user' | 'assistant',
+            messageIndex: msgIndex,
+            blockIndex: 0,
+            text: msg.content,
+            size: msg.content.length
+          });
+        } else if (Array.isArray(msg.content)) {
+          msg.content.forEach((item, blockIndex) => {
+            if (item.type === 'text' && item.text) {
+              cacheTargets.push({
+                type: msg.role as 'user' | 'assistant',
+                messageIndex: msgIndex,
+                blockIndex,
+                text: item.text,
+                size: item.text.length
+              });
+            }
+          });
+        }
       }
-      return true;
     });
+
+    // Ajouter le système aux candidats
+    if (systemMessage && !systemCacheControl) {
+      cacheTargets.push({
+        type: 'system',
+        text: systemMessage,
+        size: systemMessage.length
+      });
+    }
+
+    // Déterminer quels blocs cacher (max 4) - INCLUANT tools
+    const blocksToCache = this.applyCacheWithBedrockLimits(cacheTargets, 4);
+
+    // Continuer avec la transformation normale en utilisant blocksToCache
+    const conversationMessages = messages.filter(msg => msg.role !== 'system');
     
     const bedrockRequest: BedrockAnthropicRequest = {
-      messages: this.convertMessagesToBedrockFormatWithCache(conversationMessages),
+      messages: this.convertMessagesToBedrockFormatWithLimitedCache(conversationMessages, blocksToCache),
       max_tokens: standardRequest.max_tokens || 4096,
       anthropic_version: 'bedrock-2023-05-31'
     };
@@ -481,7 +724,7 @@ export class BedrockAdapter extends BaseAdapter {
         : [standardRequest.stop];
     }
     
-    // Gérer le système avec cache_control et auto-cache
+    // Gérer le système avec cache limité
     if (systemMessage) {
       if (systemCacheControl) {
         bedrockRequest.system = [{
@@ -489,8 +732,7 @@ export class BedrockAdapter extends BaseAdapter {
           text: systemMessage,
           cache_control: systemCacheControl
         }];
-      } else if (this.shouldAutoCache(systemMessage)) {
-        // Cache automatique pour les messages système longs
+      } else if (blocksToCache.has('system')) {
         bedrockRequest.system = [{
           type: 'text',
           text: systemMessage,
@@ -502,9 +744,26 @@ export class BedrockAdapter extends BaseAdapter {
       }
     }
 
-    // Convertir les tools au format Bedrock
+    // 🆕 GÉRER LES TOOLS AVEC CACHE
     if (standardRequest.tools && standardRequest.tools.length > 0) {
-      bedrockRequest.tools = this.convertToolsToBedrockFormat(standardRequest.tools);
+      const bedrockTools = this.convertToolsToBedrockFormat(standardRequest.tools);
+      
+      if (blocksToCache.has('tools')) {
+        // Appliquer cache_control au dernier tool (selon format Anthropic)
+        const toolsWithCache = bedrockTools.map((tool, index) => {
+          if (index === bedrockTools.length - 1) {
+            return {
+              ...tool,
+              cache_control: { type: 'ephemeral' as const }
+            };
+          }
+          return tool;
+        });
+        bedrockRequest.tools = toolsWithCache;
+        console.log(`🎯 Auto-cache activé pour tools (${toolsContent.length} caractères)`);
+      } else {
+        bedrockRequest.tools = bedrockTools;
+      }
     }
     
     return bedrockRequest;
@@ -671,8 +930,20 @@ export class BedrockAdapter extends BaseAdapter {
         return null; // Pas besoin de chunk spécial pour la fin d'un bloc
       }
       
-      // Message delta - mise à jour avec finish_reason
+      // Message delta - mise à jour avec finish_reason et usage final complet
       if (event.type === 'message_delta' && event.delta) {
+        // Construire l'usage complet au format OpenAI
+        let finalUsage: any = undefined;
+        if (event.usage) {
+          // Pour Bedrock, message_delta n'a que output_tokens
+          // Les input_tokens sont dans message_start
+          const outputTokens = event.usage.output_tokens || 0;
+
+          finalUsage = {
+            completion_tokens: outputTokens
+          };
+        }
+
         return {
           id: `bedrock-stream-${Date.now()}`,
           object: 'chat.completion.chunk',
@@ -683,11 +954,7 @@ export class BedrockAdapter extends BaseAdapter {
             delta: {},
             finish_reason: this.mapFinishReason(event.delta.stop_reason)
           }],
-          usage: event.usage ? {
-            completion_tokens: event.usage.output_tokens,
-            prompt_tokens: undefined,
-            total_tokens: undefined
-          } : undefined
+          usage: finalUsage
         };
       }
       

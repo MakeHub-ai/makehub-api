@@ -11,7 +11,7 @@ const requestBody = {
   messages: [
     { role: "user", content: "Hello, who are you?" }
   ],
-  provider: ["azure-eastus", "openai"], // Specify a single provider; can also be an array of providers
+  provider: ["bedrock"], // Specify a single provider; can also be an array of providers
   stream: true,
   max_tokens: 50,
   temperature: 0.7

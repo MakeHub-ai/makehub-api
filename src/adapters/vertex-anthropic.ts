@@ -13,8 +13,21 @@ import type {
   ToolCall,
   Tool,
   ToolChoice,
-  AdapterErrorCode
+  AdapterErrorCode,
+  ChatMessage,
+  ChatMessageContent
 } from '../types/index.js';
+
+/**
+ * Interface pour les candidats au cache
+ */
+interface CacheTarget {
+  type: 'system' | 'user' | 'assistant' | 'tools';
+  messageIndex?: number;
+  blockIndex?: number;
+  text: string;
+  size: number;
+}
 
 /**
  * Adapter Vertex AI utilisant le SDK natif Anthropic
@@ -126,9 +139,27 @@ export class VertexAnthropicAdapter extends BaseAdapter {
   transformRequest(standardRequest: StandardRequest): any {
     const messages = standardRequest.messages || [];
 
-    // Séparer les messages système
+    // Collecter tous les candidats au cache AVANT la transformation
+    const cacheTargets: CacheTarget[] = [];
+
+    // 🆕 ANALYSER LES TOOLS EN PREMIER (priorité Anthropic)
+    let toolsContent = '';
+    if (standardRequest.tools && standardRequest.tools.length > 0) {
+      // Calculer la taille totale des tools
+      toolsContent = JSON.stringify(standardRequest.tools);
+      
+      // Ajouter aux candidats cache
+      cacheTargets.push({
+        type: 'tools',
+        text: toolsContent,
+        size: toolsContent.length
+      });
+    }
+
+    // Analyser le système et séparer les messages système des autres messages
     let systemMessage = '';
-    const conversationMessages = messages.filter(msg => {
+    let systemCacheControl: any = null;
+    const conversationMessages = messages.filter((msg, msgIndex) => {
       if (msg.role === 'system') {
         if (typeof msg.content === 'string') {
           systemMessage += msg.content;
@@ -139,25 +170,79 @@ export class VertexAnthropicAdapter extends BaseAdapter {
             .map(item => item.text)
             .join('');
           systemMessage += textContent;
+          
+          // Récupérer le cache_control du premier bloc texte qui en a un
+          const cachedTextBlock = msg.content.find(item => item.type === 'text' && (item as any).cache_control);
+          if (cachedTextBlock) {
+            systemCacheControl = (cachedTextBlock as any).cache_control;
+          }
         }
+        
+        // Vérifier si le message système a cache_control au niveau du message
+        if ((msg as any).cache_control) {
+          systemCacheControl = (msg as any).cache_control;
+        }
+        
         return false;
+      } else {
+        // Analyser les messages de conversation pour les candidats au cache
+        if (typeof msg.content === 'string') {
+          cacheTargets.push({
+            type: msg.role as 'user' | 'assistant',
+            messageIndex: msgIndex,
+            blockIndex: 0,
+            text: msg.content,
+            size: msg.content.length
+          });
+        } else if (Array.isArray(msg.content)) {
+          msg.content.forEach((item, blockIndex) => {
+            if (item.type === 'text' && item.text) {
+              cacheTargets.push({
+                type: msg.role as 'user' | 'assistant',
+                messageIndex: msgIndex,
+                blockIndex,
+                text: item.text,
+                size: item.text.length
+              });
+            }
+          });
+        }
+        return true;
       }
-      return true;
     });
 
+    // Ajouter le système aux candidats
+    if (systemMessage && !systemCacheControl) {
+      cacheTargets.push({
+        type: 'system',
+        text: systemMessage,
+        size: systemMessage.length
+      });
+    }
+
+    // Déterminer quels blocs cacher (max 4) - INCLUANT tools
+    const blocksToCache = this.applyCacheWithVertexLimits(cacheTargets, 4);
+
     const vertexRequest: any = {
-      messages: this.convertMessagesToVertexFormat(conversationMessages),
+      messages: this.convertMessagesToVertexFormatWithLimitedCache(conversationMessages, blocksToCache),
       max_tokens: standardRequest.max_tokens || 4096,
     };
 
-    // Ajouter le message système s'il existe avec cache automatique
+    // Gérer le système avec cache limité
     if (systemMessage.trim()) {
-      if (this.shouldAutoCache(systemMessage)) {
+      if (systemCacheControl) {
+        vertexRequest.system = [{
+          type: 'text',
+          text: systemMessage.trim(),
+          cache_control: systemCacheControl
+        }];
+      } else if (blocksToCache.has('system')) {
         vertexRequest.system = [{
           type: 'text',
           text: systemMessage.trim(),
           cache_control: { type: 'ephemeral' }
         }];
+        console.log(`🎯 Auto-cache activé pour message système (${systemMessage.length} caractères)`);
       } else {
         vertexRequest.system = systemMessage.trim();
       }
@@ -176,8 +261,14 @@ export class VertexAnthropicAdapter extends BaseAdapter {
         : [standardRequest.stop];
     }
 
+    // 🆕 GÉRER LES TOOLS AVEC CACHE
     if (standardRequest.tools && standardRequest.tools.length > 0) {
-      vertexRequest.tools = this.convertToolsToVertexFormat(standardRequest.tools);
+      const vertexTools = this.convertToolsToVertexFormatWithCache(standardRequest.tools, blocksToCache.has('tools'));
+      vertexRequest.tools = vertexTools;
+      
+      if (blocksToCache.has('tools')) {
+        console.log(`🎯 Auto-cache activé pour tools (${toolsContent.length} caractères)`);
+      }
     }
 
     return this.cleanParams(vertexRequest);
@@ -293,6 +384,160 @@ export class VertexAnthropicAdapter extends BaseAdapter {
     return text.length >= MIN_CACHE_CHARACTERS;
   }
 
+  /**
+   * Applique le cache en respectant la limite de 4 blocs pour Vertex Anthropic
+   * Priorise les plus gros blocs pour maximiser l'efficacité
+   * Respecte l'ordre de priorité Anthropic: tools → system → messages
+   */
+  private applyCacheWithVertexLimits(cacheTargets: CacheTarget[], maxBlocks: number = 4): Set<string> {
+    // Filtrer les candidats éligibles (seuil minimum de taille)
+    const eligibleTargets = cacheTargets.filter(target => this.shouldAutoCache(target.text));
+    
+    // Trier selon l'ordre de priorité Anthropic: tools → system → messages
+    const priorityOrder = { 'tools': 0, 'system': 1, 'user': 2, 'assistant': 3 };
+    const sortedTargets = eligibleTargets
+      .sort((a, b) => {
+        // D'abord par priorité de type
+        const priorityDiff = priorityOrder[a.type] - priorityOrder[b.type];
+        if (priorityDiff !== 0) return priorityDiff;
+        // Ensuite par taille décroissante à priorité égale
+        return b.size - a.size;
+      })
+      .slice(0, maxBlocks); // Limiter au nombre maximum
+
+    // Créer un Set des identifiants à cacher
+    const cacheKeys = new Set<string>();
+    sortedTargets.forEach(target => {
+      if (target.type === 'system') {
+        cacheKeys.add('system');
+      } else if (target.type === 'tools') {
+        cacheKeys.add('tools');
+      } else {
+        cacheKeys.add(`${target.type}-${target.messageIndex}-${target.blockIndex || 0}`);
+      }
+    });
+
+    console.log(`🎯 Auto-cache Vertex: ${sortedTargets.length}/${cacheTargets.length} blocs sélectionnés (limite: ${maxBlocks})`);
+    sortedTargets.forEach(target => {
+      console.log(`   - ${target.type} (${target.size} caractères)`);
+    });
+
+    return cacheKeys;
+  }
+
+  /**
+   * Version modifiée qui respecte la liste des blocs à cacher
+   */
+  private convertMessagesToVertexFormatWithLimitedCache(
+    messages: ChatMessage[], 
+    blocksToCache: Set<string>
+  ): any[] {
+    const convertedMessages: any[] = [];
+    if (!messages) return convertedMessages;
+
+    for (let msgIndex = 0; msgIndex < messages.length; msgIndex++) {
+      const message = messages[msgIndex];
+      
+      if (message.role === 'system') continue;
+
+      if (message.role === 'tool') {
+        const toolResultContent = {
+          type: 'tool_result',
+          tool_use_id: message.tool_call_id,
+          content: [{ 
+            type: 'text', 
+            text: typeof message.content === 'string' ? message.content : JSON.stringify(message.content) 
+          }],
+        };
+        convertedMessages.push({
+          role: 'user',
+          content: [toolResultContent]
+        });
+        continue;
+      }
+
+      let contentArray: any[];
+      if (typeof message.content === 'string') {
+        const textBlock: any = { type: 'text', text: message.content };
+        const cacheKey = `${message.role}-${msgIndex}-0`;
+        
+        // Préserver cache_control du message ou appliquer cache intelligent
+        if ((message as any).cache_control) {
+          textBlock.cache_control = (message as any).cache_control;
+        } else if (blocksToCache.has(cacheKey)) {
+          textBlock.cache_control = { type: 'ephemeral' };
+          console.log(`🎯 Auto-cache activé pour ${message.role} (${message.content.length} caractères)`);
+        }
+        
+        contentArray = [textBlock];
+      } else if (Array.isArray(message.content)) {
+        contentArray = message.content.map((item: any, blockIndex: number) => {
+          if (item.type === 'text') {
+            const textBlock: any = { type: 'text', text: item.text };
+            const cacheKey = `${message.role}-${msgIndex}-${blockIndex}`;
+            
+            // Préserver cache_control de l'item ou appliquer cache intelligent
+            if (item.cache_control) {
+              textBlock.cache_control = item.cache_control;
+            } else if (blocksToCache.has(cacheKey)) {
+              textBlock.cache_control = { type: 'ephemeral' };
+              console.log(`🎯 Auto-cache activé pour bloc ${message.role} (${item.text.length} caractères)`);
+            }
+            
+            return textBlock;
+          } else if (item.type === 'image_url' && item.image_url?.url) {
+            const urlData = item.image_url.url;
+            let mediaType = 'image/jpeg';
+            let base64Data = urlData;
+
+            if (urlData.startsWith('data:')) {
+              const parts = urlData.split(';');
+              if (parts.length === 2 && parts[0].startsWith('data:') && parts[1].startsWith('base64,')) {
+                mediaType = parts[0].slice(5);
+                base64Data = parts[1].slice(7);
+              }
+            }
+            
+            const imageBlock: any = {
+              type: 'image',
+              source: {
+                type: 'base64',
+                media_type: mediaType,
+                data: base64Data,
+              },
+            };
+            
+            // Ajouter le cache_control si présent sur l'item
+            if (item.cache_control) {
+              imageBlock.cache_control = item.cache_control;
+            }
+            
+            return imageBlock;
+          }
+          return null;
+        }).filter(Boolean) as any[];
+      } else {
+        contentArray = [];
+      }
+
+      if (message.role === 'assistant' && message.tool_calls) {
+        message.tool_calls.forEach((toolCall: ToolCall) => {
+          contentArray.push({
+            type: 'tool_use',
+            id: toolCall.id,
+            name: toolCall.function.name,
+            input: JSON.parse(toolCall.function.arguments)
+          });
+        });
+      }
+      
+      if (contentArray.length > 0) {
+        convertedMessages.push({ role: message.role, content: contentArray });
+      }
+    }
+    return convertedMessages;
+  }
+
   private convertToolsToVertexFormat(tools: StandardRequest['tools']): any[] {
     if (!tools) return [];
     return tools.map((tool, index) => {
@@ -311,6 +556,34 @@ export class VertexAnthropicAdapter extends BaseAdapter {
         vertexTool.cache_control = (tool as any).cache_control;
       } else if (index === tools.length - 1) {
         // Cache automatique sur le dernier outil (cache tous les outils d'un coup)
+        vertexTool.cache_control = { type: 'ephemeral' };
+      }
+
+      return vertexTool;
+    });
+  }
+
+  /**
+   * Version avec cache intelligent basé sur la sélection
+   */
+  private convertToolsToVertexFormatWithCache(tools: StandardRequest['tools'], shouldCache: boolean): any[] {
+    if (!tools) return [];
+    return tools.map((tool, index) => {
+      if (tool.type !== 'function') {
+        throw this.createError("Vertex/Anthropic adapter only supports 'function' tools.", 400, 'VALIDATION_ERROR');
+      }
+
+      const vertexTool: any = {
+        name: tool.function.name,
+        description: tool.function.description,
+        input_schema: tool.function.parameters
+      };
+
+      // Préserver cache_control existant
+      if ((tool as any).cache_control) {
+        vertexTool.cache_control = (tool as any).cache_control;
+      } else if (shouldCache && index === tools.length - 1) {
+        // Appliquer cache_control au dernier tool (selon format Anthropic)
         vertexTool.cache_control = { type: 'ephemeral' };
       }
 
@@ -506,8 +779,23 @@ export class VertexAnthropicAdapter extends BaseAdapter {
         return null; // Pas besoin de chunk spécial pour la fin d'un bloc
       }
 
-      // Message delta - mise à jour avec finish_reason et usage final
+      // Message delta - mise à jour avec finish_reason et usage final complet
       if (event.type === 'message_delta' && event.delta) {
+        // Construire l'usage complet au format OpenAI
+        let finalUsage: any = undefined;
+        if (event.usage) {
+          const inputTokens = event.usage.input_tokens || 0;
+          const outputTokens = event.usage.output_tokens || 0;
+          const cachedTokens = event.usage.cache_read_input_tokens || 0;
+          
+          finalUsage = {
+            prompt_tokens: inputTokens,
+            completion_tokens: outputTokens,
+            total_tokens: inputTokens + outputTokens,
+            cached_tokens: cachedTokens > 0 ? cachedTokens : undefined
+          };
+        }
+
         return {
           id: event.message?.id || `vertex-${Date.now()}`,
           object: 'chat.completion.chunk' as const,
@@ -518,12 +806,7 @@ export class VertexAnthropicAdapter extends BaseAdapter {
             delta: {},
             finish_reason: this.mapFinishReason(event.delta.stop_reason)
           }],
-          usage: event.usage ? {
-            completion_tokens: event.usage.output_tokens,
-            prompt_tokens: undefined,
-            total_tokens: undefined,
-            cached_tokens: event.usage.cache_creation_input_tokens || event.usage.cache_read_input_tokens || undefined
-          } : undefined
+          usage: finalUsage
         };
       }
 
