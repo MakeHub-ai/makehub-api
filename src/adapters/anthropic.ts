@@ -100,6 +100,11 @@ interface AnthropicResponse {
  * Convertit les requêtes OpenAI vers le format natif Anthropic
  */
 export class AnthropicAdapter extends BaseAdapter {
+  private currentStreamTokens?: {
+    input_tokens: number;
+    cached_tokens?: number;
+  };
+
   constructor(config: AdapterConfig = {}) {
     super(config);
     this.name = 'anthropic';
@@ -641,6 +646,11 @@ export class AnthropicAdapter extends BaseAdapter {
       }
     });
 
+    // Calculer les prompt_tokens avec le coût de création du cache
+    const inputTokens = data.usage.input_tokens || 0;
+    const cacheCreationTokens = data.usage.cache_creation_input_tokens || 0;
+    const promptTokens = inputTokens + Math.round(cacheCreationTokens * 1.25);
+
     const completion: ChatCompletion = {
       id: data.id,
       object: 'chat.completion',
@@ -656,9 +666,9 @@ export class AnthropicAdapter extends BaseAdapter {
         finish_reason: this.mapFinishReason(data.stop_reason)
       }],
       usage: {
-        prompt_tokens: data.usage.input_tokens,
+        prompt_tokens: promptTokens,
         completion_tokens: data.usage.output_tokens,
-        total_tokens: data.usage.input_tokens + data.usage.output_tokens,
+        total_tokens: promptTokens + data.usage.output_tokens,
         cached_tokens: data.usage.cache_read_input_tokens || undefined
       }
     };
@@ -681,8 +691,17 @@ export class AnthropicAdapter extends BaseAdapter {
       const event = JSON.parse(jsonStr);
       const timestamp = Math.floor(Date.now() / 1000);
 
-      // Message start - premier chunk avec métadonnées
+      // Message start - stocker les input_tokens mais ne pas renvoyer d'usage
       if (event.type === 'message_start' && event.message) {
+        // Stocker les tokens d'input pour les combiner plus tard avec output_tokens
+        if (event.message.usage) {
+          this.currentStreamTokens = {
+            input_tokens: event.message.usage.input_tokens || 0,
+            cached_tokens: event.message.usage.cache_read_input_tokens || undefined
+          };
+          console.log('🎯 Anthropic tokens stockés depuis message_start:', this.currentStreamTokens);
+        }
+        
         return {
           id: event.message.id,
           object: 'chat.completion.chunk',
@@ -692,10 +711,8 @@ export class AnthropicAdapter extends BaseAdapter {
             index: 0,
             delta: { role: 'assistant' },
             finish_reason: null
-          }],
-          usage: event.message.usage ? {
-            prompt_tokens: event.message.usage.input_tokens,
-          } : undefined
+          }]
+          // Pas d'usage ici car output_tokens n'est pas fiable dans message_start
         };
       }
 
@@ -769,19 +786,28 @@ export class AnthropicAdapter extends BaseAdapter {
 
       // Message delta - finish_reason et usage final complet
       if (event.type === 'message_delta' && event.delta) {
-        // Construire l'usage complet au format OpenAI
+        // Construire l'usage complet en combinant les tokens stockés et les finaux
         let finalUsage: any = undefined;
-        if (event.usage) {
-          const inputTokens = event.usage.input_tokens || 0;
-          const outputTokens = event.usage.output_tokens || 0;
-          const cachedTokens = event.usage.cache_read_input_tokens || 0;
+        if (event.usage || this.currentStreamTokens) {
+          console.log('🎯 Anthropic message delta usage:', event.usage);
+          console.log('🎯 Anthropic tokens stockés:', this.currentStreamTokens);
+          
+          // Combiner les input_tokens du message_start avec les output_tokens du message_delta
+          const inputTokens = this.currentStreamTokens?.input_tokens || 0;
+          const outputTokens = event.usage?.output_tokens || 0;
+          const cachedTokens = this.currentStreamTokens?.cached_tokens || 
+                              event.usage?.cache_read_input_tokens || 0;
           
           finalUsage = {
             prompt_tokens: inputTokens,
             completion_tokens: outputTokens,
             total_tokens: inputTokens + outputTokens,
-            cached_tokens: cachedTokens > 0 ? cachedTokens : undefined
+            cached_tokens: cachedTokens > 0 ? cachedTokens : undefined,
+            input_tokens: inputTokens,
+            output_tokens: outputTokens
           };
+          
+          console.log('🎯 Anthropic final usage calculated:', finalUsage);
         }
 
         return {
@@ -800,6 +826,10 @@ export class AnthropicAdapter extends BaseAdapter {
 
       // Message stop - fin du stream
       if (event.type === 'message_stop') {
+        // Nettoyer les tokens stockés pour le prochain stream
+        this.currentStreamTokens = undefined;
+        console.log('🎯 Anthropic tokens nettoyés à la fin du stream');
+        
         return {
           id: event.message?.id || `anthropic-${Date.now()}`,
           object: 'chat.completion.chunk',

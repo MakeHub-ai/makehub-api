@@ -146,6 +146,8 @@ interface BedrockStreamEvent {
     usage: {
       input_tokens: number;
       output_tokens: number;
+      cache_creation_input_tokens?: number;
+      cache_read_input_tokens?: number;
     };
   };
   index?: number;
@@ -176,6 +178,10 @@ export class BedrockAdapter extends BaseAdapter {
   private client?: BedrockRuntimeClient;
   private region: string;
   private modelInfo?: Model;
+  private currentStreamTokens?: {
+    input_tokens: number;
+    cached_tokens?: number;
+  };
 
   constructor(config: AdapterConfig = {}) {
     super(config);
@@ -794,6 +800,11 @@ export class BedrockAdapter extends BaseAdapter {
       }
     });
 
+    // Calculer les prompt_tokens avec le coût de création du cache
+    const inputTokens = response.usage.input_tokens || 0;
+    const cacheCreationTokens = response.usage.cache_creation_input_tokens || 0;
+    const promptTokens = inputTokens + Math.round(cacheCreationTokens * 1.25);
+
     const completion: ChatCompletion = {
       id: response.id || `bedrock-${Date.now()}`,
       object: 'chat.completion',
@@ -808,9 +819,9 @@ export class BedrockAdapter extends BaseAdapter {
         finish_reason: this.mapFinishReason(response.stop_reason)
       }],
       usage: {
-        prompt_tokens: response.usage.input_tokens,
+        prompt_tokens: promptTokens,
         completion_tokens: response.usage.output_tokens,
-        total_tokens: response.usage.input_tokens + response.usage.output_tokens,
+        total_tokens: promptTokens + response.usage.output_tokens,
         cached_tokens: response.usage.cache_read_input_tokens || 0,
         input_tokens: response.usage.input_tokens,
         output_tokens: response.usage.output_tokens,
@@ -832,9 +843,22 @@ export class BedrockAdapter extends BaseAdapter {
     try {
       const event: BedrockStreamEvent = JSON.parse(chunk);
       const timestamp = Math.floor(Date.now() / 1000);
+
+      if (event) {
+        console.log(`Received Bedrock stream event: ${JSON.stringify(event)}`);
+      }
       
-      // Message start - premier chunk avec les métadonnées
+      // Message start - stocker les input_tokens mais ne pas renvoyer d'usage
       if (event.type === 'message_start' && event.message) {
+        // Stocker les tokens d'input pour les combiner plus tard avec output_tokens
+        if (event.message.usage) {
+          this.currentStreamTokens = {
+            input_tokens: event.message.usage.input_tokens || 0,
+            cached_tokens: event.message.usage.cache_read_input_tokens || undefined
+          };
+          console.log('🎯 Bedrock tokens stockés depuis message_start:', this.currentStreamTokens);
+        }
+        
         return {
           id: event.message.id,
           object: 'chat.completion.chunk',
@@ -846,12 +870,8 @@ export class BedrockAdapter extends BaseAdapter {
               role: 'assistant'
             },
             finish_reason: null
-          }],
-          usage: {
-            prompt_tokens: event.message.usage.input_tokens,
-            completion_tokens: event.message.usage.output_tokens,
-            total_tokens: undefined
-          }
+          }]
+          // Pas d'usage ici car output_tokens n'est pas fiable dans message_start
         };
       }
       
@@ -932,16 +952,27 @@ export class BedrockAdapter extends BaseAdapter {
       
       // Message delta - mise à jour avec finish_reason et usage final complet
       if (event.type === 'message_delta' && event.delta) {
-        // Construire l'usage complet au format OpenAI
+        // Construire l'usage complet en combinant les tokens stockés et les finaux
         let finalUsage: any = undefined;
-        if (event.usage) {
-          // Pour Bedrock, message_delta n'a que output_tokens
-          // Les input_tokens sont dans message_start
-          const outputTokens = event.usage.output_tokens || 0;
-
+        if (event.usage || this.currentStreamTokens) {
+          console.log('🎯 Bedrock message delta usage:', event.usage);
+          console.log('🎯 Bedrock tokens stockés:', this.currentStreamTokens);
+          
+          // Combiner les input_tokens du message_start avec les output_tokens du message_delta
+          const inputTokens = this.currentStreamTokens?.input_tokens || 0;
+          const outputTokens = event.usage?.output_tokens || 0;
+          const cachedTokens = this.currentStreamTokens?.cached_tokens || 0;
+          
           finalUsage = {
-            completion_tokens: outputTokens
+            prompt_tokens: inputTokens,
+            completion_tokens: outputTokens,
+            total_tokens: inputTokens + outputTokens,
+            cached_tokens: cachedTokens > 0 ? cachedTokens : undefined,
+            input_tokens: inputTokens,
+            output_tokens: outputTokens
           };
+          
+          console.log('🎯 Bedrock final usage calculated:', finalUsage);
         }
 
         return {
@@ -960,6 +991,10 @@ export class BedrockAdapter extends BaseAdapter {
       
       // Message stop - fin du stream
       if (event.type === 'message_stop') {
+        // Nettoyer les tokens stockés pour le prochain stream
+        this.currentStreamTokens = undefined;
+        console.log('🎯 Bedrock tokens nettoyés à la fin du stream');
+        
         return {
           id: `bedrock-stream-${Date.now()}`,
           object: 'chat.completion.chunk',

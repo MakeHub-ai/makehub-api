@@ -132,7 +132,7 @@ const requestBody = {
   stream: false, // Disable streaming to get complete response with usage info
   max_tokens: 100,
   temperature: 0.7,
-  provider: "vertex",
+  provider: "anthropic" // Specify the provider to test,
 };
 
 async function makeRequest(requestNumber) {
