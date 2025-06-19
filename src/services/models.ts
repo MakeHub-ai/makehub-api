@@ -943,7 +943,5 @@ export async function getExtendedModels(): Promise<ExtendedModelInfo[]> {
   // Trier par model_id pour un ordre cohérent
   extendedModels.sort((a, b) => a.model_id.localeCompare(b.model_id));
 
-  console.log('all models:', extendedModels);
-  
   return extendedModels;
 }
