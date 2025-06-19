@@ -201,7 +201,7 @@ providers:
         support_input_cache: true
         support_vision: false
         price_cached_token: null
-      google/gemini-2.5-flash-light-preview:
+      google/gemini-2.5-flash-lite-preview:
         base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
         context: 1000
         price_per_input_token: 0.1
@@ -2960,6 +2960,21 @@ providers:
         assistant_ready: true
         display_name: Gemini 2.5 Flash
         pricing_method: google_implicit
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
+      minimax/minimax-m1:
+        base_url: https://openrouter.ai/api/v1
+        context: 1048
+        price_per_input_token: 0.3
+        price_per_output_token: 1.65
+        provider_model_id: minimax/minimax-m1
+        quantisation: null
+        support_tool_calling: true
+        max_output: 4
+        assistant_ready: true
+        display_name: Minimax M1
+        pricing_method: standard
         support_input_cache: false
         support_vision: false
         price_cached_token: null
