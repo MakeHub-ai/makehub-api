@@ -53,7 +53,8 @@ export class RequestHandler {
    */
   async handleChatCompletion(
     request: StandardRequest, 
-    authData: AuthData
+    authData: AuthData,
+    options: { ratio_sp?: number } = {}
   ): Promise<ChatCompletion | AsyncGenerator<ChatCompletionChunk>> {
     const requestId = uuidv4();
     const startTime = Date.now();
@@ -63,7 +64,15 @@ export class RequestHandler {
       this.validateRequest(request);
       
       // 1. Obtenir les combinaisons model/provider disponibles
-      const providerCombinations = await filterProviders(request, authData.user.id, authData.userPreferences);
+      const providerCombinations = await filterProviders(
+        request, 
+        authData.user.id, 
+        authData.userPreferences,
+        { 
+          ratio_sp: options.ratio_sp
+          // Le filtrage par provider se fait maintenant via request.provider directement dans filterProviders
+        }
+      );
       
       if (providerCombinations.length === 0) {
         throw new Error(`No provider available for model_id: ${request.model || 'unknown'}`);

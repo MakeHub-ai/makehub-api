@@ -173,6 +173,50 @@ function handleBusinessError(error: unknown): { response: ApiError; status: 400 
 }
 
 /**
+ * Extrait le ratio performance/prix de l'en-tête
+ */
+function getPricePerformanceRatio(c: Context): number {
+  const headerValue = c.req.header('X-Price-Performance-Ratio');
+  if (headerValue) {
+    const ratio = parseInt(headerValue, 10);
+    if (!isNaN(ratio) && ratio >= 0 && ratio <= 100) {
+      return ratio;
+    }
+  }
+  return 50; // Valeur par défaut
+}
+
+/**
+ * Extrait la liste des providers depuis l'en-tête, la query ou le body
+ */
+function getProviders(c: Context, body: any): string | string[] | undefined {
+  // 1. Header (priorité la plus haute)
+  const headerValue = c.req.header('X-Provider');
+  if (headerValue) {
+    try {
+      // Essayer de parser comme JSON (pour les listes)
+      const parsed = JSON.parse(headerValue);
+      if (Array.isArray(parsed) && parsed.every(item => typeof item === 'string')) {
+        return parsed;
+      }
+    } catch (e) {
+      // Si ce n'est pas un JSON valide, le traiter comme une chaîne simple
+      return headerValue;
+    }
+    return headerValue;
+  }
+
+  // 2. Query parameter
+  const queryValue = c.req.query('provider');
+  if (queryValue) {
+    return queryValue;
+  }
+
+  // 3. Body (déjà géré par Zod, mais on le retourne pour la cohérence)
+  return body.provider;
+}
+
+/**
  * POST /chat/completions
  * Endpoint principal pour les requêtes de chat completion
  */
@@ -186,7 +230,11 @@ chat.post('/completions', async (c: Context<{ Variables: HonoVariables }>) => {
     const authData = c.get('auth');
     const balance = c.get('balance');
     
-    // 3. Convertir vers le format StandardRequest
+    // 3. Récupérer les paramètres avancés
+    const ratioSp = getPricePerformanceRatio(c);
+    const providers = getProviders(c, validatedRequest);
+
+    // 4. Convertir vers le format StandardRequest
     const standardRequest: StandardRequest = {
       model: validatedRequest.model,
       messages: validatedRequest.messages,
@@ -199,14 +247,14 @@ chat.post('/completions', async (c: Context<{ Variables: HonoVariables }>) => {
       stop: validatedRequest.stop,
       tools: validatedRequest.tools,
       tool_choice: validatedRequest.tool_choice,
-      provider: validatedRequest.provider,
+      provider: providers,
       user: validatedRequest.user
     };
     
-    // 4. Traiter la requête
-    const result = await requestHandler.handleChatCompletion(standardRequest, authData);
+    // 5. Traiter la requête
+    const result = await requestHandler.handleChatCompletion(standardRequest, authData, { ratio_sp: ratioSp });
     
-    // 5. Retourner la réponse selon le mode
+    // 6. Retourner la réponse selon le mode
     if (validatedRequest.stream) {
       // Définir les headers pour le streaming SSE
       c.header('Content-Type', 'text/event-stream');
@@ -484,6 +532,9 @@ chat.post('/estimate', async (c: Context<{ Variables: HonoVariables }>) => {
     
     const authData = c.get('auth');
     
+    // Récupérer les providers
+    const providers = getProviders(c, validatedRequest);
+
     // Convertir vers StandardRequest
     const standardRequest: StandardRequest = {
       model: validatedRequest.model,
@@ -497,14 +548,18 @@ chat.post('/estimate', async (c: Context<{ Variables: HonoVariables }>) => {
       stop: validatedRequest.stop,
       tools: validatedRequest.tools,
       tool_choice: validatedRequest.tool_choice,
-      provider: validatedRequest.provider,
+      provider: providers,
       user: validatedRequest.user
     };
     
+    // Obtenir le ratio depuis l'en-tête
+    const ratioSp = getPricePerformanceRatio(c);
+
     // Obtenir les combinaisons de providers
     const { filterProviders } = await import('../services/models.js');
     const combinations = await filterProviders(standardRequest, authData.user.id, authData.userPreferences, {
-      ratio_sp: 50
+      ratio_sp: ratioSp
+      // providers est déjà dans standardRequest, donc pas besoin de le passer ici
     });
 
 

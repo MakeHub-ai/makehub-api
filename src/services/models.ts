@@ -488,9 +488,9 @@ export async function filterProviders(
     return true;
   });
   
-  // 2.5. Filtrer par providers spécifiés dans la requête (si applicable)
+  // 2.5. Filtrer par providers spécifiés dans la requête ou les options
   const requestProviders = request.provider;
-  if (requestProviders) {
+  if (requestProviders && ( (Array.isArray(requestProviders) && requestProviders.length > 0) || typeof requestProviders === 'string' ) ) {
     const providerList = Array.isArray(requestProviders) ? requestProviders : [requestProviders];
     
     // Filtrer uniquement les modèles des providers spécifiés
@@ -604,7 +604,6 @@ export async function filterProviders(
         
         if (model.support_input_cache) {
           cachingMap.set(key, true);
-          console.log(`🚀 ${model.provider} supports input caching for ${model.model_id} (intrinsic support)`);
         }
       });
     } else {
