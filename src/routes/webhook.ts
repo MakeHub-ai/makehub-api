@@ -214,10 +214,6 @@ webhook.post('/calculate-tokens', webhookAuthMiddleware, async (c: Context) => {
       throw new Error('batch_size must be between 1 and 100');
     }
     
-    if (timeLimit <= 0 || timeLimit > 120000) { // Max 2 minutes
-      throw new Error('time_limit must be between 1ms and 120000ms (2 minutes)');
-    }
-    
     // Exécuter le processus de calcul et de mise à jour avec limitation
     const result = await processReadyRequests(batchSize, timeLimit);
     const duration = Date.now() - startTime;
