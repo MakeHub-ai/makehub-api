@@ -207,8 +207,8 @@ webhook.post('/calculate-tokens', webhookAuthMiddleware, async (c: Context) => {
     
     // Récupérer les paramètres de requête (optionnels)
     const batchSize = parseInt(c.req.query('batch_size') || '20');
-    const timeLimit = parseInt(c.req.query('time_limit') || '30000');
-    
+    const timeLimit = parseInt(c.req.query('time_limit') || '500000');
+
     // Validation des paramètres
     if (batchSize <= 0 || batchSize > 100) {
       throw new Error('batch_size must be between 1 and 100');

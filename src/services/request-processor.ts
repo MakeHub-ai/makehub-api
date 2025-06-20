@@ -470,12 +470,12 @@ async function calculateRequestCost(
 /**
  * Process requests with status 'ready_to_compute'
  * @param batchSize - Nombre de requêtes à traiter par lot (défaut: 10)
- * @param timeLimit - Limite de temps en ms pour le traitement (défaut: 30000 ms = 30 sec)
+ * @param timeLimit - Limite de temps en ms pour le traitement (défaut: 500000 ms = 8 minutes)
  * @returns Statistiques de traitement
  */
 async function processReadyRequests(
   batchSize: number = 10, 
-  timeLimit: number = 30000
+  timeLimit: number = 500000
 ): Promise<ProcessingStats> {
   const stats: ProcessingStats = {
     processed: 0,
@@ -489,9 +489,9 @@ async function processReadyRequests(
     if (batchSize <= 0 || batchSize > 1000) {
       throw new Error('Batch size must be between 1 and 1000');
     }
-    
-    if (timeLimit <= 0 || timeLimit > 300000) { // Max 5 minutes
-      throw new Error('Time limit must be between 1ms and 300000ms (5 minutes)');
+
+    if (timeLimit <= 0 || timeLimit > 500000) { // Max 8 minutes
+      throw new Error('Time limit must be between 1ms and 500000ms (8 minutes)');
     }
     
     // Get requests that need processing (exclusion des requêtes avec erreur pour double sécurité)
@@ -671,7 +671,7 @@ async function processRequestsBatch(options: {
 }> {
   const {
     batchSize = 10,
-    timeLimit = 30000,
+    timeLimit = 500000,
     retryFailedRequests = false,
     maxRetries = 3
   } = options;

@@ -74,8 +74,8 @@ function validateConfig(config: WebhookConfig): void {
     throw new Error('Base URL must be a valid HTTP/HTTPS URL');
   }
 
-  if (config.timeout <= 0 || config.timeout > 300000) {
-    throw new Error('Timeout must be between 1ms and 300000ms (5 minutes)');
+  if (config.timeout <= 0 || config.timeout > 500000) {
+    throw new Error('Timeout must be between 1ms and 500000ms (8 minutes)');
   }
 }
 

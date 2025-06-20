@@ -312,7 +312,7 @@ export class AzureOpenAIAdapter extends BaseAdapter {
       url: endpoint,
       headers,
       data,
-      timeout: this.config.timeout || 30000,
+      timeout: this.config.timeout || 500000,
       responseType: isStreaming ? 'stream' as const : 'json' as const
     };
 
