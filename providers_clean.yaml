@@ -202,7 +202,7 @@ providers:
         support_vision: false
         price_cached_token: null
       google/gemini-2.5-flash-lite-preview:
-        base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
+        base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi
         context: 1000
         price_per_input_token: 0.1
         price_per_output_token: 0.4
@@ -217,7 +217,7 @@ providers:
         support_vision: false
         price_cached_token: null
       google/gemini-2.5-pro:
-        base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
+        base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi
         context: 1048
         price_per_input_token: 1.25
         price_per_output_token: 10
@@ -232,7 +232,7 @@ providers:
         support_vision: false
         price_cached_token: null
       google/gemini-2.5-flash:
-        base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi/
+        base_url: https://us-central1-aiplatform.googleapis.com/v1beta1/projects/cs-poc-430lnj79urvf1fpvk3obdby/locations/us-central1/endpoints/openapi
         context: 1048
         price_per_input_token: 0.15
         price_per_output_token: 3.5
@@ -1490,7 +1490,7 @@ providers:
     provider_name: google
     models:
       google/gemini-2.5-flash-lite-preview:
-        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai
         context: 1000
         price_per_input_token: 0.1
         price_per_output_token: 0.4
@@ -1505,7 +1505,7 @@ providers:
         support_vision: false
         price_cached_token: null
       google/gemini-2.5-flash:
-        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai
         context: 2097
         price_per_input_token: 0.3
         price_per_output_token: 2.5
@@ -1520,7 +1520,7 @@ providers:
         support_vision: false
         price_cached_token: null
       google/gemini-2.5-pro:
-        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai
         context: 2097
         price_per_input_token: 1.25
         price_per_output_token: 10
@@ -1535,7 +1535,7 @@ providers:
         support_vision: false
         price_cached_token: null
       google/gemini-2.0-flash:
-        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai
         context: 1056
         price_per_input_token: 0.1
         price_per_output_token: 0.4
@@ -1550,7 +1550,7 @@ providers:
         support_vision: false
         price_cached_token: null
       google/gemini-2.0-flash-lite-preview:
-        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai
         context: 1048
         price_per_input_token: 0.075
         price_per_output_token: 0.15
@@ -1565,7 +1565,7 @@ providers:
         support_vision: false
         price_cached_token: null
       google/gemini-2.0-flash-thinking:
-        base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai
         context: 1048
         price_per_input_token: 0
         price_per_output_token: 0
