@@ -844,9 +844,12 @@ export class BedrockAdapter extends BaseAdapter {
       const event: BedrockStreamEvent = JSON.parse(chunk);
       const timestamp = Math.floor(Date.now() / 1000);
 
+      /**
       if (event) {
         console.log(`Received Bedrock stream event: ${JSON.stringify(event)}`);
       }
+         */
+
       
       // Message start - stocker les input_tokens mais ne pas renvoyer d'usage
       if (event.type === 'message_start' && event.message) {
@@ -856,7 +859,6 @@ export class BedrockAdapter extends BaseAdapter {
             input_tokens: event.message.usage.input_tokens || 0,
             cached_tokens: event.message.usage.cache_read_input_tokens || undefined
           };
-          console.log('🎯 Bedrock tokens stockés depuis message_start:', this.currentStreamTokens);
         }
         
         return {

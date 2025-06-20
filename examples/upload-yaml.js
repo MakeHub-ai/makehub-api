@@ -32,8 +32,7 @@ function convertPrice(yamlPrice) {
 // Fonction pour convertir le context window du YAML vers le format DB
 function convertContextWindow(yamlContext) {
   if (!yamlContext) return null;
-  // Si la valeur est déjà grande (>10000), on assume qu'elle est déjà en unités absolues
-  return yamlContext * 1e6; // Convertit en unités absolues (1M tokens)
+  return yamlContext * 1e3; // Convertit de k token vers token
 }
 
 /**

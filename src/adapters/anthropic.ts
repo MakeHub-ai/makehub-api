@@ -699,7 +699,6 @@ export class AnthropicAdapter extends BaseAdapter {
             input_tokens: event.message.usage.input_tokens || 0,
             cached_tokens: event.message.usage.cache_read_input_tokens || undefined
           };
-          console.log('🎯 Anthropic tokens stockés depuis message_start:', this.currentStreamTokens);
         }
         
         return {

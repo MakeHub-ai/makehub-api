@@ -697,9 +697,6 @@ export class VertexAnthropicAdapter extends BaseAdapter {
       const timestamp = Math.floor(Date.now() / 1000);
       const modelId = this.modelInfo?.model_id || event.message?.model || 'vertex-anthropic-model';
 
-      if (event.usage) {
-        console.log('Vertex Anthropic event usage:', event.type, event.usage);
-      }
 
       // Message start - stocker les input_tokens mais ne pas renvoyer d'usage
       if (event.type === 'message_start' && event.message) {

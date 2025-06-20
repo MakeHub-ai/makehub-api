@@ -494,7 +494,7 @@ chat.post('/completion', async (c: Context<{ Variables: HonoVariables }>) => {
 });
 
 /**
- * GET /chat/models
+ * GET /chat/models ou /models
  * Liste les modèles disponibles avec informations étendues
  */
 chat.get('/models', async (c: Context<{ Variables: HonoVariables }>) => {
