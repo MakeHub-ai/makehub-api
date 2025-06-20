@@ -258,9 +258,12 @@ chat.post('/completions', async (c: Context<{ Variables: HonoVariables }>) => {
     if (validatedRequest.stream) {
       // Définir les headers pour le streaming SSE
       c.header('Content-Type', 'text/event-stream');
-      c.header('Cache-Control', 'no-cache');
+      c.header('Cache-control', 'no-cache');
       c.header('Connection', 'keep-alive');
       c.header('X-Accel-Buffering', 'no'); // Nginx
+      
+      // Supprimer explicitement l'en-tête Content-Length pour le streaming
+      c.header('Content-Length', undefined);
       
       return stream(c, async (stream) => {
         try {
@@ -378,6 +381,9 @@ chat.post('/completion', async (c: Context<{ Variables: HonoVariables }>) => {
         c.header('Cache-Control', 'no-cache');
         c.header('Connection', 'keep-alive');
         c.header('X-Accel-Buffering', 'no');
+        
+        // Supprimer explicitement l'en-tête Content-Length pour le streaming
+        c.header('Content-Length', undefined);
         
         return stream(c, async (stream) => {
           try {
