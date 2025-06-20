@@ -66,6 +66,11 @@ export abstract class BaseAdapter implements AdapterInterface {
     let status: number | undefined;
     let errorDetails: { message?: string; code?: string; adapter?: string; provider?: string } = {};
 
+    // ECONNRESET = erreur réseau → autoriser le fallback
+    if (error instanceof Error && error.message.includes('ECONNRESET')) {
+      return false; // Fallback autorisé
+    }
+
     // Extraction du status et des détails selon le type d'erreur
     if (error instanceof AdapterError) {
       status = error.status;
