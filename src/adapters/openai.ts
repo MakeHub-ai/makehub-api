@@ -170,6 +170,17 @@ export class OpenAIAdapter extends BaseAdapter {
   handleError(error: unknown): AdapterError {
     if (axios.isAxiosError(error)) {
       const axiosError = error as AxiosError;
+
+      // Gestion spécifique de ECONNRESET
+      if (axiosError.code === 'ECONNRESET') {
+        return new AdapterError(
+          'Connection reset by provider - network or timeout issue',
+          503, // Service Unavailable pour déclencher le fallback
+          'NETWORK_ERROR',
+          'openai',
+          error
+        );
+      }
       
       if (axiosError.response) {
         const status = axiosError.response.status;
