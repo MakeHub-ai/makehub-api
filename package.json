@@ -7,20 +7,19 @@
     "node": "18.x"
   },
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "prestart": "npm run build",
-    "type-check": "tsc --noEmit",
+    "dev": "bun --watch src/index.ts",
+    "build": "bun run tsc",
+    "start": "bun dist/index.js",
+    "prestart": "bun run build",
+    "type-check": "bun run tsc --noEmit",
     "clean": "rm -rf dist",
-    "prebuild": "npm run clean",
-    "start:prod": "npm ci --omit=dev && npm run build && npm start"
+    "prebuild": "bun run clean",
+    "start:prod": "bun install --omit=dev && bun run build && bun start"
   },
   "dependencies": {
     "@anthropic-ai/vertex-sdk": "^0.11.4",
     "@aws-sdk/client-bedrock-runtime": "^3.821.0",
     "@aws-sdk/credential-provider-env": "^3.821.0",
-    "@hono/node-server": "^1.8.0",
     "@supabase/supabase-js": "^2.38.0",
     "axios": "^1.6.0",
     "dotenv": "^16.3.0",
@@ -29,14 +28,15 @@
     "js-yaml": "^4.1.0",
     "node-cache": "^5.1.2",
     "tiktoken": "^1.0.0",
-    "uuid": "^9.0.0",
-    "zod": "^3.22.0",
     "tsx": "^4.6.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "uuid": "^9.0.0",
+    "zod": "^3.22.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.0",
     "@types/node": "^20.10.0",
-    "@types/uuid": "^9.0.0"
+    "@types/uuid": "^9.0.0",
+    "bun-types": "^1.2.17"
   }
 }

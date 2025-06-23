@@ -1,9 +1,8 @@
+/// <reference types="bun-types" />
 import { Hono } from 'hono';
-import { serve } from '@hono/node-server';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
-import dotenv from 'dotenv';
 import type { Context, Next } from 'hono';
 import type { HonoVariables, ApiError } from './types/index.js';
 
@@ -23,9 +22,6 @@ interface ExtendedApiError {
     available_endpoints?: string[];
   };
 }
-
-// Charger les variables d'environnement
-dotenv.config();
 
 // Importer les routes
 import chatRoutes from './routes/chat.js';
@@ -196,7 +192,7 @@ app.onError((err: Error, c: Context) => {
 // Route de santé générale avec informations détaillées
 app.get('/', (c: Context) => {
   const serverInfo: ServerInfo = {
-    name: 'Makehub LLM API Gateway',
+    name: 'Makehub LLM API Gateway Azure Version',
     version: '2.0.0-typescript',
     status: serverStatus,
     environment: process.env.NODE_ENV || 'development',
@@ -291,64 +287,11 @@ if (isNaN(port) || port < 1 || port > 65535) {
 }
 
 /**
- * Gestionnaire de signaux pour un arrêt propre
+ * Interface pour les options du serveur
  */
-function setupGracefulShutdown(): void {
-  const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM', 'SIGUSR2'];
-  
-  signals.forEach((signal) => {
-    process.on(signal, async () => {
-      console.log(`\n📴 Received ${signal}. Starting graceful shutdown...`);
-      serverStatus = 'stopping';
-      
-      try {
-        // Attendre un peu pour que les requêtes en cours se terminent
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        console.log('✅ Graceful shutdown completed');
-        process.exit(0);
-      } catch (error) {
-        console.error('❌ Error during graceful shutdown:', error);
-        process.exit(1);
-      }
-    });
-  });
-}
-
-/**
- * Gestionnaire d'erreurs non capturées
- */
-function setupErrorHandlers(): void {
-  process.on('uncaughtException', (error: Error) => {
-    console.error('💥 Uncaught Exception:', {
-      message: error.message,
-      stack: error.stack,
-      timestamp: new Date().toISOString()
-    });
-    
-    // En production, on essaie un arrêt propre
-    if (process.env.NODE_ENV === 'production') {
-      setTimeout(() => process.exit(1), 1000);
-    } else {
-      process.exit(1);
-    }
-  });
-
-  process.on('unhandledRejection', (reason: unknown, promise: Promise<any>) => {
-    console.error('🔥 Unhandled Rejection:', {
-      reason: reason instanceof Error ? reason.message : String(reason),
-      stack: reason instanceof Error ? reason.stack : undefined,
-      promise: promise.toString(),
-      timestamp: new Date().toISOString()
-    });
-    
-    // En production, on essaie un arrêt propre
-    if (process.env.NODE_ENV === 'production') {
-      setTimeout(() => process.exit(1), 1000);
-    } else {
-      process.exit(1);
-    }
-  });
+interface ServerOptions {
+  port: number;
+  host: string;
 }
 
 /**
@@ -363,24 +306,15 @@ function displayStartupInfo(): void {
     console.log('');
     console.log('🔧 Running in development mode');
   }
-  }
-
-/**
- * Interface pour les options du serveur
- */
-interface ServerOptions {
-  port: number;
-  host: string;
 }
 
 /**
- * Fonction principale de démarrage
+ * Fonction principale de démarrage avec Bun
  */
 async function startServer(options?: Partial<ServerOptions>): Promise<void> {
   try {
     // Configuration des gestionnaires
-    setupGracefulShutdown();
-    setupErrorHandlers();
+    setupBunGracefulShutdown();
     
     // Affichage des informations
     displayStartupInfo();
@@ -388,43 +322,90 @@ async function startServer(options?: Partial<ServerOptions>): Promise<void> {
     const serverPort = options?.port || port;
     const serverHost = options?.host || host;
     
-    // Démarrage du serveur
-    const server = serve({
-      fetch: app.fetch,
+    // Démarrage du serveur avec Bun
+    const server = Bun.serve({
       port: serverPort,
-      hostname: serverHost
-    }, (info) => {
-      serverStatus = 'running';
+      hostname: serverHost,
+      fetch: app.fetch,
+      error: (error: Error) => {
+        console.error('🚨 Bun server error:', {
+          message: error.message,
+          stack: error.stack,
+          timestamp: new Date().toISOString()
+        });
+        return new Response('Internal Server Error', { status: 500 });
+      }
     });
     
-    // Retourner une promesse qui ne se résout jamais (serveur en continu)
-    return new Promise(() => {
-      // Le serveur tourne indéfiniment jusqu'à un signal d'arrêt
-    });
+    serverStatus = 'running';
+    
+    console.log(`🚀 Server running at http://${serverHost}:${serverPort}`);
     
   } catch (error) {
-    console.error('❌ Failed to start server:', error);
+    console.error('❌ Failed to start Bun server:', error);
     process.exit(1);
   }
 }
 
-// Démarrage du serveur seulement si ce fichier est exécuté directement
-if (import.meta.url === `file://${process.argv[1]}`) {
-  startServer().catch((error) => {
-    console.error('💥 Server startup failed:', error);
-    process.exit(1);
+/**
+ * Gestionnaire de signaux pour un arrêt propre avec Bun
+ */
+function setupBunGracefulShutdown(): void {
+  const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM', 'SIGUSR2'];
+  
+  signals.forEach((signal) => {
+    process.on(signal, async () => {
+      console.log(`\n📴 Received ${signal}. Starting graceful shutdown...`);
+      serverStatus = 'stopping';
+      
+      try {
+        // Bun handles graceful shutdown automatically
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log('✅ Graceful shutdown completed');
+        process.exit(0);
+      } catch (error) {
+        console.error('❌ Error during graceful shutdown:', error);
+        process.exit(1);
+      }
+    });
   });
 }
 
-// Export par défaut pour les tests
-export default app;
+// Configuration des gestionnaires de signaux (une seule fois)
+if (!(globalThis as any).__bunServerInitialized) {
+  setupBunGracefulShutdown();
+  (globalThis as any).__bunServerInitialized = true;
+}
+
+// Export par défaut pour Bun (gestion automatique du serveur)
+export default {
+  port: port,
+  hostname: host,
+  fetch: app.fetch,
+  error: (error: Error) => {
+    console.error('🚨 Bun server error:', {
+      message: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
+    return new Response('Internal Server Error', { status: 500 });
+  },
+  development: process.env.NODE_ENV === 'development'
+};
+
+// Affichage des informations de démarrage (une seule fois)
+if (!(globalThis as any).__startupInfoDisplayed) {
+  displayStartupInfo();
+  console.log(`🚀 Server running at http://${host}:${port}`);
+  (globalThis as any).__startupInfoDisplayed = true;
+}
+
+serverStatus = 'running';
 
 // Exports nommés pour les utilitaires
 export { 
+  app,
   getUptime, 
-  getSystemStats,
   startServer,
-  type ServerInfo, 
-  type ServerStats,
-  type ServerOptions
+  type ServerInfo
 };
