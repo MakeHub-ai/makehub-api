@@ -68,6 +68,7 @@ export interface StandardRequest {
   tool_choice?: ToolChoice;
   user?: string;
   provider?: string | string[]; // Provider(s) to use for this request
+  _routingInfo?: RoutingInfo; // AJOUTÉ pour Family Model Routing
 }
 
 /**
@@ -117,6 +118,7 @@ export interface Usage {
   prompt_tokens?: number;
   completion_tokens?: number;
   total_tokens?: number;
+  cost?: number;
   cached_tokens?: number;
   input_tokens?: number;
   output_tokens?: number;
@@ -275,7 +277,6 @@ export interface ModelVectorScore {
   hasSufficientMetrics: boolean;     // true si assez de données perf
 }
 
-// MODIFIER l'interface FilterOptions existante :
 interface FilterOptions {
   requireToolCalling?: boolean;
   requireVision?: boolean;
@@ -283,4 +284,59 @@ interface FilterOptions {
   providers?: string[];
   ratio_sp?: number;                 // AJOUTER cette ligne
   metricsWindowSize?: number;        // AJOUTER cette ligne
+}
+
+/**
+ * Types pour Family Model Routing
+ */
+export interface FamilyConfig {
+  family_id: string;
+  display_name: string;
+  description?: string;
+  evaluation_model_id: string;
+  evaluation_provider: string;
+  is_active: boolean;
+  routing_config: {
+    score_ranges: Array<{
+      min_score: number;
+      max_score: number;
+      target_model: string;
+      reason: string;
+    }>;
+    fallback_model: string;
+    fallback_provider: string;
+    cache_duration_minutes: number;
+    evaluation_timeout_ms: number;
+    evaluation_prompt?: string;
+  };
+}
+
+export interface RoutingResult {
+  selectedModel: string;
+  selectedProvider: string;
+  complexityScore: number;
+  reasoning: string;
+  evaluationCost: number;
+  evaluationTokens: number;
+  fromCache: boolean;
+}
+
+export interface RoutingInfo {
+  originalFamily: string;
+  selectedModel: string;
+  selectedProvider: string;
+  complexityScore: number;
+  evaluationCost: number;
+  evaluationTokens: number;
+  reasoning: string;
+}
+
+export interface ComplexityEvaluation {
+  score: number;
+  cost: number;
+  tokens: {
+    input: number;
+    output: number;
+    total: number;
+  };
 }

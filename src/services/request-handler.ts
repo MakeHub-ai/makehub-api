@@ -607,46 +607,31 @@ export class RequestHandler {
       let usage: Usage | null = null;
 
       if (!isStreaming && !Array.isArray(responseDataOrChunks)) {
-        // For non-streaming, use the response data directly
         responseJson = responseDataOrChunks;
         usage = responseDataOrChunks.usage || null;
       } else if (isStreaming && Array.isArray(responseDataOrChunks) && responseDataOrChunks.length > 0) {
-        // For streaming, reconstruct the complete response from chunks
         let reconstructedContent = '';
         let finalChunk: ChatCompletionChunk | null = null;
         let responseId: string | null = null;
         let model = combination.modelId;
         
-        // Process all chunks to reconstruct the response
         for (const chunk of responseDataOrChunks) {
-          if (chunk.id) {
-            responseId = chunk.id;
-          }
-          if (chunk.model) {
-            model = chunk.model;
-          }
+          if (chunk.id) responseId = chunk.id;
+          if (chunk.model) model = chunk.model;
           
-          // Extract content from chunk
           if (chunk.choices && chunk.choices[0] && chunk.choices[0].delta) {
             const delta = chunk.choices[0].delta;
-            if (delta.content) {
-              reconstructedContent += delta.content;
-            }
+            if (delta.content) reconstructedContent += delta.content;
           }
           
-          // Check if this is the final chunk (contains usage or finish_reason)
           if (chunk.choices && chunk.choices[0] && 
               (chunk.choices[0].finish_reason || chunk.usage)) {
             finalChunk = chunk;
           }
           
-          // Extract usage from chunk if present
-          if (chunk.usage) {
-            usage = chunk.usage;
-          }
+          if (chunk.usage) usage = chunk.usage;
         }
         
-        // Reconstruct a complete chat completion response
         responseJson = {
           id: responseId || `chatcmpl-${requestId}`,
           object: 'chat.completion',
@@ -671,7 +656,6 @@ export class RequestHandler {
       const endTime = Date.now();
       const totalDuration = endTime - startTime;
 
-      // Extraire les tokens depuis les données d'usage collectées
       let inputTokens: number | null = null;
       let outputTokens: number | null = null;
       let cachedTokens: number | null = null;
@@ -680,6 +664,26 @@ export class RequestHandler {
         inputTokens = usage.prompt_tokens || usage.input_tokens || null;
         outputTokens = usage.completion_tokens || usage.output_tokens || null;
         cachedTokens = usage.cached_tokens || null;
+      }
+
+      // 🆕 CALCULER LE COÛT TOTAL (requête principale + évaluation famille)
+      let mainRequestCost = 0;
+      if (inputTokens && outputTokens) {
+        const inputCost = (inputTokens * combination.model.price_per_input_token) / 1000;
+        const outputCost = (outputTokens * combination.model.price_per_output_token) / 1000;
+        mainRequestCost = inputCost + outputCost;
+      }
+
+      // Ajouter le coût d'évaluation si présent
+      const routingInfo = (request as any)._routingInfo;
+      let totalTransactionCost = mainRequestCost;
+      let transactionDescription = `Request to ${combination.modelId}`;
+
+      if (routingInfo) {
+        totalTransactionCost += routingInfo.evaluationCost;
+        transactionDescription = `Request to ${combination.modelId} (via ${routingInfo.originalFamily} routing, complexity: ${routingInfo.complexityScore})`;
+        
+        console.log(`💰 Family routing cost: +$${routingInfo.evaluationCost.toFixed(6)} for evaluation (${routingInfo.evaluationTokens} tokens)`);
       }
 
       // 1. Insérer dans la table requests
@@ -696,7 +700,8 @@ export class RequestHandler {
           output_tokens: outputTokens,
           cached_tokens: cachedTokens,
           status: 'ready_to_compute',
-          streaming: isStreaming
+          streaming: isStreaming,
+          family_routing_info: routingInfo || null // 🆕 Stocker les infos de routing
         })
         .select()
         .single();
@@ -706,7 +711,7 @@ export class RequestHandler {
         return; 
       }
 
-      // 2. Insérer le contenu de la requête avec la réponse complète
+      // 2. Insérer le contenu de la requête
       try {
         await supabase
           .from('requests_content')
@@ -719,7 +724,7 @@ export class RequestHandler {
         console.error(`Failed to insert into requests_content for ${requestId}:`, contentError);
       }
       
-      // 3. Insérer les métriques seulement si c'est en streaming
+      // 3. Insérer les métriques pour le streaming
       if (isStreaming) {
         let calculated_throughput_tokens_s: number | null = null;
         let is_metrics_actually_calculated = false;
@@ -746,13 +751,28 @@ export class RequestHandler {
           });
       }
 
+      // 4. 🆕 CRÉER UNE SEULE TRANSACTION AVEC LE COÛT TOTAL
+      if (totalTransactionCost > 0) {
+        await supabase
+          .from('transactions')
+          .insert({
+            user_id: authData.user.id,
+            amount: totalTransactionCost,
+            type: 'debit',
+            request_id: requestId,
+            description: transactionDescription
+          });
+
+        console.log(`💰 Total transaction cost: $${totalTransactionCost.toFixed(6)} (main: $${mainRequestCost.toFixed(6)}${routingInfo ? `, evaluation: $${routingInfo.evaluationCost.toFixed(6)}` : ''})`);
+      }
+
       // Mettre à jour l'usage de la clé API
       if (authData.apiKey?.name) {
         await updateApiKeyUsage(authData.user.id, authData.apiKey.name);
       }
 
       // Déclencher le webhook pour traiter cette requête réussie
-      triggerWebhookAsync(2000); // 2 secondes de délai
+      triggerWebhookAsync(2000);
 
     } catch (error) {
       console.error('Failed to log successful request:', error);

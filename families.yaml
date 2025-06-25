@@ -1,0 +1,134 @@
+# Configuration des familles de modèles pour le routing intelligent
+# Basé sur le système Family Model Routing
+
+metadata:
+  version: "2.0.0"
+  created_at: "2025-01-24"
+  updated_at: "2025-01-24"
+  description: "Intelligent model routing families using latest models only"
+  default_evaluation_model: "mistral/devstral-small-fp8"
+  default_evaluation_provider: "deepinfra"
+
+settings:
+  max_families_per_user: 5
+  max_evaluation_time_ms: 3000
+  default_cache_duration_minutes: 60
+  enable_fallback_routing: true
+  log_evaluation_costs: true
+  hide_evaluation_from_user_logs: true
+  provider_selection_strategy: "filterProvider_algorithm"
+
+families:
+  anthropic/family:
+    display_name: "Anthropic Claude Router"
+    description: "Intelligent routing between latest Claude models based on task complexity"
+    evaluation_model_id: "mistral/devstral-small-fp8"
+    evaluation_provider: "deepinfra"
+    is_active: true
+    routing_config:
+      score_ranges:
+        - min_score: 1
+          max_score: 50
+          target_model: "anthropic/claude-3-5-haiku"
+          reason: "Simple tasks - fast and cost-effective responses"
+        - min_score: 51
+          max_score: 100
+          target_model: "anthropic/claude-4-sonnet"
+          reason: "Complex reasoning - balanced performance and cost"
+      fallback_model: "anthropic/claude-4-sonnet"
+      fallback_provider: "anthropic"
+      cache_duration_minutes: 60
+      evaluation_timeout_ms: 2000
+      evaluation_prompt: "Rate the complexity of this AI task on a scale of 1-100, considering: request length, reasoning required, tool usage, and technical depth. Respond with only the number."
+
+  openai/family:
+    display_name: "OpenAI GPT Router"
+    description: "Smart routing between latest OpenAI models"
+    evaluation_model_id: "mistral/devstral-small-fp8"
+    evaluation_provider: "deepinfra"
+    is_active: true
+    routing_config:
+      score_ranges:
+        - min_score: 1
+          max_score: 40
+          target_model: "openai/gpt-4.1-mini"
+          reason: "Standard tasks - efficient and fast"
+        - min_score: 41
+          max_score: 75
+          target_model: "openai/gpt-4.1"
+          reason: "Advanced tasks - strong reasoning capabilities"
+        - min_score: 76
+          max_score: 100
+          target_model: "openai/o3"
+          reason: "Expert-level reasoning and problem solving"
+      fallback_model: "openai/gpt-4o"
+      fallback_provider: "openai"
+      cache_duration_minutes: 45
+      evaluation_timeout_ms: 1500
+
+  meta/family:
+    display_name: "Meta Llama Router"
+    description: "Routing between latest Llama models for open-source excellence"
+    evaluation_model_id: "mistral/devstral-small-fp8"
+    evaluation_provider: "deepinfra"
+    is_active: true
+    routing_config:
+      score_ranges:
+        - min_score: 1
+          max_score: 60
+          target_model: "meta/Llama-4-Scout-17B-16E-fp8"
+          reason: "Standard tasks - excellent balance of speed and capability"
+        - min_score: 61
+          max_score: 100
+          target_model: "meta/Llama-4-Maverick-17B-128E-fp8"
+          reason: "Complex tasks - latest Llama 4 Scout technology"
+      fallback_model: "meta/Llama-3.3-70B-fp8"
+      fallback_provider: "deepinfra"
+      cache_duration_minutes: 30
+      evaluation_timeout_ms: 1500
+
+  deepseek/family:
+    display_name: "DeepSeek Router"
+    description: "Route between latest DeepSeek models for optimal reasoning"
+    evaluation_model_id: "mistral/devstral-small-fp8"
+    evaluation_provider: "deepinfra"
+    is_active: true
+    routing_config:
+      score_ranges:
+        - min_score: 1
+          max_score: 60
+          target_model: "deepseek/deepseek-V3-0324-fp8"
+          reason: "Standard reasoning - fast and efficient V3 model"
+        - min_score: 61
+          max_score: 100
+          target_model: "deepseek/deepseek-R1-05-28-fp8"
+          reason: "Complex reasoning - advanced R1 reasoning capabilities"
+      fallback_model: "deepseek/deepseek-V3-fp8"
+      fallback_provider: "deepinfra"
+      cache_duration_minutes: 40
+      evaluation_timeout_ms: 1500
+
+  google/family:
+    display_name: "Google Gemini Router"
+    description: "Smart routing across latest Google Gemini models"
+    evaluation_model_id: "mistral/devstral-small-fp8"
+    evaluation_provider: "deepinfra"
+    is_active: true
+    routing_config:
+      score_ranges:
+        - min_score: 1
+          max_score: 50
+          target_model: "google/gemini-2.5-flash-lite-preview"
+          reason: "Fast tasks - optimized for speed with latest 2.5 features"
+        - min_score: 51
+          max_score: 70
+          target_model: "google/gemini-2.5-flash"
+          reason: "Balanced tasks - good performance and cost efficiency"
+        - min_score: 71
+          max_score: 100
+          target_model: "google/gemini-2.5-pro"
+          reason: "Expert-level tasks - latest Gemini 2.5 capabilities"
+      fallback_model: "google/gemini-2.5-flash"
+      fallback_provider: "google"
+      cache_duration_minutes: 35
+      evaluation_timeout_ms: 1800

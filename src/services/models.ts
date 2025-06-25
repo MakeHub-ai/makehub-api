@@ -1,5 +1,6 @@
 import { supabase } from '../config/database.js';
 import { modelsCache, cacheUtils } from '../config/cache.js';
+import { familyRoutingService } from './family-routing.js';
 import type { 
   Model, 
   StandardRequest, 
@@ -405,6 +406,63 @@ export async function filterProviders(
   filterOptions: FilterOptions = {}
 ): Promise<ProviderCombination[]> {
   
+  const { model: requestedModel } = request;
+  const modelId = typeof requestedModel === 'string' ? requestedModel : requestedModel?.model_id;
+  
+  if (!modelId) {
+    throw new Error('model_id is required and must be specified');
+  }
+
+  // 🆕 VÉRIFIER SI C'EST UNE FAMILLE
+  if (await familyRoutingService.isFamilyModel(modelId)) {
+    console.log(`🔀 Routing family model: ${modelId}`);
+    
+    try {
+      // Évaluer et router
+      const routingResult = await familyRoutingService.evaluateAndRoute(modelId, request);
+      
+      console.log(`🎯 Routed to: ${routingResult.selectedModel} (score: ${routingResult.complexityScore}, ${routingResult.fromCache ? 'cached' : 'evaluated'})`);
+      
+      // Modifier la requête pour utiliser le modèle sélectionné
+      const modifiedRequest: StandardRequest = {
+        ...request,
+        model: routingResult.selectedModel,
+        provider: [routingResult.selectedProvider],
+        _routingInfo: {
+          originalFamily: modelId,
+          selectedModel: routingResult.selectedModel,
+          selectedProvider: routingResult.selectedProvider,
+          complexityScore: routingResult.complexityScore,
+          evaluationCost: routingResult.evaluationCost,
+          evaluationTokens: routingResult.evaluationTokens,
+          reasoning: routingResult.reasoning
+        }
+      };
+      
+      // Continuer avec la logique normale en utilisant le modèle sélectionné
+      return await filterProvidersNormal(modifiedRequest, userId, userPreferences, filterOptions);
+      
+    } catch (error) {
+      console.error(`❌ Family routing failed for ${modelId}:`, error);
+      throw new Error(`Family routing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+  
+  // Logique normale pour les modèles non-famille
+  return await filterProvidersNormal(request, userId, userPreferences, filterOptions);
+}
+
+// RENOMMER la logique existante de filterProviders en filterProvidersNormal
+async function filterProvidersNormal(
+  request: StandardRequest, 
+  userId: string,
+  userPreferences: UserPreferences = {},
+  filterOptions: FilterOptions = {}
+): Promise<ProviderCombination[]> {
+  // COPIER ICI TOUT LE CONTENU ACTUEL DE LA FONCTION filterProviders
+  // (depuis "const { model: requestedModel } = request;" jusqu'à la fin)
+  // SAUF la déclaration des paramètres qui sont déjà définis ci-dessus
+
   const { 
     model: requestedModel,
     tools = null

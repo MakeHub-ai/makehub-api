@@ -44,6 +44,11 @@ export type {
   ProviderCombination,
   ModelPerformanceMetrics,
   ModelVectorScore,
+  // Family Model Routing types
+  FamilyConfig,
+  RoutingResult,
+  RoutingInfo,
+  ComplexityEvaluation,
 } from './requests.js';
 
 

@@ -7,7 +7,7 @@ const API_KEY = process.env.API_KEY_MAKEHUB || 'test-api-key-123';
 
 
 const requestBody = {
-  model: "anthropic/claude-4-sonnet",
+  model: "anthropic/family", // Replace with the actual model you want to test
   messages: [
     { role: "user", content: "Hello, who are you?" }
   ],
