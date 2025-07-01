@@ -116,8 +116,11 @@ export class FamilyRoutingService {
    */
   private async compressMessages(messages: any[]): Promise<any[]> {
     if (!messages || messages.length <= 3) {
+      console.log(`[FamilyRoutingService] compressMessages: Skipping compression (${messages?.length || 0} messages, minimum required: 4)`);
       return messages; // Ne pas compresser si trop peu de messages
     }
+
+    console.log(`[FamilyRoutingService] compressMessages: Starting compression of ${messages.length} messages`);
 
     try {
       // Configuration du modèle de compression (hardcodé)
@@ -244,12 +247,16 @@ export class FamilyRoutingService {
       // 7. Filtrer les messages (en gardant les index 0-based)
       const compressedMessages = messages.filter((_, index) => !toRemove.has(index + 1));
       
-      console.log(`[FamilyRoutingService] compressMessages: Removed ${messages.length - compressedMessages.length} messages (${Array.from(toRemove).join(',')})`);
+      const removedCount = messages.length - compressedMessages.length;
+      const removedNumbers = Array.from(toRemove).sort((a, b) => a - b);
+      
+      console.log(`[FamilyRoutingService] compressMessages: Successfully removed ${removedCount} messages (numbers: ${removedNumbers.join(', ')}) - ${messages.length} → ${compressedMessages.length} messages`);
       
       return compressedMessages;
 
     } catch (error) {
       console.error('[FamilyRoutingService] Message compression failed:', error);
+      console.log(`[FamilyRoutingService] compressMessages: Fallback - returning original ${messages.length} messages`);
       return messages; // Retourner les messages originaux en cas d'erreur
     }
   }
@@ -358,12 +365,18 @@ export class FamilyRoutingService {
 
       // Appliquer la compression puis la troncature des messages
       let processedMessages = request.messages || [];
+      const originalCount = processedMessages.length;
       
       if (compress) {
         processedMessages = await this.compressMessages(processedMessages);
       }
       
       const truncatedMessages = this.truncateMessages(processedMessages);
+      const finalCount = truncatedMessages.length;
+
+      if (compress && originalCount !== finalCount) {
+        console.log(`[FamilyRoutingService] evaluateComplexity: Message processing completed - ${originalCount} → ${finalCount} messages`);
+      }
 
       const evaluationRequest: StandardRequest = {
         model: model.provider_model_id,
@@ -434,10 +447,14 @@ export class FamilyRoutingService {
           total: inputTokens + outputTokens
         }
       };
+
+      console.log(`[FamilyRoutingService] evaluateComplexity: Complexity score = ${finalScore}/100 (cost: $${evaluationCost.toFixed(6)}, tokens: ${inputTokens + outputTokens})`);
+      
       return evalResult;
 
     } catch (error) {
       console.error('[FamilyRoutingService] Evaluation failed:', error);
+      console.log(`[FamilyRoutingService] evaluateComplexity: Using fallback complexity score = 50/100`);
       // Fallback en cas d'erreur
       return {
         score: 50,

@@ -187,3 +187,5 @@ venv/
 makehub-api.service
 manage-service.sh
 SERVICE_README.md
+
+deploy.sh
