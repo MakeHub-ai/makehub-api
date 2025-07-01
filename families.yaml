@@ -20,15 +20,15 @@ settings:
 
 families:
 
-  MakeHub_Opti/family:
-    display_name: "Anthropic Claude Router"
-    description: "Intelligent routing between latest Claude models based on task complexity"
+  makehub/family:
+    display_name: "Makehub Router"
+    description: "Smart routing for Makehub models based on task complexity"
     evaluation_model_id: "mistral/devstral-small-fp8"
     evaluation_provider: "deepinfra"
     is_active: true
     routing_config:
       score_ranges:
-        - min_score: 0
+        - min_score: 1
           max_score: 20
           target_model: "google/gemini-2.5-flash-lite-preview"
           reason: "Simple tasks - fast and cost-effective responses"
