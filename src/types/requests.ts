@@ -55,6 +55,10 @@ export type ToolChoice =
  * Requête standardisée pour tous les providers
  */
 export interface StandardRequest {
+  /**
+   * Si présent et true, compresser les messages avant routage.
+   */
+  compression?: boolean;
   model?: string | Model;
   messages: ChatMessage[];
   stream?: boolean;

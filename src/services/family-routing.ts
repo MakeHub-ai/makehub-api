@@ -3,6 +3,7 @@
 import { supabase } from '../config/database.js';
 import { createAdapter } from '../adapters/index.js';
 import type { StandardRequest, FamilyConfig, RoutingResult, ComplexityEvaluation } from '../types/index.js';
+import { ta } from 'zod/v4/locales';
 
 export class FamilyRoutingService {
   private readonly memoryCache = new Map<string, { result: RoutingResult; expiresAt: number }>();
@@ -52,6 +53,13 @@ export class FamilyRoutingService {
     familyId: string, 
     request: StandardRequest
   ): Promise<RoutingResult> {
+
+    // Compression conditionnelle si champ présent
+    if (request.compression === true) {
+      if (Array.isArray(request.messages)) {
+        request.messages = await this.compressMessages(request.messages);
+      }
+    }
 
     // 1. Récupérer la config de la famille
     const config = await this.getFamilyConfig(familyId);
@@ -104,11 +112,193 @@ export class FamilyRoutingService {
   }
 
   /**
+   * Compresse les messages en identifiant ceux qui peuvent être supprimés
+   */
+  private async compressMessages(messages: any[]): Promise<any[]> {
+    if (!messages || messages.length <= 3) {
+      return messages; // Ne pas compresser si trop peu de messages
+    }
+
+    try {
+      // Configuration du modèle de compression (hardcodé)
+      const compressionModelId = "mistral/devstral-small-fp8";
+      const compressionProvider = "deepinfra";
+
+      // 1. Récupérer la config du modèle de compression avec cache
+      const cacheKey = `${compressionModelId}:${compressionProvider}`;
+      let model = this.modelConfigCache.get(cacheKey);
+
+      if (!model) {
+        const { data, error } = await supabase
+          .from('models')
+          .select('*')
+          .eq('model_id', compressionModelId)
+          .eq('provider', compressionProvider)
+          .maybeSingle();
+
+        if (error || !data) {
+          console.warn(`[FamilyRoutingService] compressMessages: Model not found, skipping compression`);
+          return messages;
+        }
+        model = data;
+        this.modelConfigCache.set(cacheKey, model);
+      }
+
+      // 2. Construire la config de l'adapter
+      let apiKey: string | undefined;
+      if (model.api_key_name) {
+        apiKey = process.env[model.api_key_name];
+      }
+
+      const adapterConfig = {
+        apiKey,
+        baseURL: model.base_url,
+        ...model.extra_param
+      };
+
+      // Tronquer les messages si nécessaire
+      messages = this.truncateMessages(messages, 10000); // Limite arbitraire
+
+      // 3. Instancier l'adapter
+      const adapter = createAdapter(model.adapter, adapterConfig);
+
+      // 4. Numéroter les messages et créer le prompt
+      const numberedMessages = messages.map((msg, index) => ({
+        number: index + 1,
+        role: msg.role,
+        content: msg.content
+      }));
+
+      const compressionPrompt = `Analyze this conversation and identify which messages can be safely removed without losing important context or breaking the conversation flow.
+
+      **Guidelines:**
+      - Keep the first message (usually system prompt)
+      - Keep the last 2-3 messages (current context)
+      - Remove redundant messages, acknowledgments, or messages that don't add value
+      - Keep messages that introduce new topics or contain important information
+      - Preserve the logical flow of the conversation
+
+      **Messages:**
+      ${numberedMessages.map(msg => `${msg.number}. [${msg.role}]: ${msg.content}`).join('\n')}
+
+      Respond with ONLY the numbers of messages to REMOVE, separated by commas. Examples:
+      - "2,4,7" (remove messages 2, 4, and 7)
+      - "3-6,9" (remove messages 3 through 6, and message 9)
+      - "none" (if no messages should be removed)
+
+      Response:`;
+
+      const compressionRequest: StandardRequest = {
+        model: model.provider_model_id,
+        messages: [
+          {
+            role: 'user',
+            content: compressionPrompt
+          }
+        ],
+        max_tokens: 50,
+        temperature: 0
+      };
+
+      // 5. Faire la requête de compression
+      const response = await adapter.makeRequest(
+        compressionRequest,
+        model.provider_model_id,
+        false
+      );
+
+      if ('data' in response) {
+        throw new Error('Unexpected streaming response for compression');
+      }
+
+      // 6. Parser la réponse pour identifier les messages à supprimer
+      const content = response.choices[0]?.message?.content?.trim().toLowerCase() || 'none';
+      
+      if (content === 'none' || content === '') {
+        return messages;
+      }
+
+      const toRemove = new Set<number>();
+      
+      // Parser les numéros (ex: "1,2,3" ou "1-5,8")
+      const parts = content.split(',');
+      for (const part of parts) {
+        const trimmed = part.trim();
+        if (trimmed.includes('-')) {
+          // Range (ex: "3-6")
+          const [start, end] = trimmed.split('-').map(n => parseInt(n));
+          if (!isNaN(start) && !isNaN(end)) {
+            for (let i = start; i <= end; i++) {
+              toRemove.add(i);
+            }
+          }
+        } else {
+          // Single number
+          const num = parseInt(trimmed);
+          if (!isNaN(num)) {
+            toRemove.add(num);
+          }
+        }
+      }
+
+      // 7. Filtrer les messages (en gardant les index 0-based)
+      const compressedMessages = messages.filter((_, index) => !toRemove.has(index + 1));
+      
+      console.log(`[FamilyRoutingService] compressMessages: Removed ${messages.length - compressedMessages.length} messages (${Array.from(toRemove).join(',')})`);
+      
+      return compressedMessages;
+
+    } catch (error) {
+      console.error('[FamilyRoutingService] Message compression failed:', error);
+      return messages; // Retourner les messages originaux en cas d'erreur
+    }
+  }
+
+  /**
+   * Tronque les messages trop longs pour respecter la limite de tokens
+   */
+  private truncateMessages(messages: any[], maxTotalTokens: number = 128000): any[] {
+    if (!messages || messages.length === 0) return messages;
+
+    // Calculer la limite par message en fonction du nombre de messages
+    const maxTokensPerMessage = Math.min(5000, Math.floor(maxTotalTokens / messages.length));
+    
+    return messages.map(message => {
+      if (!message.content || typeof message.content !== 'string') {
+        return message;
+      }
+
+      const estimatedTokens = this.estimateTokens(message.content);
+      
+      if (estimatedTokens <= maxTokensPerMessage) {
+        return message;
+      }
+
+      // Calculer la taille à garder (début + fin)
+      const targetLength = Math.floor(maxTokensPerMessage * 4); // Approximation inverse des tokens
+      const keepStart = Math.floor(targetLength * 0.6); // 60% du début
+      const keepEnd = Math.floor(targetLength * 0.4); // 40% de la fin
+      
+      const content = message.content;
+      const truncatedContent = 
+        content.substring(0, keepStart) + 
+        '\n\n[... contenu tronqué ...]\n\n' + 
+        content.substring(content.length - keepEnd);
+
+      return {
+        ...message,
+        content: truncatedContent
+      };
+    });
+  }
+
+  /**
    * Évalue la complexité d'une requête (SANS LOGGING EN DB)
    */
   private async evaluateComplexity(
     request: StandardRequest, 
-    config: FamilyConfig
+    config: FamilyConfig,
+    compress: boolean = true
   ): Promise<ComplexityEvaluation> {
     try {
 
@@ -149,9 +339,31 @@ export class FamilyRoutingService {
       // 3. Instancier dynamiquement l'adapter
       const adapter = createAdapter(model.adapter, adapterConfig);
 
-      // 4. Construire le prompt d'évaluation
-      const evaluationPrompt = config.routing_config.evaluation_prompt || 
-        "Rate the complexity of this AI task on a scale of 1-100, considering: request length, reasoning required, tool usage, and technical depth. Respond with only the number.";
+      const evaluationPrompt = `Rate the complexity (1-100) of what the AI assistant is about to do in its response.
+
+      **Analyze the assistant's intended action:**
+      - Is it about to analyze/discover/investigate something complex?
+      - Is it planning or architecting a solution?
+      - Is it implementing something with a clear path forward?
+      - Is it applying a fix that was already identified?
+
+      **Context clues from the conversation:**
+      - What groundwork exists from previous exchanges?
+      - How much cognitive load is needed for the assistant's next step?
+      - Is this continuing established analysis or starting fresh investigation?
+
+      **Think like this:** If you were the AI assistant about to respond, how much mental effort would your specific next action require?
+
+      Respond with only a single integer between 1 and 100.`
+
+      // Appliquer la compression puis la troncature des messages
+      let processedMessages = request.messages || [];
+      
+      if (compress) {
+        processedMessages = await this.compressMessages(processedMessages);
+      }
+      
+      const truncatedMessages = this.truncateMessages(processedMessages);
 
       const evaluationRequest: StandardRequest = {
         model: model.provider_model_id,
@@ -163,13 +375,13 @@ export class FamilyRoutingService {
           {
             role: 'user', 
             content: JSON.stringify({
-              messages: request.messages,
+              messages: truncatedMessages,
               tools: request.tools,
               task_indicators: {
-                message_count: request.messages?.length || 0,
+                message_count: truncatedMessages.length,
                 has_tools: !!(request.tools && request.tools.length > 0),
-                total_characters: JSON.stringify(request.messages).length,
-                has_system_message: request.messages?.some(m => m.role === 'system')
+                total_characters: JSON.stringify(truncatedMessages).length,
+                has_system_message: truncatedMessages.some(m => m.role === 'system')
               }
             })
           }
