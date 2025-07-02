@@ -6,7 +6,6 @@ import type { StandardRequest, FamilyConfig, RoutingResult, ComplexityEvaluation
 import { ta } from 'zod/v4/locales';
 
 export class FamilyRoutingService {
-  private readonly memoryCache = new Map<string, { result: RoutingResult; expiresAt: number }>();
   private readonly modelConfigCache = new Map<string, any>();
 
   /**
@@ -101,11 +100,6 @@ export class FamilyRoutingService {
       evaluationTokens: evaluation.tokens.total,
       fromCache: false
     };
-
-    // 4. Mettre en cache (en mémoire seulement)
-    const cacheKey = this.hashRequest(request);
-    const expiresAt = Date.now() + (config.routing_config.cache_duration_minutes * 60 * 1000);
-    this.memoryCache.set(cacheKey, { result, expiresAt });
 
     console.log(`[FamilyRoutingService] rerouting result for family ${familyId}:`, result.complexityScore, result.selectedModel);
     return result;
@@ -508,21 +502,6 @@ export class FamilyRoutingService {
   }
 
   /**
-   * Crée un hash simple du contenu de la requête pour le cache
-   */
-  private hashRequest(request: StandardRequest): string {
-    const content = JSON.stringify({
-      messages: request.messages,
-      tools: request.tools,
-      temperature: request.temperature,
-      max_tokens: request.max_tokens
-    });
-    
-    // Hash simple (en production, utiliser crypto)
-    return btoa(content).slice(0, 32);
-  }
-
-  /**
    * Retourne l'URL de base d'un provider
    */
   private getProviderBaseUrl(provider: string): string {
@@ -538,14 +517,8 @@ export class FamilyRoutingService {
    * Nettoie le cache en mémoire (expire les entrées anciennes)
    */
   public cleanCache(): void {
-    const now = Date.now();
-    let deleted = 0;
-    for (const [key, value] of this.memoryCache.entries()) {
-      if (value.expiresAt <= now) {
-        this.memoryCache.delete(key);
-        deleted++;
-      }
-    }
+    // Plus de cache memoryCache à nettoyer
+    // Le modelConfigCache reste permanent
   }
 }
 
