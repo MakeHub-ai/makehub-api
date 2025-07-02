@@ -383,6 +383,7 @@ export default {
   port: port,
   hostname: host,
   fetch: app.fetch,
+  idleTimeout: 255, // 4 minutes 15 secondes
   error: (error: Error) => {
     console.error('🚨 Bun server error:', {
       message: error.message,
