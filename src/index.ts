@@ -327,6 +327,7 @@ async function startServer(options?: Partial<ServerOptions>): Promise<void> {
       port: serverPort,
       hostname: serverHost,
       fetch: app.fetch,
+      idleTimeout: 300000, // 5 minutes
       error: (error: Error) => {
         console.error('🚨 Bun server error:', {
           message: error.message,
