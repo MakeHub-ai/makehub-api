@@ -3,7 +3,7 @@
 // Run this script with: node examples/test-provider.js
 
 const API_BASE_URL = "http://localhost:3000"; // Change to your API base URL
-const API_KEY = "sk_t00dbYSFOP0Rl3DOpVd1xIA_YLJvK8bVz45m9SmbEdM"
+const API_KEY = "your_api_key"; // Replace with your actual API key
 
 
 const requestBody = {
