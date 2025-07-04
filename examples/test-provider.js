@@ -2,20 +2,21 @@
 // It sends a POST request to the /v1/chat/completions endpoint with a 'provider' field.
 // Run this script with: node examples/test-provider.js
 
-const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
-const API_KEY = process.env.API_KEY_MAKEHUB || 'test-api-key-123';
+const API_BASE_URL = "http://localhost:3000"; // Change to your API base URL
+const API_KEY = "sk_t00dbYSFOP0Rl3DOpVd1xIA_YLJvK8bVz45m9SmbEdM"
 
 
 const requestBody = {
-  model: "anthropic/family", // Replace with the actual model you want to test
+  model: "google/family", // Replace with the actual model you want to test
   messages: [
-    { role: "user", content: "Hello, who are you?" }
+    { role: "user", content: "Dans @/src/types/auth.ts , est ce que tu peux faire en sorte que quand il n'y a pas d'authentifiacrtion ou qu'il y a une authent invalide, ca renvoie une erreur a l'utilisateur, sans que ca ma throw l'erreur dans le terminal ??" }
   ],
-  provider: ["bedrock"], // Specify a single provider; can also be an array of providers
   stream: true,
-  max_tokens: 50,
-  temperature: 0.7
+  max_tokens: 500,
 };
+
+console.log("Envoi de la requête à la base de l'API :", API_BASE_URL, '/v1/chat/completions');
+console.log("Corps de la requête :", JSON.stringify(requestBody, null, 2));
 
 fetch(`${API_BASE_URL}/v1/chat/completions`, {
   method: 'POST',

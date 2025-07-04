@@ -355,7 +355,7 @@ export class FamilyRoutingService {
 
       **Think like this:** If you were the AI assistant about to respond, how much mental effort would your specific next action require?
 
-      Respond with only a single integer between 1 and 100.`
+      Respond each questions very briefly (max 10 words each), and at the end, respond with a final score (integer from 1 to 100).`
 
       // Appliquer la compression puis la troncature des messages
       let processedMessages = request.messages || [];
@@ -393,7 +393,6 @@ export class FamilyRoutingService {
             })
           }
         ],
-        max_tokens: 10,
         temperature: 0
       };
 
@@ -408,9 +407,12 @@ export class FamilyRoutingService {
         throw new Error('Unexpected streaming response for evaluation');
       }
 
+      console.log(`[FamilyRoutingService] content:`, response.choices[0]?.message?.content);
+
       // 6. Extraire le score
       const content = response.choices[0]?.message?.content || '50';
-      const score = parseInt(content.trim());
+      // On prend le dernier nombre trouvé dans le contenu
+      const score = parseInt(content.trim().split(' ').pop() || '50');
       const finalScore = isNaN(score) ? 50 : Math.max(1, Math.min(100, score));
 
       // 7. Récupérer le coût réel depuis usage si disponible, sinon fallback sur l'ancien calcul
@@ -499,26 +501,6 @@ export class FamilyRoutingService {
    */
   private estimateTokens(text: string): number {
     return Math.ceil(text.length / 4); // Approximation simple
-  }
-
-  /**
-   * Retourne l'URL de base d'un provider
-   */
-  private getProviderBaseUrl(provider: string): string {
-    const urls: Record<string, string> = {
-      'deepinfra': 'https://api.deepinfra.com/v1',
-      'openai': 'https://api.openai.com/v1',
-      'anthropic': 'https://api.anthropic.com/v1'
-    };
-    return urls[provider] || 'https://api.deepinfra.com/v1';
-  }
-
-  /**
-   * Nettoie le cache en mémoire (expire les entrées anciennes)
-   */
-  public cleanCache(): void {
-    // Plus de cache memoryCache à nettoyer
-    // Le modelConfigCache reste permanent
   }
 }
 
