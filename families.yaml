@@ -20,7 +20,7 @@ settings:
 
 families:
 
-  makehub/family:
+  makehub-sota/family:
     display_name: "Makehub Router"
     description: "Smart routing for Makehub models based on task complexity"
     evaluation_model_id: "mistral/devstral-small-fp8"

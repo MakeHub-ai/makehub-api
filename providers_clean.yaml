@@ -2128,6 +2128,21 @@ providers:
     api_key_name: API_KEY_NOVITAI
     provider_name: novitai
     models:
+      moonshotai/kimi-k2-fp8: 
+        base_url: https://api.novita.ai/v3/openai
+        context: 131
+        price_per_input_token: 0.57
+        price_per_output_token: 2.3
+        provider_model_id: moonshotai/kimi-k2-instruct
+        quantisation: 8
+        support_tool_calling: true
+        max_output: 131
+        assistant_ready: false
+        display_name: Kimi K2
+        pricing_method: deepseek_cache
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-05-28-fp8:
         base_url: https://api.novita.ai/v3/openai
         context: 128
@@ -2450,6 +2465,21 @@ providers:
   parasail:
     api_key_name: API_KEY_PARASAIL
     models:
+      moonshotai/kimi-k2-fp8:
+        base_url: https://api.parasail.io/v1
+        context: 65
+        price_per_input_token: 1.5
+        price_per_output_token: 4
+        provider_model_id: kimi-k2-instruct
+        quantisation: 8
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Kimi K2
+        pricing_method: deepseek_cache
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       deepseek/deepseek-R1-05-28-fp8:
         base_url: https://api.parasail.io/v1
         context: 128
@@ -2667,6 +2697,21 @@ providers:
     api_key_name: API_KEY_TOGETHER
     provider_name: together
     models:
+      moonshotai/kimi-k2:
+        base_url: https://api.together.xyz/v1
+        context: 131
+        price_per_input_token: 1
+        price_per_output_token: 3
+        provider_model_id: moonshotai/Kimi-K2-Instruct
+        quantisation: 8
+        support_tool_calling: true
+        max_output: 131
+        assistant_ready: false
+        display_name: Kimi K2
+        pricing_method: deepseek_cache
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       qwen/Qwen3-235B-A22B-fp8:
         base_url: https://api.together.xyz/v1
         context: 128
@@ -2836,6 +2881,21 @@ providers:
     api_key_name: API_KEY_XAI
     provider_name: xai
     models:
+      xai/grok-4:
+        base_url: https://api.x.ai/v1
+        context: 256
+        price_per_input_token: 3
+        price_per_output_token: 15
+        provider_model_id: grok-4-0709
+        quantisation: null
+        support_tool_calling: true
+        max_output: null
+        assistant_ready: true
+        display_name: Grok 4
+        pricing_method: openai_cache_50
+        support_input_cache: true
+        support_vision: false
+        price_cached_token: null
       xai/grok-3:
         base_url: https://api.x.ai/v1
         context: 131
