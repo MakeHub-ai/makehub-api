@@ -1598,6 +1598,21 @@ providers:
     api_key_name: API_KEY_GROQ
     provider_name: groq
     models:
+      moonshotai/kimi-k2-fp8:
+        base_url: https://api.groq.com/openai/v1
+        context: 131
+        price_per_input_token: 1
+        price_per_output_token: 3
+        provider_model_id: moonshotai/kimi-k2-instruct
+        quantisation: 8
+        support_tool_calling: true
+        max_output: 16
+        assistant_ready: false
+        display_name: Kimi K2
+        pricing_method: standard
+        support_input_cache: false
+        support_vision: false
+        price_cached_token: null
       meta/Llama-3.3-70B-fp16:
         base_url: https://api.groq.com/openai/v1
         context: 128
@@ -2697,7 +2712,7 @@ providers:
     api_key_name: API_KEY_TOGETHER
     provider_name: together
     models:
-      moonshotai/kimi-k2:
+      moonshotai/kimi-k2-fp8:
         base_url: https://api.together.xyz/v1
         context: 131
         price_per_input_token: 1

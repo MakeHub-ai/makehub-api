@@ -21,7 +21,7 @@ settings:
 families:
 
   makehub-sota/family:
-    display_name: "Makehub Router"
+    display_name: "Makehub SOTA Router"
     description: "Smart routing for Makehub models based on task complexity"
     evaluation_model_id: "mistral/devstral-small-fp8"
     evaluation_provider: "deepinfra"
@@ -39,6 +39,31 @@ families:
         - min_score: 51
           max_score: 100
           target_model: "anthropic/claude-4-sonnet"
+          reason: "Complex reasoning - balanced performance and cost"
+      fallback_model: "anthropic/claude-4-sonnet"
+      fallback_provider: "anthropic"
+      cache_duration_minutes: 60
+      evaluation_timeout_ms: 2000
+
+  makehub-cost/family:
+    display_name: "Makehub Cost Effective Router"
+    description: "Smart routing for Makehub models based on task complexity"
+    evaluation_model_id: "mistral/devstral-small-fp8"
+    evaluation_provider: "deepinfra"
+    is_active: true
+    routing_config:
+      score_ranges:
+        - min_score: 1
+          max_score: 20
+          target_model: "google/gemini-2.5-flash-lite-preview"
+          reason: "Simple tasks - fast and cost-effective responses"
+        - min_score: 21
+          max_score: 50
+          target_model: "google/gemini-2.5-flash"
+          reason: "Simple tasks - fast and cost-effective responses"
+        - min_score: 51
+          max_score: 100
+          target_model: "moonshotai/kimi-k2-fp8"
           reason: "Complex reasoning - balanced performance and cost"
       fallback_model: "anthropic/claude-4-sonnet"
       fallback_provider: "anthropic"
